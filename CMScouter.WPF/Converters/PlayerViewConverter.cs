@@ -34,6 +34,8 @@ namespace CMScouter.WPF.Converters
             dest.ContractMonths = months;
 
             dest.SquadStatus = source.Contract?.SquadStatus;
+            dest.TransferStatus = source.Contract?.TransferStatus;
+            dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToString() + " " + String.Format("c0", (decimal)source.Contract.ReleaseValue) : string.Empty;
 
             dest.BestRating = source.ScoutRatings.BestPosition.BestRole().Rating;
             dest.BestPosition = source.ScoutRatings.BestPosition.Position.ToString();

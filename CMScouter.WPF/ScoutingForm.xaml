@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
         mc:Ignorable="d"
-        Title="Scouting" Height="500" Width="800">
+        Title="Scouting" Height="800" Width="1200">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -15,7 +15,7 @@
             </MenuItem>
         </Menu>
 
-        <DataGrid x:Name="dgvPlayers" Margin="45,45,45,10" Grid.ColumnSpan="3" Height="360" CanUserSortColumns="False" CanUserAddRows="False"
+        <DataGrid x:Name="dgvPlayers" Margin="45,45,45,10" Grid.ColumnSpan="3" Height="600" CanUserSortColumns="False" CanUserAddRows="False"
                   ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
@@ -26,16 +26,19 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="ID" Binding="{Binding PlayerId}" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="120" />
-                <DataGridTextColumn Header="Recommend" Binding="{Binding Recommendation}" Width="65" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
+                <DataGridTextColumn Header="Recommend" Binding="{Binding Recommendation}" Width="80" />
                 <DataGridTextColumn Header="Rating" Binding="{Binding BestRating}" />
-                <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="50" />
+                <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="80" />
                 <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" />
                 <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
+                <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="90" />
+                <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="90" />
+                <DataGridTextColumn Header="Club" Binding="{Binding ClubName}" Width="90" />
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
-                <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="60" />
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="70" />
                 <DataGridTextColumn Header="Con Months" Binding="{Binding ContractMonths}" />
-                <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="50" />
+                <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="70" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

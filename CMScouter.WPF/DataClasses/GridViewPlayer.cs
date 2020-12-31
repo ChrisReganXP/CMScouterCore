@@ -42,5 +42,9 @@ namespace CMScouter.WPF.DataClasses
         public byte ContractMonths { get; set; }
 
         public string SquadStatus { get; set; }
+
+        public string TransferStatus { get; set; }
+
+        public string ReleaseFee { get; set; }
     }
 }

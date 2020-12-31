@@ -69,7 +69,9 @@ namespace CMScouter.UI
                     ReleaseClause = item._contract.MinimumFeeReleaseClause ? ReleaseClauseType.MinimumFee :
                                         item._contract.ManagerReleaseClause ? ReleaseClauseType.ManagerJob :
                                         item._contract.NonPromotionReleaseClause ? ReleaseClauseType.NonPromotion :
-                                        item._contract.RelegationReleaseClause ? ReleaseClauseType.Relegation : ReleaseClauseType.NotPlaying,
+                                        item._contract.RelegationReleaseClause ? ReleaseClauseType.Relegation : 
+                                        item._contract.NonPlayingReleaseClause ? ReleaseClauseType.NotPlaying :
+                                        ReleaseClauseType.None,
                     SquadStatus = SquadStatusConverter.ConvertSquadStatus(item._contract.SquadStatus),
                     TransferStatus = ((TransferStatus)item._contract.TransferStatus).ToName(),
                 },

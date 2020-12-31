@@ -2,6 +2,8 @@
 {
     public enum ReleaseClauseType
     {
+        None,
+
         NonPromotion,
 
         ManagerJob,
