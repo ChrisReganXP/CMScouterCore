@@ -33,6 +33,18 @@ namespace CMScouterFunctions
             return ConvertToDate(bytes.Skip(start).Take(5).ToArray());
         }
 
+        public static DateTime? GetSensibleDateFromBytes(byte[] bytes, int start)
+        {
+            try
+            {
+                return ConvertToDate(bytes.Skip(start).Take(5).ToArray());
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static byte GetByteFromBytes(byte[] bytes, int start, bool isIntrinsicValue = false)
         {
             return isIntrinsicValue ? ConvertIntrinsic(bytes[start]) : bytes[start];
@@ -66,11 +78,12 @@ namespace CMScouterFunctions
 
         public static List<byte[]> GetAllDataFromFile(DataFile dataFile, string fileName, int sizeOfData)
         {
-            int numberOfRecords = dataFile.Length / sizeOfData;
-
             FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
-            br.BaseStream.Seek(dataFile.Position, SeekOrigin.Begin);
+
+            int numberOfRecords = GetNumberOfRecordsFromDataFile(dataFile, sizeOfData, br, out int startReadPosition);
+
+            br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
 
             List<byte[]> records = new List<byte[]>();
 
@@ -82,6 +95,82 @@ namespace CMScouterFunctions
             }
 
             return records;
+        }
+
+        public static List<string> GetPossibleShortValuesFromByteArray(byte[] source)
+        {
+            if (source == null || source.Length < 2)
+            {
+                return new List<string>();
+            }
+
+            var results = new List<string>();
+            for (int i = 0; i < source.Length - 1; i++)
+            {
+                int result = GetShortFromBytes(source, i);
+
+                if (result <= 0)
+                {
+                    continue;
+                }
+
+                results.Add($"{i} - {result}");
+            }
+
+            return results;
+        }
+
+        public static List<string> GetPossibleIntValuesFromByteArray(byte[] source)
+        {
+            if (source == null || source.Length < 4)
+            {
+                return new List<string>();
+            }
+
+            var results = new List<string>();
+            for (int i = 0; i < source.Length - 3; i++)
+            {
+                int result = GetIntFromBytes(source, i);
+
+                if (result <= 0)
+                {
+                    continue;
+                }
+
+                results.Add($"{i} - {result}");
+            }
+
+            return results;
+        }
+
+        public static List<string> GetPossibleDateValuesFromByteArray(byte[] source)
+        {
+            if (source == null || source.Length < 4)
+            {
+                return new List<string>();
+            }
+
+            var results = new List<string>();
+            for (int i = 0; i < source.Length - 3; i++)
+            {
+                try
+                {
+                    DateTime? result = GetDateFromBytes(source, i);
+
+                    if (result == null)
+                    {
+                        continue;
+                    }
+
+                    results.Add($"{i} - {result.Value.ToShortDateString()}");
+                }
+                catch
+                {
+                    // no need to catch anything
+                }
+            }
+
+            return results;
         }
 
         private static byte[] TrimEnd(byte[] array)
@@ -118,7 +207,7 @@ namespace CMScouterFunctions
         {
             var day = BitConverter.ToInt16(bytes, 0);
             var year = BitConverter.ToInt16(bytes, 2);
-            if (year == 0)
+            if (year <= 0)
             {
                 return null;
             }
@@ -132,6 +221,39 @@ namespace CMScouterFunctions
 
             var date = new DateTime(year, 1, 1).AddDays(day);
             return date;
+        }
+
+        private static int GetNumberOfRecordsFromDataFile(DataFile dataFile, int sizeOfData, BinaryReader br, out int startReadPosition)
+        {
+            int numberOfRecords = dataFile.Length / sizeOfData;
+            startReadPosition = dataFile.Position;
+
+            if (dataFile.FileFacts.HeaderOverload != null)
+            {
+                byte[] header = new byte[dataFile.FileFacts.HeaderOverload.MinimumHeaderLength];
+                br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+                br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.MinimumHeaderLength);
+                startReadPosition += dataFile.FileFacts.HeaderOverload.MinimumHeaderLength;
+
+                var numberHeaderRows = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.AdditionalHeaderIndicatorPosition);
+                numberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.InitialNumberOfRecordsPosition);
+                int furtherNumberOfRecords = 0;
+
+                if (numberHeaderRows > 0)
+                {
+                    for (int headerLoop = 0; headerLoop < numberHeaderRows; headerLoop++)
+                    {
+                        header = new byte[dataFile.FileFacts.HeaderOverload.ExtraHeaderLength];
+                        br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+                        br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.ExtraHeaderLength);
+                        startReadPosition += dataFile.FileFacts.HeaderOverload.ExtraHeaderLength;
+                    }
+                    furtherNumberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.FurtherNumberOfRecordsPosition);
+                }
+                numberOfRecords = furtherNumberOfRecords > 0 ? furtherNumberOfRecords : numberOfRecords;
+            }
+
+            return numberOfRecords;
         }
     }
 }

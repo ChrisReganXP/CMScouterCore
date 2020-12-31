@@ -51,6 +51,8 @@ namespace CMScouter.UI
             return string.IsNullOrWhiteSpace(CommonName) ? null : FirstName + " " + SecondName;
         }
 
+        public ContractView Contract { get; set; }
+
         public PlayerPositionView Positions { get; set; }
 
         public PlayerAttributeView Attributes { get; set; }

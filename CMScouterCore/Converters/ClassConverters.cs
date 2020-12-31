@@ -100,6 +100,38 @@ namespace CMScouterFunctions.Converters
         }
     }
 
+    internal class ContractConverter
+    {
+        private decimal _valueMultiplier = 1;
+
+        public ContractConverter(SaveGameData gameData)
+        {
+            _valueMultiplier = gameData.ValueMultiplier;
+        }
+
+        public Contract Convert(byte[] source)
+        {
+            var contract = new Contract();
+
+            contract.PlayerId = ByteHandler.GetIntFromBytes(source, 0);
+            contract.WagePerWeek = (int)(ByteHandler.GetIntFromBytes(source, 12) * _valueMultiplier);
+            contract.GoalBonus = (int)(ByteHandler.GetIntFromBytes(source, 16) * _valueMultiplier);
+            contract.AssistBonus = (int)(ByteHandler.GetIntFromBytes(source, 20) * _valueMultiplier);
+            contract.NonPromotionReleaseClause = ByteHandler.GetByteFromBytes(source, 28) == 1;
+            contract.MinimumFeeReleaseClause = ByteHandler.GetByteFromBytes(source, 29) == 1;
+            contract.NonPlayingReleaseClause = ByteHandler.GetByteFromBytes(source, 30) == 1;
+            contract.RelegationReleaseClause = ByteHandler.GetByteFromBytes(source, 31) == 1;
+            contract.ManagerReleaseClause = ByteHandler.GetByteFromBytes(source, 32) == 1;
+            contract.ReleaseClauseValue = (int)(ByteHandler.GetIntFromBytes(source, 33) * _valueMultiplier);
+            contract.ContractStartDate = ByteHandler.GetDateFromBytes(source, 37);
+            contract.ContractEndDate = ByteHandler.GetDateFromBytes(source, 45);
+            contract.TransferStatus = ByteHandler.GetByteFromBytes(source, 78);
+            contract.SquadStatus = ByteHandler.GetByteFromBytes(source, 79);
+
+            return contract;
+        }
+    }
+
     internal class PlayerDataConverter
     {
         public PlayerData Convert(byte[] source)

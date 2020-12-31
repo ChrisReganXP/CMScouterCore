@@ -40,5 +40,7 @@ namespace CMScouter.WPF.DataClasses
         public Roles BestRole { get; set; }
 
         public byte ContractMonths { get; set; }
+
+        public string SquadStatus { get; set; }
     }
 }

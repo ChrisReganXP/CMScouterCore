@@ -19,8 +19,8 @@ namespace CMScouterFunctions
             foreach (var item in bytes)
             {
                 var staff = converter.Convert(item);
-                staff.Value = staff.Value * gameData.ValueMultiplier;
-                staff.Wage = staff.Wage * gameData.ValueMultiplier;
+                staff.Value = (int)(staff.Value * gameData.ValueMultiplier);
+                staff.Wage = (int)(staff.Wage * gameData.ValueMultiplier);
 
                 if (staff.StaffPlayerId != -1)
                 {
@@ -31,6 +31,31 @@ namespace CMScouterFunctions
                     else
                     {
                         dic.Add(staff.StaffPlayerId, staff);
+                    }
+                }
+            }
+
+            return dic;
+        }
+
+        public static Dictionary<int, Contract> GetDataFileContractDictionary(SaveGameFile savegame, SaveGameData gameData)
+        {
+            Dictionary<int, Contract> dic = new Dictionary<int, Contract>();
+            var fileFacts = DataFileFacts.GetDataFileFacts().First(x => x.Type == DataFileType.Contracts);
+            var bytes = GetDataFileBytes(savegame, fileFacts.Type, fileFacts.DataSize);
+
+            ContractConverter converter = new ContractConverter(gameData);
+
+            for (int i = 0; i < bytes.Count; i++)
+            {
+                var item = bytes[i];
+                var contract = converter.Convert(item);
+
+                if (contract.PlayerId != -1)
+                {
+                    if (!dic.ContainsKey(contract.PlayerId))
+                    {
+                        dic.Add(contract.PlayerId, contract);
                     }
                 }
             }
@@ -105,7 +130,7 @@ namespace CMScouterFunctions
 
         public static List<byte[]> GetDataFileBytes(SaveGameFile savegame, DataFileType fileType, int sizeOfData)
         {
-            DataFile dataFile = savegame.DataBlockNameList.First(x => x.FileType == fileType);
+            DataFile dataFile = savegame.DataBlockNameList.First(x => x.FileFacts.Type == fileType);
             return ByteHandler.GetAllDataFromFile(dataFile, savegame.FileName, sizeOfData);
         }
     }

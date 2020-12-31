@@ -33,6 +33,8 @@ namespace CMScouter.WPF.Converters
             }
             dest.ContractMonths = months;
 
+            dest.SquadStatus = source.Contract?.SquadStatus;
+
             dest.BestRating = source.ScoutRatings.BestPosition.BestRole().Rating;
             dest.BestPosition = source.ScoutRatings.BestPosition.Position.ToString();
             dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role;

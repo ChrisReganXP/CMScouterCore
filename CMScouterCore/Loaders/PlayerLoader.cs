@@ -28,7 +28,9 @@ namespace CMScouterFunctions
 
             List<PlayerData> players = GetDataFilePlayerData(savegame);
 
-            List<Player> searchablePlayers = ConstructSearchablePlayers(staffDic, players).ToList();
+            Dictionary<int, Contract> playerContracts = DataFileLoaders.GetDataFileContractDictionary(savegame, saveData);
+
+            List<Player> searchablePlayers = ConstructSearchablePlayers(staffDic, players, playerContracts).ToList();
 
             saveData.GameDate = savegame.GameDate;
             saveData.FirstNames = firstnames;
@@ -43,13 +45,20 @@ namespace CMScouterFunctions
         }
 
 
-        private static IEnumerable<Player> ConstructSearchablePlayers(Dictionary<int, Staff> staffDic, List<PlayerData> players)
+        private static IEnumerable<Player> ConstructSearchablePlayers(Dictionary<int, Staff> staffDic, List<PlayerData> players, Dictionary<int, Contract> contracts)
         {
             foreach (var player in players)
             {
                 if (staffDic.ContainsKey(player.PlayerId))
                 {
-                    yield return new Player(player, staffDic[player.PlayerId]);
+                    var staff = staffDic[player.PlayerId];
+                    Contract contract = null;
+                    if (contracts.Keys.Contains(staff.StaffId))
+                    {
+                        contract = contracts[staff.StaffId];
+                    }
+
+                    yield return new Player(player, staff, contract);
                 }
             }
         }

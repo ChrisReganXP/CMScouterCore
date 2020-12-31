@@ -31,6 +31,7 @@
                 <DataGridTextColumn Header="Rating" Binding="{Binding BestRating}" />
                 <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="50" />
                 <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" />
+                <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="60" />
                 <DataGridTextColumn Header="Con Months" Binding="{Binding ContractMonths}" />

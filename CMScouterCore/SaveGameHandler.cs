@@ -71,20 +71,16 @@ namespace CMScouterFunctions
                     br.Read(fileHeader, 0, ByteBlockSize);
                     var internalName = ByteHandler.GetStringFromBytes(fileHeader, 8);
 
-                    savegame.DataBlockNameList.Add(new DataFile() 
-                        {
-                            InternalName = internalName,
-                            FileType = DataFileFacts.GetDataFileFact(internalName).Type, 
-                            Position = ByteHandler.GetIntFromBytes(fileHeader, 0), 
-                            Length = ByteHandler.GetIntFromBytes(fileHeader, 4) 
-                        });
+                    var fileFacts = DataFileFacts.GetDataFileFact(internalName);
+
+                    savegame.DataBlockNameList.Add(new DataFile(fileFacts, ByteHandler.GetIntFromBytes(fileHeader, 0), ByteHandler.GetIntFromBytes(fileHeader, 4)));
                 }
             }
         }
 
         private static void LoadGameData(SaveGameFile savegame)
         {
-            var general = savegame.DataBlockNameList.First(x => x.FileType == DataFileType.General);
+            var general = savegame.DataBlockNameList.First(x => x.FileFacts.Type == DataFileType.General);
             var fileFacts = DataFileFacts.GetDataFileFacts().First(x => x.Type == DataFileType.General);
 
             ByteHandler.GetAllDataFromFile(general, savegame.FileName, fileFacts.DataSize);

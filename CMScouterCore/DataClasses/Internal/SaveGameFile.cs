@@ -21,17 +21,45 @@ namespace CMScouterFunctions.DataClasses
 
     internal class DataFile
     {
-        public DataFileType FileType { get; set; }
+        public DataFileFact FileFacts { get; }
 
-        public string InternalName { get; set; }
+        public int Position { get; }
 
-        public int Position { get; set; }
+        public int Length { get; }
 
-        public int Length { get; set; }
+        public DataFile(DataFileFact fileFacts, int position, int length)
+        {
+            FileFacts = fileFacts ?? new DataFileFact(DataFileType.General, string.Empty, 0, 0);
+            Position = position;
+            Length = length;
+        }
 
         public override string ToString()
         {
-            return $"{InternalName} [{FileType}] ({Position}/{Length})";
+            return $"{FileFacts.Name} [{FileFacts.Type}] ({Position}/{Length})";
+        }
+    }
+
+
+    internal class DataFileHeaderInformation
+    {
+        public byte AdditionalHeaderIndicatorPosition { get; }
+
+        public byte InitialNumberOfRecordsPosition { get; }
+
+        public byte MinimumHeaderLength { get; }
+
+        public byte ExtraHeaderLength { get; }
+
+        public byte FurtherNumberOfRecordsPosition { get; }
+
+        public DataFileHeaderInformation(byte additionalHeaderIndicatorPosition, byte initialNumberOfRecordsPosition, byte minimumHeaderLength, byte extraHeaderLength, byte furtherNumberOfRecordsPosition)
+        {
+            AdditionalHeaderIndicatorPosition = additionalHeaderIndicatorPosition;
+            InitialNumberOfRecordsPosition = initialNumberOfRecordsPosition;
+            MinimumHeaderLength = minimumHeaderLength;
+            ExtraHeaderLength = extraHeaderLength;
+            FurtherNumberOfRecordsPosition = furtherNumberOfRecordsPosition;
         }
     }
 }

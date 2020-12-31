@@ -29,10 +29,13 @@ namespace CMScouterFunctions.DataClasses
 
         public Staff _staff;
 
-        public Player(PlayerData playerData, Staff staffData)
+        public Contract _contract;
+
+        public Player(PlayerData playerData, Staff staffData, Contract contract)
         {
             _player = playerData;
             _staff = staffData;
+            _contract = contract;
         }
     }
 
