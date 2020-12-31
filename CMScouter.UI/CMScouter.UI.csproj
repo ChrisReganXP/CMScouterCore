@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Raters\DefaultRater.cs" />
+    <Compile Remove="Raters\DefaultReflectionRater.cs" />
+    <Compile Remove="Raters\InvestigationRater.cs" />
+    <Compile Remove="Raters\SaturnPatchRater.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CMScouterCore\CMScouterCore.csproj" />
+  </ItemGroup>
+
+</Project>

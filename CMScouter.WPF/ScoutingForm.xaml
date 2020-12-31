@@ -1,0 +1,41 @@
+﻿<Window x:Class="CMScouter.WPF.ScoutingForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CMScouter.WPF"
+        mc:Ignorable="d"
+        Title="Scouting" Height="500" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" Click="Open_Click" />
+                <Separator />
+                <MenuItem Header="_Exit" Click="Exit_Click" />
+            </MenuItem>
+        </Menu>
+
+        <DataGrid x:Name="dgvPlayers" Margin="45,45,45,10" Grid.ColumnSpan="3" Height="360" CanUserSortColumns="False" CanUserAddRows="False"
+                  ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="View_Click">View</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="ID" Binding="{Binding PlayerId}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="120" />
+                <DataGridTextColumn Header="Recommend" Binding="{Binding Recommendation}" Width="65" />
+                <DataGridTextColumn Header="Rating" Binding="{Binding BestRating}" />
+                <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="50" />
+                <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" />
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="60" />
+                <DataGridTextColumn Header="Con Months" Binding="{Binding ContractMonths}" />
+                <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="50" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

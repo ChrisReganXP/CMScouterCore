@@ -1,0 +1,8 @@
+﻿Design Scout Report format.
+Create Scout Report Request class.
+Extract classes into DataContracts or foundation
+Revisit intrinsic valuation
+Adjust calculations for
+	position familiarity, including sides and nearby positions
+Balance Basic Ratings
+Implement Scout Reports
