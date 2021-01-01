@@ -508,7 +508,6 @@ namespace CMScouter.WPF
 
         private void SearchForPlayer()
         {
-            /*
             int maxValue;
             if (!int.TryParse(tbxMaxValue.Text, out maxValue))
             {
@@ -520,7 +519,6 @@ namespace CMScouter.WPF
             {
                 maxAge = 255;
             }
-            */
 
             PlayerType castType;
             PlayerType? type;
@@ -560,15 +558,14 @@ namespace CMScouter.WPF
             ScoutingRequest request = new ScoutingRequest()
             {
                 PlayerType = type,
-                //MaxValue = maxValue,
-                //EUNationalityOnly = cbxEUNational.Checked,
-                //MaxAge = maxAge,
+                MaxValue = maxValue,
+                EUNationalityOnly = cbxEUNational.IsChecked == true,
+                MaxAge = maxAge,
                 NumberOfResults = 200,
                 PlaysInRegion = playsInRegion,
                 PlaysInDivision = playsInDivision,
                 Nationality = nationId,
                 AvailabilityCriteria = availability,
-                //ContractStatus = (short)(int)ddlContractStatus.SelectedValue,
             };
 
             var playerList = cmsUI.GetScoutResults(request);

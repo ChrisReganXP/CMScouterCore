@@ -59,6 +59,16 @@ namespace CMScouterFunctions.DataClasses
             return false;
         }
 
+        public bool IsUnwanted()
+        {
+            if (_contract != null && (int)_contract.SquadStatus > (int)SquadStatus.SquadRotation)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public short HasContractMonthsRemaining(DateTime gameDate)
         {
             if (_staff.ContractExpiryDate != null)

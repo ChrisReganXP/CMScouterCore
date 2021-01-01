@@ -163,6 +163,7 @@ namespace CMScouter.UI
 
             // AND logic not implemented
             filters.Add(x => (request.AvailabilityCriteria.TransferListed && x.IsTransferListed())
+                || (request.AvailabilityCriteria.UnwantedSquadStatus && x.IsUnwanted())
                 || (request.AvailabilityCriteria.LoanListed && x.IsLoanListed())
                 || (request.AvailabilityCriteria.ContractMonths.HasValue && x.HasContractMonthsRemaining(_savegame.GameDate) <= request.AvailabilityCriteria.ContractMonths.Value)
                 );

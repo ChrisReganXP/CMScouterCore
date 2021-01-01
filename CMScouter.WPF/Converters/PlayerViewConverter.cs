@@ -35,11 +35,11 @@ namespace CMScouter.WPF.Converters
 
             dest.SquadStatus = source.Contract?.SquadStatus;
             dest.TransferStatus = source.Contract?.TransferStatus;
-            dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToString(): string.Empty;
+            dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToName(): string.Empty;
 
             dest.BestRating = source.ScoutRatings.BestPosition.BestRole().Rating;
-            dest.BestPosition = source.ScoutRatings.BestPosition.Position.ToString();
-            dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role;
+            dest.BestPosition = source.ScoutRatings.BestPosition.Position.ToName();
+            dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role.ToName();
             dest.Recommendation = source.ScoutRatings.OverallRating;
 
             return dest;
