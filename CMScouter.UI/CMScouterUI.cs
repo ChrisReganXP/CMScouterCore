@@ -83,6 +83,7 @@ namespace CMScouter.UI
             filterHelper.CreateValueFilter(request, filters);
             filterHelper.CreateContractStatusFilter(request, filters);
             filterHelper.CreateAgeFilter(request, filters);
+            filterHelper.CreateAvailabilityFilter(request, filters);
 
             var players = _savegame.Players;
             foreach (var filter in filters)
@@ -117,7 +118,9 @@ namespace CMScouter.UI
 
             var playersToConstruct = preFilteredPlayers ?? _savegame.Players;
             var list = _displayHelper.ConstructPlayers(playersToConstruct, _rater).ToList();
-            return ScoutingOrdering(list, type).Take(numberOfResults).ToList();
+
+            var scoutOrder = ScoutingOrdering(list, type);
+            return scoutOrder.Take(numberOfResults).ToList();
         }
 
         private IEnumerable<PlayerView> ScoutingOrdering(IEnumerable<PlayerView> list, PlayerType? type)
@@ -127,7 +130,7 @@ namespace CMScouter.UI
                 return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().Rating);
             }
 
-            return list.OrderByDescending(x => x.ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderBy(p => p.Rating));
+            return list.OrderByDescending(x => x.ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderBy(p => p.Rating).FirstOrDefault().Rating);
         }
 
         private void ConstructLookups()

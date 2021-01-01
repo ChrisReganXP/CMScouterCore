@@ -21,6 +21,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Globalization;
+using CMScouter.WPF.ControlHelpers;
+using CMScouter.UI.DataClasses;
 
 namespace CMScouter.WPF
 {
@@ -46,18 +48,71 @@ namespace CMScouter.WPF
             ddlSearchTypes.SelectedIndex = 0;*/
 
             /*
+            ddlContractStatus.ValueMember = "Value";
+            ddlContractStatus.DisplayMember = "Text";
+            var contractStatusList = new[] { new { Value = -1, Text = "<All>" }, new { Value = 6, Text = "Expires 6 Months" }, new { Value = 12, Text = "Expires 12 Months" } };
+            ddlContractStatus.DataSource = contractStatusList;
+            ddlContractStatus.SelectedIndex = 0;*/
+        }
+
+        private void PopulatePlayerTypes()
+        {
             ddlPlayerType.Items.Add("<All>");
             ddlPlayerType.SelectedIndex = 0;
             foreach (var type in Enum.GetNames(typeof(PlayerType)))
             {
                 ddlPlayerType.Items.Add(type);
             }
+        }
 
-            ddlContractStatus.ValueMember = "Value";
-            ddlContractStatus.DisplayMember = "Text";
-            var contractStatusList = new[] { new { Value = -1, Text = "<All>" }, new { Value = 6, Text = "Expires 6 Months" }, new { Value = 12, Text = "Expires 12 Months" } };
-            ddlContractStatus.DataSource = contractStatusList;
-            ddlContractStatus.SelectedIndex = 0;*/
+        private void PopulateAvailabilityTypes()
+        {
+            var availabilityTypes = AvailabilityTypeControlHelper.GetAvailabilityTypeKeyValuePairs();
+
+            ddlAvailability.ItemsSource = availabilityTypes;
+            ddlAvailability.DisplayMemberPath = "Value";
+            ddlAvailability.SelectedValuePath = "Key";
+            ddlAvailability.SelectedIndex = 0;
+        }
+
+        private void PopulateNationalities()
+        {
+            ddlNationality.DisplayMemberPath = "Name";
+            ddlNationality.SelectedValuePath = "Id";
+
+            var nationList = cmsUI.GetAllNations().Select(x => new { x.Id, x.Name }).OrderBy(x => x.Name).ToList();
+            var all = new { Id = -1, Name = "<All>" };
+            nationList.Insert(0, all);
+
+            ddlNationality.ItemsSource = nationList;
+            ddlNationality.SelectedIndex = 0;
+        }
+
+        private void PopulatePlayerBased()
+        {
+            ddlPlayerBased.SelectedValuePath = "Value";
+            ddlPlayerBased.DisplayMemberPath = "Text";
+            var playsInLocationList = new List<object>
+            {
+                new { Value = "-1", Text = "<All>" },
+                new { Value = "-2", Text = "---- Regions ----" },
+                new { Value = "UKI", Text = "UK & Ireland" },
+                new { Value = "SCA", Text = "Scandinavia" },
+                new { Value = "OCE", Text = "Oceania" },
+                new { Value = "-3", Text = "---- Competitions ----" },
+            };
+
+            var nations = cmsUI.GetAllNations();
+            var clubComps = cmsUI.GetAllClubCompetitions().OrderBy(x => x.LongName);
+
+            foreach (var comp in clubComps)
+            {
+                var x = new { Value = comp.Id.ToString(), Text = comp.LongName };
+                playsInLocationList.Add(x);
+            }
+
+            ddlPlayerBased.ItemsSource = playsInLocationList;
+            ddlPlayerBased.SelectedIndex = 0;
         }
 
         private void CustomiseInitialItems()
@@ -68,6 +123,8 @@ namespace CMScouter.WPF
 
             dgvPlayers.Visibility = Visibility.Hidden;
             dgvPlayers.AutoGenerateColumns = false;
+
+            stpSearchCriteria.Visibility = Visibility.Collapsed;
         }
         #region Menu Events
 
@@ -98,8 +155,8 @@ namespace CMScouter.WPF
             {*/
                 CustomiseInitialItems();
                 cmsUI = new CMScouterUI(fileName);
-            /*PopulateSearchControls();
-            DisplayInitialSearchOptions();*/
+            PopulateSearchControls();
+            /*DisplayInitialSearchOptions();*/
             /*}*/
 
             Globals.Instance.SetGameDate(cmsUI.GameDate);
@@ -209,6 +266,7 @@ namespace CMScouter.WPF
         }
         */
 
+        /*
         private DataTable CreateDataTable(List<PlayerView> playerList, ScoutingRequest request)
         {
             DataTable dt = new DataTable();
@@ -261,7 +319,7 @@ namespace CMScouter.WPF
             }
 
             return dt;
-        }
+        }*/
 
         private string GetScoutedPositionRating(PlayerType? scoutedPosition, ScoutingInformation ratings)
         {
@@ -425,5 +483,97 @@ namespace CMScouter.WPF
                     return "";
             }
         }
+
+        private void PopulateSearchControls()
+        {
+            stpSearchCriteria.Visibility = Visibility.Visible;
+
+            PopulatePlayerTypes();
+            PopulateAvailabilityTypes();
+            PopulateNationalities();
+            PopulatePlayerBased();
+
+            /*
+            var clubNames = cmsUI.GetClubs().Select(x => x.Name).ToList();
+            clubNames.Sort();
+            cbxClubName.Items.AddRange(clubNames.ToArray());*/
+        }
+
+        #region Execute Search
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            SearchForPlayer();
+        }
+
+        private void SearchForPlayer()
+        {
+            /*
+            int maxValue;
+            if (!int.TryParse(tbxMaxValue.Text, out maxValue))
+            {
+                maxValue = int.MaxValue;
+            }
+
+            byte maxAge;
+            if (!byte.TryParse(tbxMaxAge.Text, out maxAge))
+            {
+                maxAge = 255;
+            }
+            */
+
+            PlayerType castType;
+            PlayerType? type;
+            if (!Enum.TryParse(ddlPlayerType.Text, out castType))
+            {
+                type = null;
+            }
+            else
+            {
+                type = castType;
+            }
+
+            int? nationId = (int)ddlNationality.SelectedValue == -1 ? (int?)null : (int)ddlNationality.SelectedValue;
+
+            string selectedPlaysInValue = (string)ddlPlayerBased.SelectedValue;
+            string playsInRegion = null;
+            int? playsInDivision = null;
+            if (!string.IsNullOrWhiteSpace(selectedPlaysInValue) && selectedPlaysInValue.Length == 3 && selectedPlaysInValue.ToList().All(Char.IsLetter))
+            {
+                playsInRegion = (string)ddlPlayerBased.Text;
+            }
+            else
+            {
+                if (selectedPlaysInValue.ToList().All(Char.IsDigit))
+                {
+                    int parsedID = 0;
+                    if (int.TryParse(selectedPlaysInValue, out parsedID))
+                    {
+                        playsInDivision = parsedID;
+                    }
+                }
+            }
+
+            AvailabilityCriteria availability;
+            AvailabilityTypeControlHelper.GetSearchCriteria(ddlAvailability.SelectedValue.ToString(), out availability);
+
+            ScoutingRequest request = new ScoutingRequest()
+            {
+                PlayerType = type,
+                //MaxValue = maxValue,
+                //EUNationalityOnly = cbxEUNational.Checked,
+                //MaxAge = maxAge,
+                NumberOfResults = 200,
+                PlaysInRegion = playsInRegion,
+                PlaysInDivision = playsInDivision,
+                Nationality = nationId,
+                AvailabilityCriteria = availability,
+                //ContractStatus = (short)(int)ddlContractStatus.SelectedValue,
+            };
+
+            var playerList = cmsUI.GetScoutResults(request);
+            DisplayPlayerList(playerList, request);
+        }
+        #endregion
     }
 }

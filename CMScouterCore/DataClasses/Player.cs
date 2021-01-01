@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMScouter.DataClasses;
+using System;
 
 namespace CMScouterFunctions.DataClasses
 {
@@ -36,6 +37,41 @@ namespace CMScouterFunctions.DataClasses
             _player = playerData;
             _staff = staffData;
             _contract = contract;
+        }
+
+        public bool IsTransferListed()
+        {
+            if (_contract != null && ((TransferStatus)_contract.TransferStatus == TransferStatus.ListedByRequest || (TransferStatus)_contract.TransferStatus == TransferStatus.TransferListed))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsLoanListed()
+        {
+            if (_contract != null && ((TransferStatus)_contract.TransferStatus == TransferStatus.ListedForLoan))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public short HasContractMonthsRemaining(DateTime gameDate)
+        {
+            if (_staff.ContractExpiryDate != null)
+            {
+                double diffDays = _staff.ContractExpiryDate.Value.Subtract(gameDate).TotalDays;
+                if (diffDays > 0)
+                {
+                    double doubleMonths = diffDays / 30;
+                    return doubleMonths > byte.MaxValue ? byte.MaxValue : (byte)doubleMonths;
+                }
+            }
+
+            return 0;
         }
     }
 

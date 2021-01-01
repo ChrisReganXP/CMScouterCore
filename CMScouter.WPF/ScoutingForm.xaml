@@ -15,7 +15,23 @@
             </MenuItem>
         </Menu>
 
-        <DataGrid x:Name="dgvPlayers" Margin="45,45,45,10" Grid.ColumnSpan="3" Height="600" CanUserSortColumns="False" CanUserAddRows="False"
+        <StackPanel x:Name="stpSearchCriteria" Width="220" >
+            <Label>Player Type:</Label>
+            <ComboBox Name="ddlPlayerType" Height="25" Margin="10"/>
+            
+            <Label>Availability:</Label>
+            <ComboBox Name="ddlAvailability" Height="25" Margin="10"/>
+
+            <Label>Based In:</Label>
+            <ComboBox Name="ddlPlayerBased" Height="25" Margin="10"/>
+
+            <Label>Nationality</Label>
+            <ComboBox Name="ddlNationality" Height="25" Margin="10"/>
+            
+            <Button Click="btnSearch_Click" Width="120" Margin="40">Search</Button>
+        </StackPanel>
+
+        <DataGrid x:Name="dgvPlayers" Margin="45,10,45,10" Grid.ColumnSpan="3" Height="700" CanUserSortColumns="False" CanUserAddRows="False"
                   ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>

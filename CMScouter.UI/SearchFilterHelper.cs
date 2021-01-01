@@ -1,4 +1,5 @@
-﻿using CMScouterFunctions;
+﻿using CMScouter.DataClasses;
+using CMScouterFunctions;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,28 @@ namespace CMScouter.UI
         public void CreatePositionFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
             filters.Add(x => (request.PlayerType == null || _playerRater.PlaysPosition(request.PlayerType.Value, x._player)));
+        }
+
+        public void CreateAvailabilityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
+        {
+            if (request.AvailabilityCriteria == null)
+            {
+                return;
+            }
+
+            // if not asking for anything, then don't filter
+            if (!request.AvailabilityCriteria.TransferListed && !request.AvailabilityCriteria.LoanListed && !request.AvailabilityCriteria.UnwantedSquadStatus && request.AvailabilityCriteria.ContractMonths == null)
+            {
+                return;
+            }
+
+            //  (TransferStatus)x._contract.TransferStatus == TransferStatus.ListedByRequest || (TransferStatus)x._contract.TransferStatus == TransferStatus.TransferListed)
+
+            // AND logic not implemented
+            filters.Add(x => (request.AvailabilityCriteria.TransferListed && x.IsTransferListed())
+                || (request.AvailabilityCriteria.LoanListed && x.IsLoanListed())
+                || (request.AvailabilityCriteria.ContractMonths.HasValue && x.HasContractMonthsRemaining(_savegame.GameDate) <= request.AvailabilityCriteria.ContractMonths.Value)
+                );
         }
 
         private byte GetAge(DateTime date)

@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.UI.DataClasses;
 
 namespace CMScouter.UI
 {
@@ -19,6 +20,8 @@ namespace CMScouter.UI
         public int? MaxValue { get; set; }
 
         public short? ContractStatus { get; set; }
+
+        public AvailabilityCriteria AvailabilityCriteria { get; set; }
 
         public PlayerType? PlayerType { get; set; }
 
