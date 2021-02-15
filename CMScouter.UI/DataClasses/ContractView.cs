@@ -4,6 +4,8 @@ namespace CMScouter.UI
 {
     public class ContractView
     {
+        public byte SquadStatusValue { get; set; }
+
         public string SquadStatus { get; set; }
 
         public string TransferStatus { get; set; }

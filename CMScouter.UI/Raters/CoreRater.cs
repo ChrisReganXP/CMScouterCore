@@ -353,6 +353,8 @@ namespace CMScouter.UI
             decimal mentalRating = impactRating + reliabilityRating;
             decimal mentalWeighting = weights[(int)AG.Impact] + weights[(int)AG.Reliability];
 
+            mentalRating = Math.Min(mentalRating * 1.2m, mentalWeighting);
+
             decimal technicalRating = playmakingRating + wideplayRating + scoringRating + defendingRating + goalkeepingRating;
             decimal technicalWeighting = weights[(int)AG.Playmaking] + weights[(int)AG.Wideplay] + weights[(int)AG.Scoring] + weights[(int)AG.Defending] + weights[(int)AG.Goalkeeping];
 
@@ -369,12 +371,25 @@ namespace CMScouter.UI
                 case Roles.TM:
                     technicalRating = technicalRating * 0.95m;
                     break;
+
+                default:
+                    technicalRating = Math.Min(technicalRating * 1.2m, technicalWeighting);
+                    break;
             }
 
             decimal physicalRating = speedRating + strengthRating;
             decimal physicalWeighting = weights[(int)AG.Speed] + weights[(int)AG.Strength];
 
+            physicalRating = Math.Min(physicalRating * 1.15m, physicalWeighting);
+
             decimal rating = mentalRating + technicalRating + physicalRating;
+
+            switch (role)
+            {
+                case Roles.PO:
+                    rating = rating * 0.95m;
+                    break;
+            }
 
             debug = new RatingRoleDebug()
             {
@@ -425,7 +440,7 @@ namespace CMScouter.UI
 
             if (offFieldScore < 50)
             {
-                adjuster = 1 - (0.25M - (offFieldScore/2)/100);
+                adjuster = 1 - (0.2M - ((decimal)(offFieldScore/2))/100);
                 debug.OffField = $"*{adjuster}";
                 return (byte)Math.Max(1, unadjustedScore * adjuster);
             }

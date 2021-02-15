@@ -12,6 +12,8 @@ namespace CMScouter.WPF.ControlHelpers
     {
         private const string UnwantedKey = "UWA";
 
+        private const string SquadPlayerKey = "SQA";
+
         private const string LoanListedKey = "LFL";
 
         private const string SixMonthExpiry = "6MO";
@@ -23,6 +25,7 @@ namespace CMScouter.WPF.ControlHelpers
             var availabilityTypes = new List<KeyValuePair<string, string>>();
             availabilityTypes.Add(new KeyValuePair<string, string>("ALL", "<All>"));
             availabilityTypes.Add(new KeyValuePair<string, string>(UnwantedKey, "Transfer Listed / Unwanted"));
+            availabilityTypes.Add(new KeyValuePair<string, string>(SquadPlayerKey, "Squad Player or Lesser"));
             availabilityTypes.Add(new KeyValuePair<string, string>(SixMonthExpiry, "Expires 6 Months"));
             availabilityTypes.Add(new KeyValuePair<string, string>(TwelveMonthExpiry, "Expires 12 Months"));
             availabilityTypes.Add(new KeyValuePair<string, string>(LoanListedKey, "Listed For Loan"));
@@ -46,6 +49,10 @@ namespace CMScouter.WPF.ControlHelpers
                     /*
                     squadStatus = SquadStatus.Backup;
                     transferStatus = TransferStatus.TransferListed;*/
+                    break;
+
+                case SquadPlayerKey:
+                    criteria.SquadPlayerStatus = true;
                     break;
 
                 case LoanListedKey:

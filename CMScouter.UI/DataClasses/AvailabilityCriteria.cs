@@ -14,6 +14,8 @@ namespace CMScouter.UI.DataClasses
 
         public bool UnwantedSquadStatus { get; set; }
 
+        public bool SquadPlayerStatus { get; set; }
+
         public bool LoanListed { get; set; }
 
         public short? ContractMonths { get; set; }

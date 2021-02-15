@@ -115,9 +115,19 @@ namespace CMScouter.UI
             filters.Add(filter);
         }
 
+        public void CreateReputationFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
+        {
+            filters.Add(x => request.Reputation <= 0 || x._player.Reputation <= request.Reputation);
+        }
+
         public void CreateAgeFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
             filters.Add(x => (request.MinAge == 0 || GetAge(x._staff.DOB) >= request.MinAge) && (request.MaxAge == 0 || GetAge(x._staff.DOB) <= request.MaxAge));
+        }
+
+        public void CreateWageFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
+        {
+            filters.Add(x => request.MaxWage == null || x._contract?.WagePerWeek <= request.MaxWage);
         }
 
         public void CreateEUNationalityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
@@ -154,7 +164,7 @@ namespace CMScouter.UI
             }
 
             // if not asking for anything, then don't filter
-            if (!request.AvailabilityCriteria.TransferListed && !request.AvailabilityCriteria.LoanListed && !request.AvailabilityCriteria.UnwantedSquadStatus && request.AvailabilityCriteria.ContractMonths == null)
+            if (!request.AvailabilityCriteria.TransferListed && !request.AvailabilityCriteria.LoanListed && !request.AvailabilityCriteria.UnwantedSquadStatus && !request.AvailabilityCriteria.SquadPlayerStatus && request.AvailabilityCriteria.ContractMonths == null)
             {
                 return;
             }
@@ -164,6 +174,7 @@ namespace CMScouter.UI
             // AND logic not implemented
             filters.Add(x => (request.AvailabilityCriteria.TransferListed && x.IsTransferListed())
                 || (request.AvailabilityCriteria.UnwantedSquadStatus && x.IsUnwanted())
+                || (request.AvailabilityCriteria.SquadPlayerStatus && x.IsSquadPlayerOrLesser())
                 || (request.AvailabilityCriteria.LoanListed && x.IsLoanListed())
                 || (request.AvailabilityCriteria.ContractMonths.HasValue && x.HasContractMonthsRemaining(_savegame.GameDate) <= request.AvailabilityCriteria.ContractMonths.Value)
                 );

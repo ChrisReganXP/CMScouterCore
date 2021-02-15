@@ -37,11 +37,17 @@ namespace CMScouter.WPF
         {
             InitializeComponent();
             PopulateInitialItems();
-            CustomiseInitialItems();
         }
 
         private void PopulateInitialItems()
         {
+            dgvPlayers.Visibility = Visibility.Hidden;
+            dgvPlayers.AutoGenerateColumns = false;
+
+            stpSearchCriteria.Visibility = Visibility.Collapsed;
+
+            PopulateStaticSearchControls();
+
             /*
             ddlSearchTypes.Items.Add(PlayerSearch);
             ddlSearchTypes.Items.Add(ClubSearch);
@@ -73,6 +79,18 @@ namespace CMScouter.WPF
             ddlAvailability.DisplayMemberPath = "Value";
             ddlAvailability.SelectedValuePath = "Key";
             ddlAvailability.SelectedIndex = 0;
+        }
+
+        private void PopulateReputationLevels()
+        {
+            var reputationTypes = ReputationLevelControlHelper.GetReputationLevelKeyValuePairs().OrderByDescending(x => x.Key).ToList();
+
+            ddlReputation.ItemsSource = reputationTypes;
+            ddlReputation.DisplayMemberPath = "Value";
+            ddlReputation.SelectedValuePath = "Key";
+            var all = new KeyValuePair<int, string>(-1, "<All>");
+            reputationTypes.Insert(0, all);
+            ddlReputation.SelectedIndex = 0;
         }
 
         private void PopulateNationalities()
@@ -114,18 +132,6 @@ namespace CMScouter.WPF
             ddlPlayerBased.ItemsSource = playsInLocationList;
             ddlPlayerBased.SelectedIndex = 0;
         }
-
-        private void CustomiseInitialItems()
-        {
-            /*
-            pnlSearch.Hide();
-            */
-
-            dgvPlayers.Visibility = Visibility.Hidden;
-            dgvPlayers.AutoGenerateColumns = false;
-
-            stpSearchCriteria.Visibility = Visibility.Collapsed;
-        }
         #region Menu Events
 
         private void Exit_Click(object sender, EventArgs e)
@@ -150,12 +156,10 @@ namespace CMScouter.WPF
 
         private void LoadSaveGameFile(string fileName)
         {
-            /*
-            if (result == DialogResult.OK)
-            {*/
-                CustomiseInitialItems();
-                cmsUI = new CMScouterUI(fileName);
-            PopulateSearchControls();
+            cmsUI = new CMScouterUI(fileName);
+
+            CustomiseSearchOptions();
+
             /*DisplayInitialSearchOptions();*/
             /*}*/
 
@@ -174,7 +178,7 @@ namespace CMScouter.WPF
             ScoutingRequest request = new ScoutingRequest()
             {
                 // Initial Test only. Delete me
-                ClubName = "Liverpool",
+                ClubName = "Oldham",
 
                 /*ClubName = cbxClubName.Text,*/
             };
@@ -484,19 +488,23 @@ namespace CMScouter.WPF
             }
         }
 
-        private void PopulateSearchControls()
+        private void PopulateStaticSearchControls()
         {
-            stpSearchCriteria.Visibility = Visibility.Visible;
-
             PopulatePlayerTypes();
             PopulateAvailabilityTypes();
-            PopulateNationalities();
-            PopulatePlayerBased();
+            PopulateReputationLevels();
 
             /*
             var clubNames = cmsUI.GetClubs().Select(x => x.Name).ToList();
             clubNames.Sort();
             cbxClubName.Items.AddRange(clubNames.ToArray());*/
+        }
+
+        private void CustomiseSearchOptions()
+        {
+            PopulateNationalities();
+            PopulatePlayerBased();
+            stpSearchCriteria.Visibility = Visibility.Visible;
         }
 
         #region Execute Search
@@ -517,7 +525,13 @@ namespace CMScouter.WPF
             byte maxAge;
             if (!byte.TryParse(tbxMaxAge.Text, out maxAge))
             {
-                maxAge = 255;
+                maxAge = byte.MaxValue;
+            }
+
+            long maxWage;
+            if (string.IsNullOrEmpty(tbxMaxWage.Text) || !long.TryParse(tbxMaxWage.Text, out maxWage))
+            {
+                maxWage = long.MaxValue;
             }
 
             PlayerType castType;
@@ -555,17 +569,21 @@ namespace CMScouter.WPF
             AvailabilityCriteria availability;
             AvailabilityTypeControlHelper.GetSearchCriteria(ddlAvailability.SelectedValue.ToString(), out availability);
 
+            int reputation = ReputationLevelControlHelper.GetMaxLevelCriteria((int)ddlReputation.SelectedValue);
+
             ScoutingRequest request = new ScoutingRequest()
             {
                 PlayerType = type,
                 MaxValue = maxValue,
                 EUNationalityOnly = cbxEUNational.IsChecked == true,
                 MaxAge = maxAge,
-                NumberOfResults = 200,
+                MaxWage = maxWage,
+                NumberOfResults = 50,
                 PlaysInRegion = playsInRegion,
                 PlaysInDivision = playsInDivision,
                 Nationality = nationId,
                 AvailabilityCriteria = availability,
+                Reputation = reputation,
             };
 
             var playerList = cmsUI.GetScoutResults(request);

@@ -32,8 +32,10 @@ namespace CMScouter.WPF.Converters
                 }
             }
             dest.ContractMonths = months;
+            dest.Reputation = source.ReputationDescription;
 
             dest.SquadStatus = source.Contract?.SquadStatus;
+            dest.SquadStatusValue = source.Contract?.SquadStatusValue ?? (byte)255;
             dest.TransferStatus = source.Contract?.TransferStatus;
             dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToName(): string.Empty;
 

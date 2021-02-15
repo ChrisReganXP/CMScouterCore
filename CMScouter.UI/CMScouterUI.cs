@@ -83,7 +83,9 @@ namespace CMScouter.UI
             filterHelper.CreateValueFilter(request, filters);
             filterHelper.CreateContractStatusFilter(request, filters);
             filterHelper.CreateAgeFilter(request, filters);
+            filterHelper.CreateWageFilter(request, filters);
             filterHelper.CreateAvailabilityFilter(request, filters);
+            filterHelper.CreateReputationFilter(request, filters);
 
             var players = _savegame.Players;
             foreach (var filter in filters)
@@ -130,7 +132,7 @@ namespace CMScouter.UI
                 return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().Rating);
             }
 
-            return list.OrderByDescending(x => x.ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderBy(p => p.Rating).FirstOrDefault().Rating);
+            return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).Rating);
         }
 
         private void ConstructLookups()

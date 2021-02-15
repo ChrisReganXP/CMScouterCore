@@ -59,7 +59,7 @@ namespace CMScouter.UI
                 CurrentAbility = item._player.CurrentAbility,
                 PotentialAbility = item._player.PotentialAbility,
 
-                Reputation = item._player.Reputation,
+                ReputationDescription = ReputationConverter.Convert(item._player.Reputation),
                 DomesticReputation = item._player.DomesticReputation,
                 WorldReputation = item._player.WorldReputation,
 
@@ -69,10 +69,11 @@ namespace CMScouter.UI
                     ReleaseClause = item._contract.MinimumFeeReleaseClause ? ReleaseClauseType.MinimumFee :
                                         item._contract.ManagerReleaseClause ? ReleaseClauseType.ManagerJob :
                                         item._contract.NonPromotionReleaseClause ? ReleaseClauseType.NonPromotion :
-                                        item._contract.RelegationReleaseClause ? ReleaseClauseType.Relegation : 
+                                        item._contract.RelegationReleaseClause ? ReleaseClauseType.Relegation :
                                         item._contract.NonPlayingReleaseClause ? ReleaseClauseType.NotPlaying :
                                         ReleaseClauseType.None,
-                    SquadStatus = SquadStatusConverter.ConvertSquadStatus(item._contract.SquadStatus),
+                    SquadStatus = SquadStatusConverter.ConvertSquadStatus(item._contract.SquadStatus, GetAge(item._staff.DOB)),
+                    SquadStatusValue = item._contract.SquadStatus,
                     TransferStatus = ((TransferStatus)item._contract.TransferStatus).ToName(),
                 },
 

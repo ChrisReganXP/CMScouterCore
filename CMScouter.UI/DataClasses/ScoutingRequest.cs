@@ -11,6 +11,8 @@ namespace CMScouter.UI
 
         public byte MaxAge { get; set; }
 
+        public long? MaxWage { get; set; }
+
         public int? Nationality { get; set; }
 
         public bool EUNationalityOnly { get; set; }
@@ -32,5 +34,7 @@ namespace CMScouter.UI
         public int? PlaysInDivision { get; set; }
 
         public short NumberOfResults { get; set; }
+
+        public int Reputation { get; set; }
     }
 }

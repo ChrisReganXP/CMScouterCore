@@ -41,7 +41,7 @@ namespace CMScouterFunctions.DataClasses
 
         public bool IsTransferListed()
         {
-            if (_contract != null && ((TransferStatus)_contract.TransferStatus == TransferStatus.ListedByRequest || (TransferStatus)_contract.TransferStatus == TransferStatus.TransferListed))
+            if (_contract == null || ((TransferStatus)_contract.TransferStatus == TransferStatus.ListedByRequest || (TransferStatus)_contract.TransferStatus == TransferStatus.TransferListed))
             {
                 return true;
             }
@@ -51,7 +51,7 @@ namespace CMScouterFunctions.DataClasses
 
         public bool IsLoanListed()
         {
-            if (_contract != null && ((TransferStatus)_contract.TransferStatus == TransferStatus.ListedForLoan))
+            if (_contract != null && (TransferStatus)_contract.TransferStatus == TransferStatus.ListedForLoan)
             {
                 return true;
             }
@@ -61,7 +61,17 @@ namespace CMScouterFunctions.DataClasses
 
         public bool IsUnwanted()
         {
-            if (_contract != null && (int)_contract.SquadStatus > (int)SquadStatus.SquadRotation)
+            if (_contract == null || ((int)_contract.SquadStatus > (int)SquadStatus.YoungPlayer))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsSquadPlayerOrLesser()
+        {
+            if (_contract == null || ((int)_contract.SquadStatus >= (int)SquadStatus.SquadRotation))
             {
                 return true;
             }

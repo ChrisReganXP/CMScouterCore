@@ -1,4 +1,5 @@
-﻿using CMScouter.UI.Raters;
+﻿using CMScouter.DataClasses;
+using CMScouter.UI.Raters;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,9 @@ namespace CMScouter.UI
 
         public DateTime? ContractExpiryDate { get; set; }
 
-        public short Reputation { get; set; }
+        public string ReputationDescription { get; set; }
+
+        public short ReputationValue { get; set; }
 
         public short DomesticReputation { get; set; }
 
@@ -97,6 +100,12 @@ namespace CMScouter.UI
         public string BestRole
         {
             get { return ScoutRatings.BestPosition.BestRole().Role.ToString(); }
+        }
+
+        public RoleRating BestRoleRatingForPlayerType(PlayerType type)
+        {
+            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.Rating)).First();
+            return bestPosition.Ratings.OrderByDescending(x => x.Rating).First();
         }
 
         /*

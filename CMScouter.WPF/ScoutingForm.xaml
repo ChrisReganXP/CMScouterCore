@@ -22,11 +22,17 @@
             <Label>Availability:</Label>
             <ComboBox Name="ddlAvailability" Height="25" Margin="10"/>
 
+            <Label>Maximum Reputation:</Label>
+            <ComboBox Name="ddlReputation" Height="25" Margin="10"/>
+
             <Label>Max Value:</Label>
             <TextBox Name="tbxMaxValue" Height="20" Margin="10"/>
 
             <Label>Max Age:</Label>
             <TextBox Name="tbxMaxAge" Height="20" Margin="10" />
+
+            <Label>Max Wage:</Label>
+            <TextBox Name="tbxMaxWage" Height="20" Margin="10" />
 
             <Label>Based In:</Label>
             <ComboBox Name="ddlPlayerBased" Height="25" Margin="10"/>
@@ -67,6 +73,7 @@
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="70" />
                 <DataGridTextColumn Header="Con Months" Binding="{Binding ContractMonths}" />
                 <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="70" />
+                <DataGridTextColumn Header="Reputation" Binding="{Binding Reputation}" Width="80" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>
