@@ -4,6 +4,7 @@ using CMScouter.UI.Raters;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CMScouter.UI
@@ -75,17 +76,24 @@ namespace CMScouter.UI
             List<Func<Player, bool>> filters = new List<Func<Player, bool>>();
             SearchFilterHelper filterHelper = new SearchFilterHelper(_savegame, _rater);
 
-            filterHelper.CreateClubFilter(request, filters);
-            filterHelper.CreatePositionFilter(request, filters);
-            filterHelper.CreatePlayerBasedFilter(request, filters);
-            filterHelper.CreateNationalityFilter(request, filters);
-            filterHelper.CreateEUNationalityFilter(request, filters);
-            filterHelper.CreateValueFilter(request, filters);
-            filterHelper.CreateContractStatusFilter(request, filters);
-            filterHelper.CreateAgeFilter(request, filters);
-            filterHelper.CreateWageFilter(request, filters);
-            filterHelper.CreateAvailabilityFilter(request, filters);
-            filterHelper.CreateReputationFilter(request, filters);
+            if (request.PlayerId.HasValue)
+            {
+                filters.Add(x => x._player.PlayerId == request.PlayerId.Value);
+            }
+            else
+            {
+                filterHelper.CreateClubFilter(request, filters);
+                filterHelper.CreatePositionFilter(request, filters);
+                filterHelper.CreatePlayerBasedFilter(request, filters);
+                filterHelper.CreateNationalityFilter(request, filters);
+                filterHelper.CreateEUNationalityFilter(request, filters);
+                filterHelper.CreateValueFilter(request, filters);
+                filterHelper.CreateContractStatusFilter(request, filters);
+                filterHelper.CreateAgeFilter(request, filters);
+                filterHelper.CreateWageFilter(request, filters);
+                filterHelper.CreateAvailabilityFilter(request, filters);
+                filterHelper.CreateReputationFilter(request, filters);
+            }
 
             var players = _savegame.Players;
             foreach (var filter in filters)
@@ -129,10 +137,40 @@ namespace CMScouter.UI
         {
             if (type == null)
             {
-                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().Rating);
+                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().PurchaseRating);
             }
 
-            return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).Rating);
+            Dictionary<byte, int> scoreDistribution = new Dictionary<byte, int>();
+            foreach (var player in list)
+            {
+                byte score = player.BestRoleRatingForPlayerType(type.Value).AbilityRating;
+                if (scoreDistribution.ContainsKey(score))
+                {
+                    scoreDistribution[score]++;
+                }
+                else
+                {
+                    scoreDistribution.Add(score, 1);
+                }
+            }
+
+            var keys = scoreDistribution.Keys.ToList();
+            keys.Sort();
+            keys.ForEach(x =>
+            {
+                int percent = (int)Math.Round(scoreDistribution[x] / (decimal)list.Count() * 100);
+                Debug.WriteLine($"{x} => {scoreDistribution[x]} {percent}");
+            });
+
+            byte cumulativePercent = 0;
+            for (byte i = 1; i < 100; i++)
+            {
+                cumulativePercent += scoreDistribution.ContainsKey(i) ? (byte)Math.Round(scoreDistribution[i] / (decimal)list.Count() * 100) : 0;
+                Debug.WriteLine(cumulativePercent);
+            }
+
+            return list.OrderByDescending(x => x.ScoutRatings.GroupedRatings.playmakingRating);
+            // return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).AbilityRating);
         }
 
         private void ConstructLookups()

@@ -127,7 +127,7 @@ namespace CMScouter.UI
 
         public void CreateWageFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => request.MaxWage == null || x._contract?.WagePerWeek <= request.MaxWage);
+            filters.Add(x => request.MaxWage == null || x._contract == null || x._contract?.WagePerWeek <= request.MaxWage);
         }
 
         public void CreateEUNationalityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)

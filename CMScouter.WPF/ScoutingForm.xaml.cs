@@ -226,16 +226,16 @@ namespace CMScouter.WPF
             dgvPlayers.Columns.Add(CreateGridViewColumn(70, "Nationality", "Nation"));
             dgvPlayers.Columns.Add(CreateGridViewColumn(70, "ContractExpiryDate", "Contract"));*/
 
-            List<GridViewPlayer> playerViewList = CreatePlayerViews(playerList).ToList();
+            List<GridViewPlayer> playerViewList = CreatePlayerViews(playerList, request.PlayerType).ToList();
             dgvPlayers.ItemsSource = playerViewList;
             dgvPlayers.Visibility = Visibility.Visible;
         }
 
-        private IEnumerable<GridViewPlayer> CreatePlayerViews(List<PlayerView> originalPlayers)
+        private IEnumerable<GridViewPlayer> CreatePlayerViews(List<PlayerView> originalPlayers, PlayerType? playerType)
         {
             foreach (var p in originalPlayers)
             {
-                yield return PlayerViewConverter.ConvertViewToGrid(p);
+                yield return PlayerViewConverter.ConvertViewToGrid(p, playerType);
             }
         }
 
@@ -335,49 +335,49 @@ namespace CMScouter.WPF
             switch (scoutedPosition)
             {
                 case PlayerType.GoalKeeper:
-                    return ratings.Goalkeeper.BestRole().Rating.ToString();
+                    return ratings.Goalkeeper.BestRole().AbilityRating.ToString();
 
                 case PlayerType.RightBack:
-                    return ratings.RightBack.BestRole().Rating.ToString();
+                    return ratings.RightBack.BestRole().AbilityRating.ToString();
 
                 case PlayerType.CentreHalf:
-                    return ratings.CentreHalf.BestRole().Rating.ToString();
+                    return ratings.CentreHalf.BestRole().AbilityRating.ToString();
 
                 case PlayerType.LeftBack:
-                    return ratings.LeftBack.BestRole().Rating.ToString();
+                    return ratings.LeftBack.BestRole().AbilityRating.ToString();
 
                 case PlayerType.RightWingBack:
-                    return ratings.RightWingBack.BestRole().Rating.ToString();
+                    return ratings.RightWingBack.BestRole().AbilityRating.ToString();
 
                 case PlayerType.DefensiveMidfielder:
-                    return ratings.DefensiveMidfielder.BestRole().Rating.ToString();
+                    return ratings.DefensiveMidfielder.BestRole().AbilityRating.ToString();
 
                 case PlayerType.LeftWingBack:
-                    return ratings.LeftWingBack.BestRole().Rating.ToString();
+                    return ratings.LeftWingBack.BestRole().AbilityRating.ToString();
 
                 case PlayerType.RightMidfielder:
-                    return ratings.RightMidfielder.BestRole().Rating.ToString();
+                    return ratings.RightMidfielder.BestRole().AbilityRating.ToString();
 
                 case PlayerType.CentralMidfielder:
-                    return ratings.CentreMidfielder.BestRole().Rating.ToString();
+                    return ratings.CentreMidfielder.BestRole().AbilityRating.ToString();
 
                 case PlayerType.LeftMidfielder:
-                    return ratings.LeftMidfielder.BestRole().Rating.ToString();
+                    return ratings.LeftMidfielder.BestRole().AbilityRating.ToString();
 
                 case PlayerType.RightWinger:
-                    return ratings.RightWinger.BestRole().Rating.ToString();
+                    return ratings.RightWinger.BestRole().AbilityRating.ToString();
 
                 case PlayerType.AttackingMidfielder:
-                    return ratings.AttackingMidfielder.BestRole().Rating.ToString();
+                    return ratings.AttackingMidfielder.BestRole().AbilityRating.ToString();
 
                 case PlayerType.LeftWinger:
-                    return ratings.LeftWinger.BestRole().Rating.ToString();
+                    return ratings.LeftWinger.BestRole().AbilityRating.ToString();
 
                 case PlayerType.CentreForward:
-                    return ratings.CentreForward.BestRole().Rating.ToString();
+                    return ratings.CentreForward.BestRole().AbilityRating.ToString();
 
                 default:
-                    return ratings.BestPosition.BestRole().Rating.ToString();
+                    return ratings.BestPosition.BestRole().AbilityRating.ToString();
             }
         }
 
@@ -516,6 +516,17 @@ namespace CMScouter.WPF
 
         private void SearchForPlayer()
         {
+            int playerIdNonNull;
+            int? playerId;
+            if (!int.TryParse(tbxPlayerId.Text, out playerIdNonNull))
+            {
+                playerId = null;
+            }
+            else
+            {
+                playerId = playerIdNonNull;
+            }
+
             int maxValue;
             if (!int.TryParse(tbxMaxValue.Text, out maxValue))
             {
@@ -573,6 +584,7 @@ namespace CMScouter.WPF
 
             ScoutingRequest request = new ScoutingRequest()
             {
+                PlayerId = playerId,
                 PlayerType = type,
                 MaxValue = maxValue,
                 EUNationalityOnly = cbxEUNational.IsChecked == true,

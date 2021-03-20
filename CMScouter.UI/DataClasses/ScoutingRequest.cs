@@ -5,6 +5,8 @@ namespace CMScouter.UI
 {
     public class ScoutingRequest
     {
+        public int? PlayerId { get; set; }
+
         public string ClubName { get; set; }
 
         public byte MinAge { get; set; }

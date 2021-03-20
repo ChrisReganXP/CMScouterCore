@@ -94,7 +94,7 @@ namespace CMScouter.UI
 
         public byte BestRating
         {
-            get { return ScoutRatings.BestPosition.BestRole().Rating; }
+            get { return ScoutRatings.BestPosition.BestRole().AbilityRating; }
         }
 
         public string BestRole
@@ -104,8 +104,8 @@ namespace CMScouter.UI
 
         public RoleRating BestRoleRatingForPlayerType(PlayerType type)
         {
-            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.Rating)).First();
-            return bestPosition.Ratings.OrderByDescending(x => x.Rating).First();
+            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.AbilityRating)).First();
+            return bestPosition.Ratings.OrderByDescending(x => x.AbilityRating).First();
         }
 
         /*
@@ -277,7 +277,7 @@ namespace CMScouter.UI
         {
             var bestRole = ScoutRatings.BestPosition.BestRole();
 
-            return $"{FirstName} {SecondName} - {bestRole.Role}:{bestRole.Rating} - ({ClubName})";
+            return $"{FirstName} {SecondName} - {bestRole.Role}:{bestRole.PurchaseRating} - ({ClubName})";
         }
     }
 }

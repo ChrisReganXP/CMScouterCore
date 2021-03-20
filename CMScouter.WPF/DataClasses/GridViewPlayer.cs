@@ -35,6 +35,8 @@ namespace CMScouter.WPF.DataClasses
 
         public byte BestRating { get; set; }
 
+        public byte PurchaseRating { get; set; }
+
         public string BestPosition { get; set; }
 
         public string BestRole { get; set; }
@@ -50,5 +52,23 @@ namespace CMScouter.WPF.DataClasses
         public string TransferStatus { get; set; }
 
         public string ReleaseFee { get; set; }
+
+        public byte GoalkeepingRating { get; set; }
+
+        public byte DefendingRating { get; set; }
+
+        public byte PlaymakingRating { get; set; }
+
+        public byte WidePlayRating { get; set; }
+
+        public byte ScoringRating { get; set; }
+
+        public byte ImpactRating { get; set; }
+
+        public byte ReliabilityRating { get; set; }
+
+        public byte StrengthRating { get; set; }
+
+        public byte SpeedRating { get; set; }
     }
 }

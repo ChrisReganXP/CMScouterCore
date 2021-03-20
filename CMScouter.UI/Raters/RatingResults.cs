@@ -10,7 +10,9 @@ namespace CMScouter.UI.Raters
     {
         public Roles Role { get; set; }
 
-        public byte Rating { get; set; }
+        public byte AbilityRating { get; set; }
+
+        public byte PurchaseRating { get; set; }
 
         public byte PhysicalRating { get; set; }
 
@@ -38,11 +40,11 @@ namespace CMScouter.UI.Raters
             PositionalAdjustment = positionAdjust;
         }
 
-        public byte Rating { get => Ratings.OrderByDescending(r => r.Rating).First().Rating; }
+        public byte Rating { get => Ratings.OrderByDescending(r => r.PurchaseRating).First().PurchaseRating; }
 
         public RoleRating BestRole()
         {
-            return Ratings.OrderByDescending(x => x.Rating).First();
+            return Ratings.OrderByDescending(x => x.AbilityRating).First();
         }
     }
 
@@ -50,13 +52,16 @@ namespace CMScouter.UI.Raters
     {
         private List<PositionRating> _positionRatings = new List<PositionRating>();
 
-        public ScoutingInformation(List<PositionRating> scouting, decimal offField)
+        public ScoutingInformation(List<PositionRating> scouting, decimal offField, GroupedRatings groupedRatings)
         {
             _positionRatings = scouting;
             PersonalityRating = offField;
+            GroupedRatings = groupedRatings;
         }
 
         public List<PositionRating> PositionRatings { get => _positionRatings; }
+
+        public GroupedRatings GroupedRatings { get; }
 
         public decimal PersonalityRating { get; }
 
@@ -94,6 +99,7 @@ namespace CMScouter.UI.Raters
 
         public PositionRating CentreForward { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.CentreForward); }
     }
+
 
     public class RatingRoleDebug
     {
