@@ -64,20 +64,12 @@
                 </DataGridTemplateColumn>-->
                 <DataGridTextColumn Header="ID" Binding="{Binding PlayerId}" />
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
-                <DataGridTextColumn Header="Overall" Binding="{Binding Recommendation}" Width="60" />
+                <DataGridTextColumn Header="Overall" Binding="{Binding tbc}" Width="30" />
                 <DataGridTextColumn Header="Ability Rating" Binding="{Binding BestRating}" />
                 <DataGridTextColumn Header="Purchase Rating" Binding="{Binding PurchaseRating}" />
                 <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="125" />
-                <DataGridTextColumn Header="GK R" Binding="{Binding GoalkeepingRating}" Width="60" />
-                <DataGridTextColumn Header="DF R" Binding="{Binding DefendingRating}" Width="60" />
-                <DataGridTextColumn Header="PM R" Binding="{Binding PlaymakingRating}" Width="60" />
-                <DataGridTextColumn Header="WP R" Binding="{Binding WidePlayRating}" Width="60" />
-                <DataGridTextColumn Header="SC R" Binding="{Binding ScoringRating}" Width="60" />
-                <DataGridTextColumn Header="ST R" Binding="{Binding StrengthRating}" Width="60" />
-                <DataGridTextColumn Header="SP R" Binding="{Binding SpeedRating}" Width="60" />
-                <DataGridTextColumn Header="RL R" Binding="{Binding ReliabilityRating}" Width="60" />
-                <DataGridTextColumn Header="IM R" Binding="{Binding ImpactRating}" Width="60" />
                 <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
+                <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />
                 <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
                 <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="90" />
                 <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="90" />
@@ -89,6 +81,15 @@
                 <DataGridTextColumn Header="Reputation" Binding="{Binding Reputation}" Width="80" />
                 <DataGridTextColumn Header="Ability" Binding="{Binding CurrentAbility}" />
                 <DataGridTextColumn Header="Potential" Binding="{Binding PotentialAbility}" />
+                <DataGridTextColumn Header="GK R" Binding="{Binding GoalkeepingRating}" Width="60" />
+                <DataGridTextColumn Header="DF R" Binding="{Binding DefendingRating}" Width="60" />
+                <DataGridTextColumn Header="PM R" Binding="{Binding PlaymakingRating}" Width="60" />
+                <DataGridTextColumn Header="WP R" Binding="{Binding WidePlayRating}" Width="60" />
+                <DataGridTextColumn Header="SC R" Binding="{Binding ScoringRating}" Width="60" />
+                <DataGridTextColumn Header="ST R" Binding="{Binding StrengthRating}" Width="60" />
+                <DataGridTextColumn Header="SP R" Binding="{Binding SpeedRating}" Width="60" />
+                <DataGridTextColumn Header="RL R" Binding="{Binding ReliabilityRating}" Width="60" />
+                <DataGridTextColumn Header="IM R" Binding="{Binding ImpactRating}" Width="60" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

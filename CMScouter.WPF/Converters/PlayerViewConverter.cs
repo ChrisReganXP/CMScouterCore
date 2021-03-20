@@ -25,6 +25,8 @@ namespace CMScouter.WPF.Converters
             dest.CurrentAbility = source.CurrentAbility;
             dest.PotentialAbility = source.PotentialAbility;
 
+            dest.PlayingPositionDescription = source.PlayingPositionDescription;
+
             byte months = 0;
             if (source.ContractExpiryDate != null)
             {

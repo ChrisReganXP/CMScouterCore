@@ -70,5 +70,7 @@ namespace CMScouter.WPF.DataClasses
         public byte StrengthRating { get; set; }
 
         public byte SpeedRating { get; set; }
+
+        public string PlayingPositionDescription { get; set; }
     }
 }

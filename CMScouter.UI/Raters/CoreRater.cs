@@ -50,10 +50,10 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Playmaking] = 0;
             groupWeight[(int)AG.Wideplay] = 10;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 35;
+            groupWeight[(int)AG.Defending] = 45;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 30;
+            groupWeight[(int)AG.Speed] = 20;
             groupWeight[(int)AG.Strength] = 5;
 
             groupedWeightings[(int)Roles.DFB] = groupWeight;
@@ -66,14 +66,14 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Impact] = 10;
             groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 5;
-            groupWeight[(int)AG.Wideplay] = 15;
+            groupWeight[(int)AG.Playmaking] = 10;
+            groupWeight[(int)AG.Wideplay] = 20;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 25;
+            groupWeight[(int)AG.Defending] = 10;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 30;
-            groupWeight[(int)AG.Strength] = 5;
+            groupWeight[(int)AG.Speed] = 40;
+            groupWeight[(int)AG.Strength] = 0;
 
             groupedWeightings[(int)Roles.AFB] = groupWeight;
         }
@@ -120,17 +120,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
+            groupWeight[(int)AG.Impact] = 20;
+            groupWeight[(int)AG.Reliability] = 20;
 
-            groupWeight[(int)AG.Playmaking] = 15;
+            groupWeight[(int)AG.Playmaking] = 5;
             groupWeight[(int)AG.Wideplay] = 0;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 30;
+            groupWeight[(int)AG.Defending] = 10;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 25;
+            groupWeight[(int)AG.Speed] = 15;
+            groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.HM] = groupWeight;
         }
@@ -139,17 +139,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
+            groupWeight[(int)AG.Impact] = 15;
+            groupWeight[(int)AG.Reliability] = 15;
 
-            groupWeight[(int)AG.Playmaking] = 15;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 30;
+            groupWeight[(int)AG.Playmaking] = 20;
+            groupWeight[(int)AG.Wideplay] = 5;
+            groupWeight[(int)AG.Scoring] = 5;
+            groupWeight[(int)AG.Defending] = 10;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 25;
+            groupWeight[(int)AG.Strength] = 20;
 
             groupedWeightings[(int)Roles.CM] = groupWeight;
         }
@@ -158,17 +158,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Impact] = 5;
             groupWeight[(int)AG.Reliability] = 10;
 
             groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 15;
-            groupWeight[(int)AG.Scoring] = 5;
-            groupWeight[(int)AG.Defending] = 10;
+            groupWeight[(int)AG.Wideplay] = 25;
+            groupWeight[(int)AG.Scoring] = 10;
+            groupWeight[(int)AG.Defending] = 5;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 30;
-            groupWeight[(int)AG.Strength] = 10;
+            groupWeight[(int)AG.Strength] = 5;
 
             groupedWeightings[(int)Roles.WM] = groupWeight;
         }
@@ -177,11 +177,11 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Impact] = 5;
             groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 45;
-            groupWeight[(int)AG.Wideplay] = 5;
+            groupWeight[(int)AG.Playmaking] = 35;
+            groupWeight[(int)AG.Wideplay] = 20;
             groupWeight[(int)AG.Scoring] = 10;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
@@ -196,17 +196,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Impact] = 5;
             groupWeight[(int)AG.Reliability] = 10;
 
             groupWeight[(int)AG.Playmaking] = 10;
             groupWeight[(int)AG.Wideplay] = 25;
-            groupWeight[(int)AG.Scoring] = 5;
-            groupWeight[(int)AG.Defending] = 5;
+            groupWeight[(int)AG.Scoring] = 15;
+            groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 30;
-            groupWeight[(int)AG.Strength] = 5;
+            groupWeight[(int)AG.Speed] = 35;
+            groupWeight[(int)AG.Strength] = 0;
 
             groupedWeightings[(int)Roles.WG] = groupWeight;
         }
@@ -219,13 +219,13 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Reliability] = 10;
 
             groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 10;
+            groupWeight[(int)AG.Wideplay] = 15;
             groupWeight[(int)AG.Scoring] = 30;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 15;
+            groupWeight[(int)AG.Strength] = 10;
 
             groupedWeightings[(int)Roles.ST] = groupWeight;
         }
@@ -238,8 +238,8 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Reliability] = 10;
 
             groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 10;
-            groupWeight[(int)AG.Scoring] = 35;
+            groupWeight[(int)AG.Wideplay] = 20;
+            groupWeight[(int)AG.Scoring] = 25;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
@@ -253,17 +253,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Impact] = 15;
             groupWeight[(int)AG.Reliability] = 10;
 
             groupWeight[(int)AG.Playmaking] = 0;
             groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 40;
+            groupWeight[(int)AG.Scoring] = 35;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 30;
+            groupWeight[(int)AG.Strength] = 35;
 
             groupedWeightings[(int)Roles.TM] = groupWeight;
         }
@@ -272,12 +272,12 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Impact] = 5;
             groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 10;
-            groupWeight[(int)AG.Scoring] = 30;
+            groupWeight[(int)AG.Playmaking] = 15;
+            groupWeight[(int)AG.Wideplay] = 15;
+            groupWeight[(int)AG.Scoring] = 25;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
@@ -643,7 +643,21 @@ namespace CMScouter.UI
 
             //mentalRating = Math.Min(mentalRating * 1.2m, mentalWeighting);
 
-            decimal technicalRating = ApplyWeightToGroup(playerGroupedRatings.playmakingRating, weights[(int)AG.Playmaking]) + ApplyWeightToGroup(playerGroupedRatings.wideplayRating, weights[(int)AG.Wideplay]) 
+            const decimal fb_wp = 1.1m;
+            decimal wp_adj = 1;
+
+            switch (type)
+            {
+                case PlayerType.RightBack:
+                case PlayerType.LeftBack:
+                    wp_adj = fb_wp;
+                    break;
+            }
+
+            const decimal pm_adj = 1.08m;
+
+            decimal technicalRating = ApplyWeightToGroup((byte)(playerGroupedRatings.playmakingRating * pm_adj), weights[(int)AG.Playmaking])
+                + ApplyWeightToGroup((byte)(playerGroupedRatings.wideplayRating * wp_adj), weights[(int)AG.Wideplay]) 
                 + ApplyWeightToGroup(playerGroupedRatings.scoringRating, weights[(int)AG.Scoring]) + ApplyWeightToGroup(playerGroupedRatings.defendingRating, weights[(int)AG.Defending]) 
                 + ApplyWeightToGroup(playerGroupedRatings.goalkeepingRating, weights[(int)AG.Goalkeeping]);
             decimal technicalWeighting = weights[(int)AG.Playmaking] + weights[(int)AG.Wideplay] + weights[(int)AG.Scoring] + weights[(int)AG.Defending] + weights[(int)AG.Goalkeeping];
@@ -683,6 +697,59 @@ namespace CMScouter.UI
 
             decimal rating = mentalRating + technicalRating + physicalRating;
 
+            const decimal fb_adj = 1.1m;
+            const decimal dm_adj = 1.15m;
+            const decimal cm_adj = 1.14m;
+            const decimal am_adj = 1.1m;
+            const decimal wm_adj = 1.06m;
+            const decimal wg_adj = 1.08m;
+            const decimal fw_adj = 1.15m;
+
+            decimal rat_adj = 1m;
+
+            switch (type)
+            {
+                case PlayerType.RightBack:
+                case PlayerType.LeftBack:
+                    rat_adj = fb_adj;
+                    break;
+
+                case PlayerType.DefensiveMidfielder:
+                    rat_adj = dm_adj;
+                    break;
+
+                case PlayerType.CentralMidfielder:
+                    rat_adj = cm_adj;
+                    break;
+
+                case PlayerType.AttackingMidfielder:
+                    rat_adj = am_adj;
+                    break;
+
+                case PlayerType.RightMidfielder:
+                case PlayerType.LeftMidfielder:
+                    rat_adj = wm_adj;
+                    break;
+
+                case PlayerType.RightWinger:
+                case PlayerType.LeftWinger:
+                    rat_adj = wg_adj;
+                    break;
+
+                case PlayerType.CentreForward:
+                    switch (role)
+                    {
+                        case Roles.TM:
+                            break;
+                        default:
+                            rat_adj = fw_adj;
+                            break;
+                    }
+                    break;
+            }
+
+            rating = Math.Min(99, rat_adj * rating);
+
             /*
             switch (role)
             {
@@ -715,7 +782,7 @@ namespace CMScouter.UI
 
         private byte ApplyWeightToGroup(byte groupRating, byte weight)
         {
-            return (byte)Math.Round(((decimal)groupRating / 100 * weight));
+            return (byte)Math.Min(99, Math.Round((decimal)groupRating / 100 * weight));
         }
 
         private byte AdjustScoreForPosition(Player player, PlayerType type, byte unadjustedScore, RatingRoleDebug debug)

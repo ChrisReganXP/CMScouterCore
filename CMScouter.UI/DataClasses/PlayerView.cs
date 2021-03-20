@@ -87,6 +87,55 @@ namespace CMScouter.UI
             return "Right Only";
         }
 
+        public string PlayingPositionDescription
+        {
+            get
+            {
+                if (Positions.GK == 20)
+                {
+                    return "GK";
+                }
+
+                var position = string.Empty;
+                if (Positions.DF >= 15)
+                {
+                    position = "D";
+                }
+                if (Positions.DM >= 15)
+                {
+                    position += (!string.IsNullOrWhiteSpace(position)) ? "/DM" : "DM";
+                }
+                if (Positions.MF >= 15)
+                {
+                    position += (!string.IsNullOrWhiteSpace(position)) ? "/M" : "M";
+                }
+                if (Positions.AM >= 15)
+                {
+                    position += (!string.IsNullOrWhiteSpace(position)) ? "/AM" : "AM";
+                }
+                if (Positions.ST >= 15)
+                {
+                    position += (!string.IsNullOrWhiteSpace(position)) ? "/F" : "ST";
+                }
+
+                position += " ";
+
+                if (Positions.Right >= 15)
+                {
+                    position += "R";
+                }
+                if (Positions.Left >= 15)
+                {
+                    position += "L";
+                }
+                if (Positions.Centre >= 15)
+                {
+                    position += "C";
+                }
+                return position;
+            }
+        }
+
         public byte OverallRating
         {
             get { return ScoutRatings.OverallRating; }

@@ -169,8 +169,8 @@ namespace CMScouter.UI
                 Debug.WriteLine(cumulativePercent);
             }
 
-            return list.OrderByDescending(x => x.ScoutRatings.GroupedRatings.playmakingRating);
-            // return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).AbilityRating);
+            // return list.OrderBy(x => x.ScoutRatings.GroupedRatings.strengthRating);
+            return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).AbilityRating);
         }
 
         private void ConstructLookups()
