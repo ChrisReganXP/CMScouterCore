@@ -8,6 +8,6 @@ namespace CMScouter.UI
 {
     public interface IIntrinsicMasker
     {
-        byte GetIntrinsicMask(byte intrinsicValue);
+        byte GetIntrinsicMask(byte intrinsicValue, short currentAbility);
     }
 }

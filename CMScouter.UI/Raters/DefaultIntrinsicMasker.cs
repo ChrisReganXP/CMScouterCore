@@ -4,7 +4,7 @@ namespace CMScouter.UI.Raters
 {
     public class DefaultIntrinsicMasker : IIntrinsicMasker
     {
-        public byte GetIntrinsicMask(byte val)
+        public byte GetIntrinsicMask(byte val, short currentAbility)
         {
             // based on GK attribs
             /*

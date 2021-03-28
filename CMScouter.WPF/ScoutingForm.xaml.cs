@@ -23,6 +23,7 @@ using System.Windows.Markup;
 using System.Globalization;
 using CMScouter.WPF.ControlHelpers;
 using CMScouter.UI.DataClasses;
+using System.IO;
 
 namespace CMScouter.WPF
 {
@@ -178,7 +179,7 @@ namespace CMScouter.WPF
             ScoutingRequest request = new ScoutingRequest()
             {
                 // Initial Test only. Delete me
-                ClubName = "Oldham",
+                ClubName = "Schalke 04",
 
                 /*ClubName = cbxClubName.Text,*/
             };
@@ -512,6 +513,38 @@ namespace CMScouter.WPF
         private void btnSearch_Click(object sender, EventArgs e)
         {
             SearchForPlayer();
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            ExportCurrentResults();
+        }
+
+        private void ExportCurrentResults()
+        {
+            var displayedResults = dgvPlayers.ItemsSource;
+
+            if (!(displayedResults is List<GridViewPlayer>))
+            {
+                return;
+            }
+
+            var csvLines = cmsUI.CreateExportSet(((List<GridViewPlayer>)displayedResults).Select(x => x.PlayerId).ToList());
+
+            ExportViaDialog(csvLines);
+        }
+
+        private void ExportViaDialog(string csv)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = @"C:\";
+            dlg.Filter = "CSV file (*.csv)|*.csv|All Files (*.*)|*.*";
+            var result = dlg.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                //Save the file, assuming the DataContext is plain text (i.e. string)
+                File.WriteAllText(dlg.FileName, csv);
+            }
         }
 
         private void SearchForPlayer()

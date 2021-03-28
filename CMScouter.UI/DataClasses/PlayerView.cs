@@ -4,6 +4,7 @@ using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace CMScouter.UI
@@ -155,6 +156,27 @@ namespace CMScouter.UI
         {
             var bestPosition = ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.AbilityRating)).First();
             return bestPosition.Ratings.OrderByDescending(x => x.AbilityRating).First();
+        }
+
+        public string CreateCSVText(List<PropertyInfo> csv_order, List<PropertyInfo> csv_attributes_order, List<PropertyInfo> csv_positions_order)
+        {
+            StringBuilder csv = new StringBuilder();
+            foreach (var prop in csv_order)
+            {
+                csv.Append(prop.GetValue(this) + ",");
+            }
+
+            foreach (var prop in csv_attributes_order)
+            {
+                csv.Append(prop.GetValue(this.Attributes) + ",");
+            }
+
+            foreach (var prop in csv_positions_order)
+            {
+                csv.Append(prop.GetValue(this.Positions) + ",");
+            }
+
+            return csv.ToString();
         }
 
         /*

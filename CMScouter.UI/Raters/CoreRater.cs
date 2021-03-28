@@ -558,7 +558,7 @@ namespace CMScouter.UI
             string mentalDebugString;
             byte[] values = GetValues(player);
 
-            byte offField = GetGroupingScore(OffFieldAttributes, values, weightings[weightings.Length - 1], false, out mentalDebugString);
+            byte offField = GetGroupingScore(OffFieldAttributes, values, weightings[weightings.Length - 1], false, player, out mentalDebugString);
 
             return offField;
         }
@@ -606,15 +606,15 @@ namespace CMScouter.UI
 
             byte[] values = GetValues(player);
 
-            playerGroupedRatings.impactRating = GetGroupingScore(ImpactAttributes, values);
-            playerGroupedRatings.reliabilityRating = GetGroupingScore(ReliabilityAttributes, values);
-            playerGroupedRatings.playmakingRating = GetGroupingScore(PlaymakingAttributes, values);
-            playerGroupedRatings.wideplayRating = GetGroupingScore(WidePlayAttributes, values);
-            playerGroupedRatings.scoringRating = GetGroupingScore(ScoringAttributes, values);
-            playerGroupedRatings.defendingRating = GetGroupingScore(DefendingAttributes, values);
-            playerGroupedRatings.goalkeepingRating = GetGroupingScore(GoalkeepingAttributes, values);
-            playerGroupedRatings.speedRating = GetGroupingScore(SpeedAttributes, values);
-            playerGroupedRatings.strengthRating = GetGroupingScore(StrengthAttributes, values);
+            playerGroupedRatings.impactRating = GetGroupingScore(player, ImpactAttributes, values);
+            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, ReliabilityAttributes, values);
+            playerGroupedRatings.playmakingRating = GetGroupingScore(player, PlaymakingAttributes, values);
+            playerGroupedRatings.wideplayRating = GetGroupingScore(player, WidePlayAttributes, values);
+            playerGroupedRatings.scoringRating = GetGroupingScore(player, ScoringAttributes, values);
+            playerGroupedRatings.defendingRating = GetGroupingScore(player, DefendingAttributes, values);
+            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, GoalkeepingAttributes, values);
+            playerGroupedRatings.speedRating = GetGroupingScore(player, SpeedAttributes, values);
+            playerGroupedRatings.strengthRating = GetGroupingScore(player, StrengthAttributes, values);
         }
 
         private byte RatePlayerInRole(Player player, PlayerType type, Roles role, byte[] weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
@@ -646,15 +646,24 @@ namespace CMScouter.UI
             const decimal fb_wp = 1.1m;
             decimal wp_adj = 1;
 
+            /*
             switch (type)
             {
                 case PlayerType.RightBack:
                 case PlayerType.LeftBack:
                     wp_adj = fb_wp;
                     break;
-            }
+            }*/
 
-            const decimal pm_adj = 1.08m;
+            const decimal pm_adj_all = 1.08m;
+            decimal pm_adj = 1;
+
+            /*
+            switch (type)
+            {
+                default:
+                    pm_adj = pm_adj_all;
+            }*/
 
             decimal technicalRating = ApplyWeightToGroup((byte)(playerGroupedRatings.playmakingRating * pm_adj), weights[(int)AG.Playmaking])
                 + ApplyWeightToGroup((byte)(playerGroupedRatings.wideplayRating * wp_adj), weights[(int)AG.Wideplay]) 
@@ -707,6 +716,7 @@ namespace CMScouter.UI
 
             decimal rat_adj = 1m;
 
+            /*
             switch (type)
             {
                 case PlayerType.RightBack:
@@ -746,7 +756,7 @@ namespace CMScouter.UI
                             break;
                     }
                     break;
-            }
+            }*/
 
             rating = Math.Min(99, rat_adj * rating);
 
@@ -822,7 +832,7 @@ namespace CMScouter.UI
             return (byte)Math.Min(99, Math.Max(0, (int)unadjustedScore));
         }
 
-        private byte GetGroupingScore(AttributeWeight[] attributes, byte[] values)
+        private byte GetGroupingScore(Player player, AttributeWeight[] attributes, byte[] values)
         {
             decimal rating = 0;
             int combinedWeights = 0;
@@ -841,7 +851,7 @@ namespace CMScouter.UI
                 realValue = values[(int)i.Attribute];
                 string attribute = Enum.GetNames(typeof(DP))[(int)i.Attribute];
 
-                decimal value = Adj(realValue, i.IsIntrinsic);
+                decimal value = Adj(realValue, i.IsIntrinsic, player._player.CurrentAbility);
 
                 decimal cappedValue = Math.Min(20, value);
                 if (value > 20)
@@ -880,7 +890,7 @@ namespace CMScouter.UI
             return Math.Min((byte)99, (byte)(easyratio + scoreadjust));*/
         }
 
-        private byte GetGroupingScore(byte[] attributes, byte[] values, byte[] weights, bool isIntrinsic, out string debugString)
+        private byte GetGroupingScore(byte[] attributes, byte[] values, byte[] weights, bool isIntrinsic, Player player, out string debugString)
         {
             decimal rating = 0;
             int combinedWeights = 0;
@@ -906,7 +916,7 @@ namespace CMScouter.UI
                 realValue = values[i];
                 string attribute = Enum.GetNames(typeof(DP))[i];
 
-                decimal value = Adj(realValue, isIntrinsic);
+                decimal value = Adj(realValue, isIntrinsic, player._player.CurrentAbility);
 
                 decimal cappedValue = Math.Min(20, value);
                 if (value > 20)
@@ -1024,14 +1034,14 @@ namespace CMScouter.UI
             return (decimal)inflatedScore / 100 * importance;
         }
 
-        private decimal Adj(byte val, bool isIntrinsic)
+        private decimal Adj(byte val, bool isIntrinsic, short currentAbility)
         {
             if (!isIntrinsic)
             {
                 return val;
             }
 
-            return masker.GetIntrinsicMask(val);
+            return masker.GetIntrinsicMask(val, currentAbility);
         }
 
         private byte[] GetWeights(Roles role)
