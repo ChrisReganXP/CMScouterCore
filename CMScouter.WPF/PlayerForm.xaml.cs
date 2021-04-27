@@ -165,7 +165,7 @@ namespace CMScouter.WPF
             SetAttributeLabels(lblAcceleration, player.Attributes.Acceleration);
             SetAttributeLabels(lblAgility, player.Attributes.Agility);
             SetAttributeLabels(lblBalance, player.Attributes.Balance);
-            SetAttributeLabels(lblInjuryProne, player.Attributes.InjuryProneness);
+            SetAttributeLabels(lblInjuryProne, player.Attributes.InjuryProneness, false, true);
             SetAttributeLabels(lblJumping, player.Attributes.Jumping);
             SetAttributeLabels(lblNatFitness, player.Attributes.NaturalFitness);
             SetAttributeLabels(lblPace, player.Attributes.Pace);

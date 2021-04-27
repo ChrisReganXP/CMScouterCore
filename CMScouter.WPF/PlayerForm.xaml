@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="PlayerForm" Height="800" Width="1000">
     <DockPanel  Background="WhiteSmoke">
         <StackPanel DockPanel.Dock="Left" Width="220">
