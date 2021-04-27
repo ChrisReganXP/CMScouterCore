@@ -189,7 +189,7 @@ namespace CMScouter.UI
             return specificPlayerList.Where(x => filter(x));
         }
 
-        private List<PlayerView> ConstructPlayerByScoutingValueDesc(PlayerType? type, short numberOfResults, List<Player> preFilteredPlayers)
+        private List<PlayerView> ConstructPlayerByScoutingValueDesc(PlayerPosition? type, short numberOfResults, List<Player> preFilteredPlayers)
         {
             if (numberOfResults == 0)
             {
@@ -203,10 +203,11 @@ namespace CMScouter.UI
             return scoutOrder.Take(numberOfResults).ToList();
         }
 
-        private IEnumerable<PlayerView> ScoutingOrdering(IEnumerable<PlayerView> list, PlayerType? type)
+        private IEnumerable<PlayerView> ScoutingOrdering(IEnumerable<PlayerView> list, PlayerPosition? type)
         {
             if (type == null)
             {
+                // return list.OrderByDescending(x => x.PotentialAbility);
                 return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().PurchaseRating);
             }
 
@@ -239,7 +240,7 @@ namespace CMScouter.UI
                 Debug.WriteLine(cumulativePercent);
             }
 
-            // return list.OrderBy(x => x.ScoutRatings.GroupedRatings.strengthRating);
+            // return list.OrderByDescending(x => x.Age);
             return list.OrderByDescending(x => x.BestRoleRatingForPlayerType(type.Value).AbilityRating);
         }
 

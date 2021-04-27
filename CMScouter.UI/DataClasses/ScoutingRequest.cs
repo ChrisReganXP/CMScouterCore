@@ -27,7 +27,7 @@ namespace CMScouter.UI
 
         public AvailabilityCriteria AvailabilityCriteria { get; set; }
 
-        public PlayerType? PlayerType { get; set; }
+        public PlayerPosition? PlayerType { get; set; }
 
         public string PlaysInCountry { get; set; }
 

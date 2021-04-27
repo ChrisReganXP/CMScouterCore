@@ -15,7 +15,7 @@ namespace CMScouter.DataClasses
         }
     }
 
-    public enum PlayerType
+    public enum PlayerPosition
     {
         [LinkedRoles(Roles.GK)]
         GoalKeeper,

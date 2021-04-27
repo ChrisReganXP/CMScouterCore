@@ -11,7 +11,7 @@ namespace CMScouter.WPF.Converters
 {
     public static class PlayerViewConverter
     {
-        public static GridViewPlayer ConvertViewToGrid(PlayerView source, PlayerType? playerType = null)
+        public static GridViewPlayer ConvertViewToGrid(PlayerView source, PlayerPosition? playerType = null)
         {
             GridViewPlayer dest = new GridViewPlayer();
 
@@ -45,12 +45,12 @@ namespace CMScouter.WPF.Converters
             dest.TransferStatus = source.Contract?.TransferStatus;
             dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToName(): string.Empty;
 
-            dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole().AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.Position == playerType).OrderByDescending(y => y.Rating).First().Rating;
+            dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole().AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.Rating).First().Rating;
             dest.PurchaseRating = source.ScoutRatings.BestPosition.BestRole().PurchaseRating;
-            dest.BestPosition = source.ScoutRatings.BestPosition.Position.ToName();
+            dest.BestPosition = source.ScoutRatings.BestPosition.SetPosition.ToName();
             dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role.ToName();
             dest.Recommendation = source.ScoutRatings.OverallRating;
-            dest.GoalkeepingRating = source.ScoutRatings.GroupedRatings.goalkeepingRating;
+            /*dest.GoalkeepingRating = source.ScoutRatings.GroupedRatings.goalkeepingRating;
             dest.DefendingRating = source.ScoutRatings.GroupedRatings.defendingRating;
             dest.PlaymakingRating = source.ScoutRatings.GroupedRatings.playmakingRating;
             dest.WidePlayRating = source.ScoutRatings.GroupedRatings.wideplayRating;
@@ -58,7 +58,7 @@ namespace CMScouter.WPF.Converters
             dest.ImpactRating = source.ScoutRatings.GroupedRatings.impactRating;
             dest.ReliabilityRating = source.ScoutRatings.GroupedRatings.reliabilityRating;
             dest.StrengthRating = source.ScoutRatings.GroupedRatings.strengthRating;
-            dest.SpeedRating = source.ScoutRatings.GroupedRatings.speedRating;
+            dest.SpeedRating = source.ScoutRatings.GroupedRatings.speedRating;*/
 
             return dest;
         }

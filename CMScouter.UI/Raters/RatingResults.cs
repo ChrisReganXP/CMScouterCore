@@ -25,19 +25,18 @@ namespace CMScouter.UI.Raters
 
     public class PositionRating
     {
-        public PlayerType Position { get; set; }
+        public PlayerPosition SetPosition { get; set; }
 
-        public decimal PositionalAdjustment { get; }
+        public PlayerPosition MovementPosition { get; set; }
 
         public byte OffFieldRating { get; }
 
         public List<RoleRating> Ratings { get; set; }
 
-        public PositionRating(byte offField, decimal positionAdjust)
+        public PositionRating(byte offField)
         {
             Ratings = new List<RoleRating>();
             OffFieldRating = offField;
-            PositionalAdjustment = positionAdjust;
         }
 
         public byte Rating { get => Ratings.OrderByDescending(r => r.PurchaseRating).First().PurchaseRating; }
@@ -65,39 +64,39 @@ namespace CMScouter.UI.Raters
 
         public decimal PersonalityRating { get; }
 
-        public byte OverallRating { get => this.ApplyPersonalityModifier(_positionRatings.OrderByDescending(r => r.PositionalAdjustment).First().Rating); }
+        public byte OverallRating { get => this.ApplyPersonalityModifier(_positionRatings.OrderByDescending(r => r.Rating).First().Rating); }
 
         private byte ApplyPersonalityModifier(byte rating) => RatingHelper.ModifyByte(rating, PersonalityRating);
 
         public PositionRating BestPosition { get => _positionRatings.OrderByDescending(r => r.Rating).First(); }
 
-        public PositionRating Goalkeeper { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.GoalKeeper); }
+        public PositionRating Goalkeeper { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.GoalKeeper); }
 
-        public PositionRating RightBack { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.RightBack); }
+        public PositionRating RightBack { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.RightBack); }
 
-        public PositionRating CentreHalf { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.CentreHalf); }
+        public PositionRating CentreHalf { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.CentreHalf); }
 
-        public PositionRating LeftBack { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.LeftBack); }
+        public PositionRating LeftBack { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.LeftBack); }
 
-        public PositionRating RightWingBack { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.RightWingBack); }
+        public PositionRating RightWingBack { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.RightWingBack); }
 
-        public PositionRating DefensiveMidfielder { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.DefensiveMidfielder); }
+        public PositionRating DefensiveMidfielder { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.DefensiveMidfielder); }
 
-        public PositionRating LeftWingBack { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.LeftWingBack); }
+        public PositionRating LeftWingBack { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.LeftWingBack); }
 
-        public PositionRating RightMidfielder { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.RightMidfielder); }
+        public PositionRating RightMidfielder { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.RightMidfielder); }
 
-        public PositionRating CentreMidfielder { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.CentralMidfielder); }
+        public PositionRating CentreMidfielder { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.CentralMidfielder); }
 
-        public PositionRating LeftMidfielder { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.LeftMidfielder); }
+        public PositionRating LeftMidfielder { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.LeftMidfielder); }
 
-        public PositionRating RightWinger { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.RightWinger); }
+        public PositionRating RightWinger { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.RightWinger); }
 
-        public PositionRating AttackingMidfielder { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.AttackingMidfielder); }
+        public PositionRating AttackingMidfielder { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.AttackingMidfielder); }
 
-        public PositionRating LeftWinger { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.LeftWinger); }
+        public PositionRating LeftWinger { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.LeftWinger); }
 
-        public PositionRating CentreForward { get => _positionRatings.FirstOrDefault(r => r.Position == PlayerType.CentreForward); }
+        public PositionRating CentreForward { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.CentreForward); }
     }
 
 

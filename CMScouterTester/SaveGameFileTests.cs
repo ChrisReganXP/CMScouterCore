@@ -96,7 +96,7 @@ namespace CMScouterTester
         [TestMethod]
         public void TestSearchForHighestGKs()
         {
-            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerType.GoalKeeper, NumberOfResults = 20 };
+            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerPosition.GoalKeeper, NumberOfResults = 20 };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
             
             Assert.IsNotNull(players);
@@ -136,7 +136,7 @@ namespace CMScouterTester
         [TestMethod]
         public void TestSearchForCentreBacks()
         {
-            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerType.CentreHalf, MaxValue = 2000000, NumberOfResults = 50, EUNationalityOnly = true };
+            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerPosition.CentreHalf, MaxValue = 2000000, NumberOfResults = 50, EUNationalityOnly = true };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
 
             Assert.IsNotNull(players);
@@ -147,7 +147,7 @@ namespace CMScouterTester
         [TestMethod]
         public void TestSearchForAttackingMidfielders()
         {
-            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerType.AttackingMidfielder, MaxValue = 2000000, NumberOfResults = 50, EUNationalityOnly = true };
+            ScoutingRequest request = new ScoutingRequest() { PlayerType = PlayerPosition.AttackingMidfielder, MaxValue = 2000000, NumberOfResults = 50, EUNationalityOnly = true };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
 
             Assert.IsNotNull(players);
@@ -222,7 +222,7 @@ namespace CMScouterTester
             var Div3 = allComps.FirstOrDefault(x => x.LongName.Equals("English Third Division", StringComparison.InvariantCultureIgnoreCase));
             Assert.IsNotNull(Div3);
 
-            ScoutingRequest request = new ScoutingRequest() { NumberOfResults = 30, PlayerType = PlayerType.CentreForward, PlaysInDivision = Div3.Id };
+            ScoutingRequest request = new ScoutingRequest() { NumberOfResults = 30, PlayerType = PlayerPosition.CentreForward, PlaysInDivision = Div3.Id };
             var players = cmsUI.GetScoutResults(request);
 
             Assert.IsNotNull(players);

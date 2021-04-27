@@ -152,9 +152,9 @@ namespace CMScouter.UI
             get { return ScoutRatings.BestPosition.BestRole().Role.ToString(); }
         }
 
-        public RoleRating BestRoleRatingForPlayerType(PlayerType type)
+        public RoleRating BestRoleRatingForPlayerType(PlayerPosition type)
         {
-            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.Position == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.AbilityRating)).First();
+            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.SetPosition == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.AbilityRating)).First();
             return bestPosition.Ratings.OrderByDescending(x => x.AbilityRating).First();
         }
 
