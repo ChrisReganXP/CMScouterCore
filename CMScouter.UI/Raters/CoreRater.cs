@@ -88,11 +88,11 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Playmaking] = 0;
             groupWeight[(int)AG.Wideplay] = 0;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 40;
+            groupWeight[(int)AG.Defending] = 45;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 5;
-            groupWeight[(int)AG.Strength] = 35;
+            groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.CB] = groupWeight;
         }
@@ -254,16 +254,16 @@ namespace CMScouter.UI
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
             groupWeight[(int)AG.Impact] = 15;
-            groupWeight[(int)AG.Reliability] = 10;
+            groupWeight[(int)AG.Reliability] = 5;
 
-            groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 35;
+            groupWeight[(int)AG.Playmaking] = 5;
+            groupWeight[(int)AG.Wideplay] = 5;
+            groupWeight[(int)AG.Scoring] = 30;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 35;
+            groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.TM] = groupWeight;
         }
@@ -390,51 +390,51 @@ namespace CMScouter.UI
             AddCF();
         }
 
-        public bool PlaysPosition(PlayerType type, PlayerData player)
+        public bool PlaysPosition(PlayerPosition type, PlayerData player)
         {
             switch (type)
             {
-                case PlayerType.GoalKeeper:
+                case PlayerPosition.GoalKeeper:
                     return player.GK >= 19;
 
-                case PlayerType.RightBack:
+                case PlayerPosition.RightBack:
                     return player.DF >= 15 && player.Right >= 15;
 
-                case PlayerType.CentreHalf:
+                case PlayerPosition.CentreHalf:
                     return player.DF >= 15 && player.Centre >= 15;
 
-                case PlayerType.LeftBack:
+                case PlayerPosition.LeftBack:
                     return player.DF >= 15 && player.Left >= 15;
 
-                case PlayerType.RightWingBack:
+                case PlayerPosition.RightWingBack:
                     return (player.WingBack >= 15 && player.Right >= 15) || (player.DF == 20 && player.Right == 20);
 
-                case PlayerType.DefensiveMidfielder:
+                case PlayerPosition.DefensiveMidfielder:
                     return (player.DM >= 15 && player.Centre >= 15) || (player.Centre == 20 && (player.DF == 20 || player.MF == 20));
 
-                case PlayerType.LeftWingBack:
+                case PlayerPosition.LeftWingBack:
                     return (player.WingBack >= 15 && player.Left >= 15) || (player.DF == 20 && player.Left == 20);
 
-                case PlayerType.RightMidfielder:
+                case PlayerPosition.RightMidfielder:
                     return (player.MF >= 15 && player.Right >= 15) || (player.Right == 20 && player.AM == 20);
 
-                case PlayerType.CentralMidfielder:
+                case PlayerPosition.CentralMidfielder:
                     return (player.MF >= 15 && player.Centre >= 15) ||
                         (player.DM == 20 && player.Centre >= 15) || (player.AM == 20 && player.Centre == 20);
 
-                case PlayerType.LeftMidfielder:
+                case PlayerPosition.LeftMidfielder:
                     return (player.MF >= 15 && player.Left >= 15) || (player.Left == 20 && player.AM == 20);
 
-                case PlayerType.RightWinger:
+                case PlayerPosition.RightWinger:
                     return (player.AM >= 15 && player.Right >= 15) || (player.Right == 20 && (player.MF == 20 || player.ST == 20));
 
-                case PlayerType.AttackingMidfielder:
+                case PlayerPosition.AttackingMidfielder:
                     return (player.AM >= 15 && player.Centre >= 15) || (player.Centre == 20 && (player.MF == 20 || player.ST == 20));
 
-                case PlayerType.LeftWinger:
+                case PlayerPosition.LeftWinger:
                     return (player.AM >= 15 && player.Left >= 15) || (player.Left == 20 && (player.MF == 20 || player.ST == 20));
 
-                case PlayerType.CentreForward:
+                case PlayerPosition.CentreForward:
                     return (player.ST >= 15 && player.Centre >= 15) || (player.ST == 20) || (player.AM == 20 && player.Centre == 20);
 
                 default:
@@ -450,20 +450,20 @@ namespace CMScouter.UI
             GroupedRatings playerGroupedRatings = null;
 
             List<PositionRating> positionRatings = new List<PositionRating>();
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.GoalKeeper, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.RightBack, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.CentreHalf, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.LeftBack, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.RightWingBack, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.DefensiveMidfielder, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.LeftWingBack, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.RightMidfielder, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.CentralMidfielder, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.LeftMidfielder, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.RightWinger, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.AttackingMidfielder, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.LeftWinger, offFieldRating, ref playerGroupedRatings));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerType.CentreForward, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightBack, PlayerPosition.RightBack, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftBack, PlayerPosition.LeftBack, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWingBack, PlayerPosition.RightWingBack, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.DefensiveMidfielder, PlayerPosition.DefensiveMidfielder, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWingBack, PlayerPosition.LeftWingBack, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightMidfielder, PlayerPosition.RightMidfielder, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentralMidfielder, PlayerPosition.CentralMidfielder, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftMidfielder, PlayerPosition.LeftMidfielder, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWinger, PlayerPosition.RightWinger, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.AttackingMidfielder, PlayerPosition.AttackingMidfielder, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWinger, PlayerPosition.LeftWinger, offFieldRating, ref playerGroupedRatings));
+            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreForward, PlayerPosition.CentreForward, offFieldRating, ref playerGroupedRatings));
 
             ScoutingInformation coreResults = new ScoutingInformation(positionRatings, offFieldRating, playerGroupedRatings);
 
@@ -527,16 +527,15 @@ namespace CMScouter.UI
             return values;
         }
 
-        private PositionRating GetRatingsForPosition(Player player, PlayerType type, byte offFieldRating, ref GroupedRatings playerGroupedRatings)
+        private PositionRating GetRatingsForPosition(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, byte offFieldRating, ref GroupedRatings playerGroupedRatings)
         {
-            byte positionalAdjustment = PositionalFamiliarity(type, player);
-            PositionRating ratings = new PositionRating(offField: offFieldRating, positionAdjust: positionalAdjustment) { Position = type };
+            // byte positionalAdjustment = PositionalFamiliarity(setPosition, player);
+            PositionRating ratings = new PositionRating(offField: offFieldRating) { SetPosition = setPosition, MovementPosition = movementPosition };
 
-            List<Roles> roles = type.GetAttributeValue<LinkedRoles, List<Roles>>(x => x.Roles);
+            List<Roles> roles = setPosition.GetAttributeValue<LinkedRoles, List<Roles>>(x => x.Roles);
             foreach (var role in roles)
             {
-                var rating = GetRatingForTypeAndRole(player, type, role, ref playerGroupedRatings);
-                rating.AbilityRating = AdjustScoreForPosition(player, type, rating.AbilityRating, rating.Debug);
+                var rating = GetRatingForTypeAndRole(player, setPosition, movementPosition, role);
                 rating.PurchaseRating = ApplyOffFieldAdjustment(rating.AbilityRating, offFieldRating, rating.Debug);
                 ratings.Ratings.Add(rating);
             }
@@ -544,11 +543,10 @@ namespace CMScouter.UI
             return ratings;
         }
 
-        private RoleRating GetRatingForTypeAndRole(Player player, PlayerType type, Roles role, ref GroupedRatings playerGroupedRatings)
+        private RoleRating GetRatingForTypeAndRole(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role)
         {
             RatingRoleDebug roleDebug = new RatingRoleDebug();
-            var rating = CalculateRating(player, type, role, ref playerGroupedRatings, ref roleDebug);
-            //var adjustedForPosition = AdjustScoreForPosition(player, type, attributeRating, roleDebug);
+            var rating = CalculateRating(player, setPosition, movementPosition, role, ref roleDebug);
 
             return new RoleRating() { AbilityRating = rating, Role = role, Debug = roleDebug, };
         }
@@ -558,7 +556,8 @@ namespace CMScouter.UI
             string mentalDebugString;
             byte[] values = GetValues(player);
 
-            byte offField = GetGroupingScore(OffFieldAttributes, values, weightings[weightings.Length - 1], false, player, out mentalDebugString);
+            // TODO use a different method!
+            byte offField = GetGroupingScore(OffFieldAttributes, values, weightings[weightings.Length - 1], false, player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, out mentalDebugString);
 
             return offField;
         }
@@ -568,18 +567,15 @@ namespace CMScouter.UI
             return -5 + (((decimal)offFieldRating) / 10);
         }
 
-        private byte CalculateRating(Player player, PlayerType type, Roles role, ref GroupedRatings playerGroupedRatings, ref RatingRoleDebug debug)
+        private byte CalculateRating(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref RatingRoleDebug debug)
         {
             RatingRoleDebug roleDebug;
             var weights = GetWeights(role);
 
-            if (playerGroupedRatings == null)
-            {
-                CreatePlayerGroupedRatings(player, weights, ref playerGroupedRatings);
-            }
+            GroupedRatings playerGroupedRatings = CreatePlayerGroupedRatings(player, setPosition, movementPosition);
 
             //var values = GetValues(player);
-            decimal result = RatePlayerInRole(player, type, role, weights, playerGroupedRatings, out roleDebug);
+            decimal result = RatePlayerInRole(player, setPosition, role, weights, playerGroupedRatings, out roleDebug);
 
             var proportion = result;
 
@@ -600,24 +596,26 @@ namespace CMScouter.UI
             return (byte)proportion;
         }
 
-        private void CreatePlayerGroupedRatings(Player player, byte[] weights, ref GroupedRatings playerGroupedRatings)
+        private GroupedRatings CreatePlayerGroupedRatings(Player player, PlayerPosition setPosition, PlayerPosition movementPosition)
         {
-            playerGroupedRatings = new GroupedRatings();
+            var playerGroupedRatings = new GroupedRatings();
 
             byte[] values = GetValues(player);
 
-            playerGroupedRatings.impactRating = GetGroupingScore(player, ImpactAttributes, values);
-            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, ReliabilityAttributes, values);
-            playerGroupedRatings.playmakingRating = GetGroupingScore(player, PlaymakingAttributes, values);
-            playerGroupedRatings.wideplayRating = GetGroupingScore(player, WidePlayAttributes, values);
-            playerGroupedRatings.scoringRating = GetGroupingScore(player, ScoringAttributes, values);
-            playerGroupedRatings.defendingRating = GetGroupingScore(player, DefendingAttributes, values);
-            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, GoalkeepingAttributes, values);
-            playerGroupedRatings.speedRating = GetGroupingScore(player, SpeedAttributes, values);
-            playerGroupedRatings.strengthRating = GetGroupingScore(player, StrengthAttributes, values);
+            playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, ImpactAttributes, values);
+            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, ReliabilityAttributes, values);
+            playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, PlaymakingAttributes, values);
+            playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, WidePlayAttributes, values);
+            playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, ScoringAttributes, values);
+            playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, DefendingAttributes, values);
+            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, GoalkeepingAttributes, values);
+            playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, SpeedAttributes, values);
+            playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, StrengthAttributes, values);
+
+            return playerGroupedRatings;
         }
 
-        private byte RatePlayerInRole(Player player, PlayerType type, Roles role, byte[] weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
+        private byte RatePlayerInRole(Player player, PlayerPosition type, Roles role, byte[] weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
         {
             /*
             byte mentalWeight = weights.GW(DP.MentalityWeight);
@@ -795,7 +793,7 @@ namespace CMScouter.UI
             return (byte)Math.Min(99, Math.Round((decimal)groupRating / 100 * weight));
         }
 
-        private byte AdjustScoreForPosition(Player player, PlayerType type, byte unadjustedScore, RatingRoleDebug debug)
+        private byte AdjustScoreForPosition(Player player, PlayerPosition type, byte unadjustedScore, RatingRoleDebug debug)
         {
             decimal positionModifier = (decimal)PositionalFamiliarity(type, player) / 100;
             debug.Position = positionModifier.ToString("0.00");
@@ -832,7 +830,7 @@ namespace CMScouter.UI
             return (byte)Math.Min(99, Math.Max(0, (int)unadjustedScore));
         }
 
-        private byte GetGroupingScore(Player player, AttributeWeight[] attributes, byte[] values)
+        private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeight[] attributes, byte[] values)
         {
             decimal rating = 0;
             int combinedWeights = 0;
@@ -851,7 +849,7 @@ namespace CMScouter.UI
                 realValue = values[(int)i.Attribute];
                 string attribute = Enum.GetNames(typeof(DP))[(int)i.Attribute];
 
-                decimal value = Adj(realValue, i.IsIntrinsic, player._player.CurrentAbility);
+                decimal value = Adj(realValue, i.IsIntrinsic, i.Attribute, player._player, setPosition, movementPosition);
 
                 decimal cappedValue = Math.Min(20, value);
                 if (value > 20)
@@ -890,7 +888,7 @@ namespace CMScouter.UI
             return Math.Min((byte)99, (byte)(easyratio + scoreadjust));*/
         }
 
-        private byte GetGroupingScore(byte[] attributes, byte[] values, byte[] weights, bool isIntrinsic, Player player, out string debugString)
+        private byte GetGroupingScore(byte[] attributes, byte[] values, byte[] weights, bool isIntrinsic, Player player, PlayerPosition setPosition, PlayerPosition movementPosition, out string debugString)
         {
             decimal rating = 0;
             int combinedWeights = 0;
@@ -916,7 +914,7 @@ namespace CMScouter.UI
                 realValue = values[i];
                 string attribute = Enum.GetNames(typeof(DP))[i];
 
-                decimal value = Adj(realValue, isIntrinsic, player._player.CurrentAbility);
+                decimal value = Adj(realValue, isIntrinsic, (DP)i, player._player, setPosition, movementPosition);
 
                 decimal cappedValue = Math.Min(20, value);
                 if (value > 20)
@@ -938,66 +936,66 @@ namespace CMScouter.UI
             return Math.Min((byte)99, result);
         }
 
-        private byte PositionalFamiliarity(PlayerType type, Player player)
+        private byte PositionalFamiliarity(PlayerPosition type, Player player)
         {
             byte modifierForPosition = 100;
             byte modifierForVersitility = GetVersitilityModifier(player._player.Versatility);
 
             switch (type)
             {
-                case PlayerType.GoalKeeper:
+                case PlayerPosition.GoalKeeper:
                     modifierForPosition = GetFamiliarity(player._player.GK, player._player.GK); // double down on GK position, not side
                     break;
 
-                case PlayerType.RightBack:
+                case PlayerPosition.RightBack:
                     modifierForPosition = GetFamiliarity(player._player.DF, player._player.Right);
                     break;
 
-                case PlayerType.CentreHalf:
+                case PlayerPosition.CentreHalf:
                     modifierForPosition = GetFamiliarity(player._player.DF, player._player.Centre);
                     break;
 
-                case PlayerType.LeftBack:
+                case PlayerPosition.LeftBack:
                     modifierForPosition = GetFamiliarity(player._player.DF, player._player.Left);
                     break;
 
-                case PlayerType.RightWingBack:
+                case PlayerPosition.RightWingBack:
                     modifierForPosition = GetFamiliarity(player._player.WingBack, player._player.Right);
                     break;
 
-                case PlayerType.DefensiveMidfielder:
+                case PlayerPosition.DefensiveMidfielder:
                     modifierForPosition = GetFamiliarity(player._player.DM, player._player.Centre);
                     break;
 
-                case PlayerType.LeftWingBack:
+                case PlayerPosition.LeftWingBack:
                     modifierForPosition = GetFamiliarity(player._player.WingBack, player._player.Left);
                     break;
 
-                case PlayerType.RightMidfielder:
+                case PlayerPosition.RightMidfielder:
                     modifierForPosition = GetFamiliarity(player._player.MF, player._player.Right);
                     break;
 
-                case PlayerType.CentralMidfielder:
+                case PlayerPosition.CentralMidfielder:
                     modifierForPosition = GetFamiliarity(player._player.MF, player._player.Centre);
                     break;
 
-                case PlayerType.LeftMidfielder:
+                case PlayerPosition.LeftMidfielder:
                     modifierForPosition = GetFamiliarity(player._player.MF, player._player.Left);
                     break;
 
-                case PlayerType.RightWinger:
+                case PlayerPosition.RightWinger:
                     modifierForPosition = GetFamiliarity(player._player.AM, player._player.Right);
                     break;
 
-                case PlayerType.AttackingMidfielder:
+                case PlayerPosition.AttackingMidfielder:
                     modifierForPosition = GetFamiliarity(player._player.AM, player._player.Centre);
                     break;
 
-                case PlayerType.LeftWinger:
+                case PlayerPosition.LeftWinger:
                     modifierForPosition = GetFamiliarity(player._player.AM, player._player.Left);
                     break;
 
-                case PlayerType.CentreForward:
+                case PlayerPosition.CentreForward:
                     modifierForPosition = GetFamiliarity(player._player.ST, player._player.Centre);
                     break;
 
@@ -1034,14 +1032,14 @@ namespace CMScouter.UI
             return (decimal)inflatedScore / 100 * importance;
         }
 
-        private decimal Adj(byte val, bool isIntrinsic, short currentAbility)
+        private decimal Adj(byte val, bool isIntrinsic, DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition)
         {
             if (!isIntrinsic)
             {
                 return val;
             }
 
-            return masker.GetIntrinsicMask(val, currentAbility);
+            return masker.GetIntrinsicMask(player, attribute, setPosition, movementPosition, val);
         }
 
         private byte[] GetWeights(Roles role)
