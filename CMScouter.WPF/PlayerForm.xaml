@@ -1,0 +1,391 @@
+﻿<Window x:Class="CMScouter.WPF.PlayerForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CMScouter.WPF"
+        mc:Ignorable="d"
+        Title="PlayerForm" Height="800" Width="1000">
+    <DockPanel  Background="WhiteSmoke">
+        <StackPanel DockPanel.Dock="Left" Width="220">
+            <GroupBox Header="Personal" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblFullName" /></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblAlternateName"/></TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"></TextBlock>
+                    
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblNationality"/></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblSecondNation"/></TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"></TextBlock>
+                    
+                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"><Label Name="lblPosition"/></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"><Label Name="lblAge"/></TextBlock>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0"><Label Name="lblCAText">CA</Label></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="1"><Label Name="lblCAValue"/></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="2"><Label Name="lblPAText">PA</Label></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="3"><Label Name="lblPAValue"/></TextBlock>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4"></TextBlock>
+
+                    <TextBlock Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"><Label Name="lblPreferredFoot"/></TextBlock>
+                    <TextBlock Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2"><Label Name="lblValue"/></TextBlock>
+
+
+                    <TextBlock Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"><Label Name="lblWage"/></TextBlock>
+                    <TextBlock Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2"><Label Name="lblExpiry"/></TextBlock>
+
+                    <TextBlock Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblClub"/></TextBlock>
+                    
+                </Grid>
+            </GroupBox>
+            
+            <GroupBox Header="Positions" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"><Label>GK</Label></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblGK"/></TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"><Label>SW</Label></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblSW"/></TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0"><Label>DF</Label></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblDF"/></TextBlock>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0"><Label>DM</Label></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblDM"/></TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0"><Label>WB</Label></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="1"><Label Name="lblWB"/></TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0"><Label>MF</Label></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="1"><Label Name="lblMF"/></TextBlock>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0"><Label>AM</Label></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="1"><Label Name="lblAM"/></TextBlock>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0"><Label>FW</Label></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="1"><Label Name="lblFW"/></TextBlock>
+
+
+                    <TextBlock Grid.Row="8" Grid.Column="0"></TextBlock>
+                    <TextBlock Grid.Row="8" Grid.Column="1"></TextBlock>
+
+
+                    <TextBlock Grid.Row="9" Grid.Column="0"><Label>Free Role</Label></TextBlock>
+                    <TextBlock Grid.Row="9" Grid.Column="1"><Label Name="lblFreeRole"/></TextBlock>
+
+
+                    <TextBlock Grid.Row="10" Grid.Column="0"></TextBlock>
+                    <TextBlock Grid.Row="10" Grid.Column="1"></TextBlock>
+
+
+                    <TextBlock Grid.Row="11" Grid.Column="0"><Label>R</Label></TextBlock>
+                    <TextBlock Grid.Row="11" Grid.Column="1"><Label Name="lblR"/></TextBlock>
+
+                    <TextBlock Grid.Row="12" Grid.Column="0"><Label>C</Label></TextBlock>
+                    <TextBlock Grid.Row="12" Grid.Column="1"><Label Name="lblC"/></TextBlock>
+
+                    <TextBlock Grid.Row="13" Grid.Column="0"><Label>L</Label></TextBlock>
+                    <TextBlock Grid.Row="13" Grid.Column="1"><Label Name="lblL"/></TextBlock>
+                </Grid>
+
+            </GroupBox>
+        </StackPanel>
+        
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="WhiteSmoke" Height="350">
+            <GroupBox Header="Technical" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"><Label>Anticipation</Label></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblAnticipation"/></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="2"><Label>Long Shots</Label></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="3"><Label Name="lblLongShots"/></TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"><Label>Creativity</Label></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblCreativity"/></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2"><Label>Marking</Label></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="3"><Label Name="lblMarking"/></TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0"><Label>Crossing</Label></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblCrossing"/></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="2"><Label>Off The Ball</Label></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="3"><Label Name="lblOffTheBall"/></TextBlock>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0"><Label>Decisions</Label></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblDecisions"/></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="2"><Label>Passing</Label></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="3"><Label Name="lblPassing"/></TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0"><Label>Dribbling</Label></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="1"><Label Name="lblDribbling"/></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="2"><Label>Positioning</Label></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="3"><Label Name="lblPositioning"/></TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0"><Label>Finishing</Label></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="1"><Label Name="lblFinishing"/></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="2"><Label>Tackling</Label></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="3"><Label Name="lblTackling"/></TextBlock>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0"><Label>Heading</Label></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="1"><Label Name="lblHeading"/></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="2"><Label>Technique</Label></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="3"><Label Name="lblTechnique"/></TextBlock>
+                </Grid>
+            </GroupBox>
+            
+            <GroupBox Header="Mental" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"><Label>Aggression</Label></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblAggression"/></TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"><Label>Bravery</Label></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblBravery"/></TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0"><Label>Consistency</Label></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblConsistency"/></TextBlock>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0"><Label>Dirtyness</Label></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblDirtyness"/></TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0"><Label>Flair</Label></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="1"><Label Name="lblFlair"/></TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0"><Label>Imp. Matches</Label></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="1"><Label Name="lblImpMatches"/></TextBlock>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0"><Label>Influence</Label></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="1"><Label Name="lblInfluence"/></TextBlock>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0"><Label>Teamwork</Label></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="1"><Label Name="lblTeamwork"/></TextBlock>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0"><Label>Versitility</Label></TextBlock>
+                    <TextBlock Grid.Row="8" Grid.Column="1"><Label Name="lblVersitility"/></TextBlock>
+
+                    <TextBlock Grid.Row="9" Grid.Column="0"><Label>Work Rate</Label></TextBlock>
+                    <TextBlock Grid.Row="9" Grid.Column="1"><Label Name="lblWorkRate"/></TextBlock>
+
+                </Grid>
+            </GroupBox>
+            
+            <GroupBox Header="Physical" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"><Label>Acceleration</Label></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblAcceleration"/></TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"><Label>Agility</Label></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblAgility"/></TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0"><Label>Balance</Label></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblBalance"/></TextBlock>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0"><Label>Injury Prone</Label></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblInjuryProne"/></TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0"><Label>Jumping</Label></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="1"><Label Name="lblJumping"/></TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0"><Label>Natural Fitness</Label></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="1"><Label Name="lblNatFitness"/></TextBlock>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0"><Label>Pace</Label></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="1"><Label Name="lblPace"/></TextBlock>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0"><Label>Stamina</Label></TextBlock>
+                    <TextBlock Grid.Row="7" Grid.Column="1"><Label Name="lblStamina"/></TextBlock>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0"><Label>Strength</Label></TextBlock>
+                    <TextBlock Grid.Row="8" Grid.Column="1"><Label Name="lblStrength"/></TextBlock>
+
+                </Grid>
+            </GroupBox>
+
+            <StackPanel Orientation="Vertical">
+                <GroupBox Header="SetPieces" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"><Label>Corners</Label></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblCorners"/></TextBlock>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"><Label>Free Kicks</Label></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblFreeKicks"/></TextBlock>
+                        
+                        <TextBlock Grid.Row="2" Grid.Column="0"><Label>Penalties</Label></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblPenalties"/></TextBlock>
+                        
+                        <TextBlock Grid.Row="3" Grid.Column="0"><Label>Throw Ins</Label></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblThrowIns"/></TextBlock>
+
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Goalkeeping" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"><Label>Handling</Label></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="1"><Label Name="lblHandling"/></TextBlock>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"><Label>One on Ones</Label></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblOneOnes"/></TextBlock>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"><Label>Reflexes</Label></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblReflexes"/></TextBlock>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </StackPanel>
+        
+        <Grid DockPanel.Dock="Bottom"  Height="350">
+            
+        </Grid>
+        <Grid DockPanel.Dock="Bottom">
+            <GroupBox Header="Personality" >
+                <StackPanel Orientation="Horizontal">
+                    <Label>Adaptability</Label>
+                    <Label Name="lblAdaptability" />
+
+                    <Label>Ambition</Label>
+                    <Label Name="lblAmbition" />
+
+                    <Label>Dermination</Label>
+                    <Label Name="lblDetermination" />
+
+                    <Label>Loyalty</Label>
+                    <Label Name="lblLoyalty" />
+
+                    <Label>Pressure</Label>
+                    <Label Name="lblPressure" />
+
+                    <Label>Professionalism</Label>
+                    <Label Name="lblProfessionalism" />
+
+                    <Label>Sportsmanship</Label>
+                    <Label Name="lblSportsmanship" />
+
+                    <Label>Temperament</Label>
+                    <Label Name="lblTemperament" />
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</Window>

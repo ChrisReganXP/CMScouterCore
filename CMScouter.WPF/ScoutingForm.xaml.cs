@@ -245,9 +245,8 @@ namespace CMScouter.WPF
             GridViewPlayer gvp = (sender as Button).DataContext as GridViewPlayer;
             PlayerView player = cmsUI.GetPlayerByPlayerId(new List<int>() { gvp.PlayerId }).First();
 
-            /*
-            PlayerViewForm details = new PlayerViewForm(player, cmsUI.IntrinsicMasker);
-            DialogResult result = details.ShowDialog();*/
+            PlayerForm details = new PlayerForm(player, cmsUI.IntrinsicMasker);
+            details.Show();
         }
 
         #endregion

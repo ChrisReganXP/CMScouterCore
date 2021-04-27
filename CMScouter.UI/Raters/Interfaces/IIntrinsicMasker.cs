@@ -10,5 +10,7 @@ namespace CMScouter.UI
     public interface IIntrinsicMasker
     {
         byte GetIntrinsicMask(PlayerData player, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte intrinsicValue);
+
+        byte GetIntrinsicBasicMask(byte val, short currentAbility);
     }
 }
