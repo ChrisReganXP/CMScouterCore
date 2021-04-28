@@ -7,7 +7,7 @@ namespace CMScouter.UI
     {
         public int? PlayerId { get; set; }
 
-        public string ClubName { get; set; }
+        public int? ClubId { get; set; }
 
         public byte MinAge { get; set; }
 

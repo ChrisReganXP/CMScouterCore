@@ -8,19 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Markup;
-using System.Globalization;
 using CMScouter.WPF.ControlHelpers;
 using CMScouter.UI.DataClasses;
 using System.IO;
@@ -64,6 +53,7 @@ namespace CMScouter.WPF
 
         private void PopulatePlayerTypes()
         {
+            ddlPlayerType.Items.Clear();
             ddlPlayerType.Items.Add("<All>");
             ddlPlayerType.SelectedIndex = 0;
             foreach (var type in Enum.GetNames(typeof(PlayerPosition)))
@@ -133,6 +123,20 @@ namespace CMScouter.WPF
             ddlPlayerBased.ItemsSource = playsInLocationList;
             ddlPlayerBased.SelectedIndex = 0;
         }
+
+        private void PopulateClubs()
+        {
+            var clubNames = cmsUI.GetClubs().Select(x => new { x.ClubId, x.Name }).OrderBy(x => x.Name).ToList();
+            var all = new { ClubId = -1, Name = "<All>" };
+            clubNames.Insert(0, all);
+
+            cbxClubs.DisplayMemberPath = "Name";
+            cbxClubs.SelectedValuePath = "ClubId";
+
+            cbxClubs.ItemsSource = clubNames;
+            cbxClubs.SelectedIndex = 0;
+        }
+
         #region Menu Events
 
         private void Exit_Click(object sender, EventArgs e)
@@ -165,27 +169,6 @@ namespace CMScouter.WPF
             /*}*/
 
             Globals.Instance.SetGameDate(cmsUI.GameDate);
-
-            // Initial Test only. Delete me
-            SearchForClub();
-        }
-
-        #endregion
-
-        #region Execute Search
-        
-        private void SearchForClub()
-        {
-            ScoutingRequest request = new ScoutingRequest()
-            {
-                // Initial Test only. Delete me
-                ClubName = "Estoril",
-
-                /*ClubName = cbxClubName.Text,*/
-            };
-
-            var playerList = cmsUI.GetScoutResults(request);
-            DisplayPlayerList(playerList, request);
         }
 
         #endregion
@@ -504,6 +487,7 @@ namespace CMScouter.WPF
         {
             PopulateNationalities();
             PopulatePlayerBased();
+            PopulateClubs();
             stpSearchCriteria.Visibility = Visibility.Visible;
         }
 
@@ -512,6 +496,12 @@ namespace CMScouter.WPF
         private void btnSearch_Click(object sender, EventArgs e)
         {
             SearchForPlayer();
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            PopulateStaticSearchControls();
+            CustomiseSearchOptions();
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -590,6 +580,8 @@ namespace CMScouter.WPF
 
             int? nationId = (int)ddlNationality.SelectedValue == -1 ? (int?)null : (int)ddlNationality.SelectedValue;
 
+            int? clubId = (int)cbxClubs.SelectedValue == -1 ? (int?)null : (int)cbxClubs.SelectedValue;
+
             string selectedPlaysInValue = (string)ddlPlayerBased.SelectedValue;
             string playsInRegion = null;
             int? playsInDivision = null;
@@ -628,6 +620,7 @@ namespace CMScouter.WPF
                 Nationality = nationId,
                 AvailabilityCriteria = availability,
                 Reputation = reputation,
+                ClubId = clubId,
             };
 
             var playerList = cmsUI.GetScoutResults(request);

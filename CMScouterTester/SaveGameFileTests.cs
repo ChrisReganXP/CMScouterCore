@@ -15,12 +15,13 @@ namespace CMScouterTester
         protected const string OldhamSave = @"C:\Install\Games\CM 0102\Oldham Cheating.sav";
         protected const string BurySave = @"C:\Install\Games\CM0102\Bury End Season 1 3.9.68.sav";
         protected const string BonnyriggSave = @"C:\Install\Games\CM0102\World Tour (AUS).sav";
+        protected const string EstorilSave = @"C:\Install\Games\CM0102\Estoril.sav";
         static CMScouterUI cmsUI;
 
         [ClassInitialize]
         public static void TestSetup(TestContext context)
         {
-            cmsUI = new CMScouterUI(BonnyriggSave);
+            cmsUI = new CMScouterUI(EstorilSave);
         }
 
         [TestMethod]
@@ -56,7 +57,7 @@ namespace CMScouterTester
         [TestMethod]
         public void TestSearchByClubName(string clubName)
         {
-            ScoutingRequest request = new ScoutingRequest() { ClubName = clubName };
+            ScoutingRequest request = new ScoutingRequest() { ClubId = cmsUI.GetClubByName(clubName)?.ClubId };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
 
             Assert.IsNotNull(players);
@@ -174,10 +175,10 @@ namespace CMScouterTester
         [DataRow("LIVERPOOL", "VAN DIJK")]
         public void TestCentreHalfRatings(string clubName, string playerSurname)
         {
-            ScoutingRequest request = new ScoutingRequest() { ClubName = clubName };
+            ScoutingRequest request = new ScoutingRequest() { ClubId = cmsUI.GetClubByName(clubName)?.ClubId };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
             Assert.IsNotNull(players);
-            Assert.IsTrue(players.Count > 0);
+            Assert.IsTrue(players.Count > 0 && players.Count <= 50);
 
             var player = players.First(f => f.SecondName.Equals(playerSurname, StringComparison.InvariantCultureIgnoreCase));
 
@@ -189,10 +190,10 @@ namespace CMScouterTester
         [DataRow("LIVERPOOL", "FIRMINO")]
         public void TestAttackingMidfielderRatings(string clubName, string playerSurname)
         {
-            ScoutingRequest request = new ScoutingRequest() { ClubName = clubName };
+            ScoutingRequest request = new ScoutingRequest() { ClubId = cmsUI.GetClubByName(clubName)?.ClubId };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
             Assert.IsNotNull(players);
-            Assert.IsTrue(players.Count > 0);
+            Assert.IsTrue(players.Count > 0 && players.Count <= 50);
 
             var player = players.First(f => f.SecondName.Equals(playerSurname, StringComparison.InvariantCultureIgnoreCase));
 
@@ -201,13 +202,13 @@ namespace CMScouterTester
         }
 
         [TestMethod]
-        [DataRow("LIVERPOOL", "SALAH")]
+        [DataRow("LIVERPOOL2", "SALAH")]
         public void TestStrikerRatings(string clubName, string playerSurname)
         {
-            ScoutingRequest request = new ScoutingRequest() { ClubName = clubName };
+            ScoutingRequest request = new ScoutingRequest() { ClubId = cmsUI.GetClubByName(clubName)?.ClubId };
             List<PlayerView> players = cmsUI.GetScoutResults(request);
             Assert.IsNotNull(players);
-            Assert.IsTrue(players.Count > 0);
+            Assert.IsTrue(players.Count > 0 && players.Count <= 50);
 
             var player = players.First(f => f.SecondName.Equals(playerSurname, StringComparison.InvariantCultureIgnoreCase));
 

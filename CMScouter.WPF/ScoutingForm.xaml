@@ -5,7 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
         mc:Ignorable="d"
-        Title="Scouting" Height="800" Width="1450">
+        Title="Scouting" Height="900" Width="1450">
+    
+    <Window.Resources>
+        <ItemsPanelTemplate x:Key="VSP">
+            <VirtualizingStackPanel/>
+        </ItemsPanelTemplate>
+    </Window.Resources>
+    
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -46,12 +53,19 @@
                 </CheckBox>
             </StackPanel>
 
+            <Label>Club:</Label>
+            <ComboBox Name="cbxClubs" Height="25" Margin="10" ItemsPanel="{StaticResource VSP}"/>
+
             <Label>Player ID:</Label>
             <TextBox Name="tbxPlayerId" Height="20" Margin="10" />
 
             <Button Click="btnSearch_Click" Width="120" Margin="20">Search</Button>
 
-            <Button Click="btnExport_Click" Width="120" >Export</Button>
+            <StackPanel Orientation="Horizontal">
+                <Button Click="btnReset_Click" Width="100" Margin="10, 0, 0, 0">Reset</Button>
+                <Button Click="btnExport_Click" Width="100" Margin="10, 0, 0, 0">Export</Button>
+            </StackPanel>
+            
         </StackPanel>
 
         <DataGrid x:Name="dgvPlayers" Margin="45,10,10,10" Grid.ColumnSpan="3" Height="750" CanUserSortColumns="False" CanUserAddRows="False"

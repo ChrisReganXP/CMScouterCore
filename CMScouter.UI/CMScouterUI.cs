@@ -79,6 +79,11 @@ namespace CMScouter.UI
             return _savegame.Clubs.Values.ToList();
         }
 
+        public Club GetClubByName(string name)
+        {
+            return _savegame.Clubs.FirstOrDefault(x => x.Value.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).Value;
+        }
+
         public List<Nation> GetAllNations()
         {
             return _savegame.Nations.Values.ToList();

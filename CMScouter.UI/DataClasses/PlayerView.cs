@@ -106,6 +106,10 @@ namespace CMScouter.UI
                 {
                     position += (!string.IsNullOrWhiteSpace(position)) ? "/DM" : "DM";
                 }
+                if (Positions.WingBack >= 15)
+                {
+                    position += (!string.IsNullOrWhiteSpace(position)) ? "/WB" : "WB";
+                }
                 if (Positions.MF >= 15)
                 {
                     position += (!string.IsNullOrWhiteSpace(position)) ? "/M" : "M";

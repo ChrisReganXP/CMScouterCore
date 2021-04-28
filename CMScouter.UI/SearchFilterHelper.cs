@@ -90,18 +90,13 @@ namespace CMScouter.UI
 
         public void CreateClubFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            int? clubId = null;
-
-            if (!string.IsNullOrWhiteSpace(request.ClubName))
+            if (request.ClubId == null)
             {
-                clubId = _savegame.Clubs.Values.FirstOrDefault(x => x.Name.Equals(request.ClubName, StringComparison.OrdinalIgnoreCase))?.ClubId;
-                if (clubId == null)
-                {
-                    clubId = -2;
-                }
+                return;
             }
 
-            filters.Add(x => (clubId == null || x._staff.ClubId == clubId));
+            Func<Player, bool> filter = x => x._staff.ClubId == request.ClubId;
+            filters.Add(filter);
         }
 
         public void CreateNationalityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
