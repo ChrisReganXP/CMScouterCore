@@ -502,6 +502,11 @@ namespace CMScouter.WPF
         {
             PopulateStaticSearchControls();
             CustomiseSearchOptions();
+            tbxMaxAge.Clear();
+            tbxMaxValue.Clear();
+            tbxMaxWage.Clear();
+            tbxPlayerId.Clear();
+            cbxEUNational.IsChecked = false;
         }
 
         private void btnExport_Click(object sender, EventArgs e)
