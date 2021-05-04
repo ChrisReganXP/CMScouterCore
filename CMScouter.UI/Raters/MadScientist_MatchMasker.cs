@@ -1,12 +1,25 @@
 ﻿using CMScouter.DataClasses;
 using CMScouterFunctions.DataClasses;
 using System;
+using System.Diagnostics;
 
 namespace CMScouter.UI.Raters
 {
     public class MadScientist_MatchMasker : IIntrinsicMasker
     {
         private IPositionalPenaltyCalculator positionalPenaltyCalculator;
+
+        private bool outputDebug;
+
+        private void LogDebug(string debug)
+        {
+            if (!outputDebug)
+            {
+                return;
+            }
+
+            Debug.WriteLine(debug);
+        }
 
         public MadScientist_MatchMasker()
         {
@@ -15,40 +28,47 @@ namespace CMScouter.UI.Raters
 
         public byte GetIntrinsicBasicMask(byte val, short currentAbility)
         {
+            return (byte)Math.Round(GetIntrinsicMaskedByAbility(val, currentAbility));
+        }
+
+        private decimal GetIntrinsicMaskedByAbility(byte val, short currentAbility)
+        {
             decimal valueAspect = (decimal)(val - 128) / 5;
             decimal abilityAspect = (decimal)currentAbility / 20;
             byte otherAspect = 10;
 
-            return (byte)Math.Min(99, Math.Max(1, Math.Round(valueAspect + abilityAspect + otherAspect)));
+            return Math.Min(99, Math.Max(1, valueAspect + abilityAspect + otherAspect));
         }
 
-        public byte GetIntrinsicMask(PlayerData player, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte val)
+        public decimal GetIntrinsicMask(PlayerData player, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte val)
         {
-            byte rating = GetIntrinsicBasicMask(val, player.CurrentAbility);
+            decimal ratingCA = GetIntrinsicMaskedByAbility(val, player.CurrentAbility);
 
-            rating = AdjustForSetPosition(rating, player, attribute, setPosition);
+            decimal ratingPos = AdjustForSetPosition(ratingCA, player, attribute, setPosition);
 
+            decimal ratingMove = -1;
             if (movementPosition != setPosition)
             {
-                rating = AdjustForMovementPosition(rating, player, attribute, movementPosition);
+               ratingMove = AdjustForMovementPosition(ratingPos, player, attribute, movementPosition);
             }
 
-            return rating;
+            LogDebug($"CA rating = {ratingCA}, Pos Rating = {ratingPos}, Move Rating {(ratingMove == -1 ? ratingPos : ratingMove)}");
+            return Math.Min(45, ratingMove == -1 ? ratingPos : ratingMove);
         }
 
-        private byte AdjustForSetPosition(byte rating, PlayerData player, DP attribute, PlayerPosition position)
+        private decimal AdjustForSetPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position)
         {
             byte maxPenalty = 20;
             return AdjustForPosition(rating, player, attribute, position, maxPenalty);
         }
 
-        private byte AdjustForMovementPosition(byte rating, PlayerData player, DP attribute, PlayerPosition position)
+        private decimal AdjustForMovementPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position)
         {
             byte maxPenalty = 5;
             return AdjustForPosition(rating, player, attribute, position, maxPenalty);
         }
 
-        private byte AdjustForPosition(byte rating, PlayerData player, DP attribute, PlayerPosition position, byte maxPenalty)
+        private decimal AdjustForPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position, byte maxPenalty)
         {
             switch (attribute)
             {

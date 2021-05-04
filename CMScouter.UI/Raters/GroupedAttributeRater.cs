@@ -10,8 +10,25 @@ using System.Text;
 
 namespace CMScouter.UI
 {
-    internal class CoreRater : IPlayerRater
+    internal class GroupedAttributeRater : IPlayerRater
     {
+        public void OutputDebug(bool enabled)
+        {
+            outputDebug = enabled;
+        }
+
+        private bool outputDebug { get; set; }
+
+        private void LogDebug(string debug)
+        {
+            if (!outputDebug)
+            {
+                return;
+            }
+
+            Debug.WriteLine(debug);
+        }
+
         /*
             GK: Anticipation, Decisions, Handling, Heading, Positioning, Reflexes, Tackling, One on Ones
             Full backs: Anticipation, Crossing, Decisions, Dribbling, Marking, Positioning, Tackling, Team work
@@ -365,7 +382,8 @@ namespace CMScouter.UI
 
         private IIntrinsicMasker masker;
 
-        public CoreRater(IIntrinsicMasker Masker)
+        // rename
+        public GroupedAttributeRater(IIntrinsicMasker Masker)
         {
             masker = Masker;
 
@@ -398,7 +416,7 @@ namespace CMScouter.UI
                     return player.GK >= 19;
 
                 case PlayerPosition.RightBack:
-                    return player.DF >= 15 && player.Right >= 15;
+                    return player.DF >= 15 && player.Right >= 15; // add WBs
 
                 case PlayerPosition.CentreHalf:
                     return player.DF >= 15 && player.Centre >= 15;
@@ -449,6 +467,7 @@ namespace CMScouter.UI
 
             GroupedRatings playerGroupedRatings = null;
 
+            //New object
             List<PositionRating> positionRatings = new List<PositionRating>();
             positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, offFieldRating, ref playerGroupedRatings));
             positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightBack, PlayerPosition.RightBack, offFieldRating, ref playerGroupedRatings));
@@ -572,6 +591,8 @@ namespace CMScouter.UI
             RatingRoleDebug roleDebug;
             var weights = GetWeights(role);
 
+            LogDebug($"*** {role} ***");
+
             GroupedRatings playerGroupedRatings = CreatePlayerGroupedRatings(player, setPosition, movementPosition);
 
             //var values = GetValues(player);
@@ -602,14 +623,32 @@ namespace CMScouter.UI
 
             byte[] values = GetValues(player);
 
+            if (setPosition == movementPosition)
+            {
+                LogDebug($"{setPosition}");
+            }
+            else
+            {
+                LogDebug($"{setPosition} -> {movementPosition}");
+            }
+
+            LogDebug("Impact");
             playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, ImpactAttributes, values);
+            LogDebug("Reliability");
             playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, ReliabilityAttributes, values);
+            LogDebug("Playmaking");
             playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, PlaymakingAttributes, values);
+            LogDebug("Wideplay");
             playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, WidePlayAttributes, values);
+            LogDebug("Scoring");
             playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, ScoringAttributes, values);
+            LogDebug("Defending");
             playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, DefendingAttributes, values);
+            LogDebug("Goalkeeping");
             playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, GoalkeepingAttributes, values);
+            LogDebug("Speed");
             playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, SpeedAttributes, values);
+            LogDebug("Strength");
             playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, StrengthAttributes, values);
 
             return playerGroupedRatings;
@@ -793,14 +832,6 @@ namespace CMScouter.UI
             return (byte)Math.Min(99, Math.Round((decimal)groupRating / 100 * weight));
         }
 
-        private byte AdjustScoreForPosition(Player player, PlayerPosition type, byte unadjustedScore, RatingRoleDebug debug)
-        {
-            decimal positionModifier = (decimal)PositionalFamiliarity(type, player) / 100;
-            debug.Position = positionModifier.ToString("0.00");
-
-            return (byte)(unadjustedScore * positionModifier);
-        }
-
         private byte ApplyOffFieldAdjustment(byte unadjustedScore, byte offFieldScore, RatingRoleDebug debug)
         {
             decimal adjuster;
@@ -825,11 +856,6 @@ namespace CMScouter.UI
             return unadjustedScore;
         }
 
-        private byte AdjustScoreForOffField(byte unadjustedScore, RatingRoleDebug debug)
-        {
-            return (byte)Math.Min(99, Math.Max(0, (int)unadjustedScore));
-        }
-
         private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeight[] attributes, byte[] values)
         {
             decimal rating = 0;
@@ -851,6 +877,7 @@ namespace CMScouter.UI
 
                 decimal value = Adj(realValue, i.IsIntrinsic, i.Attribute, player._player, setPosition, movementPosition);
 
+                /*
                 decimal cappedValue = Math.Min(20, value);
                 if (value > 20)
                 {
@@ -858,14 +885,20 @@ namespace CMScouter.UI
                     cappedValue += remainder;
                 }
 
-                decimal weightedValue = cappedValue * weight;
+                decimal weightedValue = cappedValue * weight;*/
+                decimal weightedValue = value * weight;
 
                 rating += weightedValue;
+
+                LogDebug($"{attribute} real={realValue} masked={value} weighted={weightedValue} ({weight})");
             }
 
             int maxScore = 20 * combinedWeights;
 
             var result = GetRatingAdjustedForMaxScoreDifficulty(rating, maxScore);
+
+            LogDebug($"{rating} out of {maxScore} = {result}");
+
             return result;
         }
 
@@ -936,107 +969,11 @@ namespace CMScouter.UI
             return Math.Min((byte)99, result);
         }
 
-        private byte PositionalFamiliarity(PlayerPosition type, Player player)
-        {
-            byte modifierForPosition = 100;
-            byte modifierForVersitility = GetVersitilityModifier(player._player.Versatility);
-
-            switch (type)
-            {
-                case PlayerPosition.GoalKeeper:
-                    modifierForPosition = GetFamiliarity(player._player.GK, player._player.GK); // double down on GK position, not side
-                    break;
-
-                case PlayerPosition.RightBack:
-                    modifierForPosition = GetFamiliarity(player._player.DF, player._player.Right);
-                    break;
-
-                case PlayerPosition.CentreHalf:
-                    modifierForPosition = GetFamiliarity(player._player.DF, player._player.Centre);
-                    break;
-
-                case PlayerPosition.LeftBack:
-                    modifierForPosition = GetFamiliarity(player._player.DF, player._player.Left);
-                    break;
-
-                case PlayerPosition.RightWingBack:
-                    modifierForPosition = GetFamiliarity(player._player.WingBack, player._player.Right);
-                    break;
-
-                case PlayerPosition.DefensiveMidfielder:
-                    modifierForPosition = GetFamiliarity(player._player.DM, player._player.Centre);
-                    break;
-
-                case PlayerPosition.LeftWingBack:
-                    modifierForPosition = GetFamiliarity(player._player.WingBack, player._player.Left);
-                    break;
-
-                case PlayerPosition.RightMidfielder:
-                    modifierForPosition = GetFamiliarity(player._player.MF, player._player.Right);
-                    break;
-
-                case PlayerPosition.CentralMidfielder:
-                    modifierForPosition = GetFamiliarity(player._player.MF, player._player.Centre);
-                    break;
-
-                case PlayerPosition.LeftMidfielder:
-                    modifierForPosition = GetFamiliarity(player._player.MF, player._player.Left);
-                    break;
-
-                case PlayerPosition.RightWinger:
-                    modifierForPosition = GetFamiliarity(player._player.AM, player._player.Right);
-                    break;
-
-                case PlayerPosition.AttackingMidfielder:
-                    modifierForPosition = GetFamiliarity(player._player.AM, player._player.Centre);
-                    break;
-
-                case PlayerPosition.LeftWinger:
-                    modifierForPosition = GetFamiliarity(player._player.AM, player._player.Left);
-                    break;
-
-                case PlayerPosition.CentreForward:
-                    modifierForPosition = GetFamiliarity(player._player.ST, player._player.Centre);
-                    break;
-
-                default:
-                    modifierForPosition = 1;
-                    break;
-            }
-
-            return (byte)(((decimal)modifierForPosition + modifierForVersitility) / 200 * 100);
-        }
-
-        private byte GetFamiliarity(byte position, byte channel = 20)
-        {
-            return (byte)((position + channel) * 2.5);
-        }
-
-        private byte GetVersitilityModifier(byte versatility)
-        {
-            return (byte)100;
-        }
-
-        private decimal Weight(byte score, short importance, short inflationPercentage = 100)
-        {
-            if (inflationPercentage == 0)
-            {
-                inflationPercentage = 100;
-            }
-
-            score = Math.Min(score, (byte)99);
-
-            decimal inflatedValue = score * ((decimal)inflationPercentage / 100);
-            var inflatedScore = Math.Min(99, Math.Max(1, (int)Math.Round(inflatedValue)));
-
-            return (decimal)inflatedScore / 100 * importance;
-        }
-
         private decimal Adj(byte val, bool isIntrinsic, DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition)
         {
             if (!isIntrinsic)
             {
-                return val;
+                return Math.Min((byte)20, val);
             }
 
             return masker.GetIntrinsicMask(player, attribute, setPosition, movementPosition, val);

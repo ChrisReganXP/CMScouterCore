@@ -25,7 +25,7 @@ namespace CMScouterTester
         public void BasicMaskerTests()
         {
             // Player Ability 90
-            byte rating = masker.GetIntrinsicBasicMask(50, 90);
+            decimal rating = masker.GetIntrinsicBasicMask(50, 90);
             Assert.IsTrue(rating == 1);
 
             rating = masker.GetIntrinsicBasicMask(70, 90);
@@ -181,7 +181,7 @@ namespace CMScouterTester
         private void CycleTestCurrentAbilityUp(PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition)
         {
             short initial_ability = player.CurrentAbility;
-            byte adjusted = 0;
+            decimal adjusted = 0;
             for (int i = 0; i <= 15; i++)
             {
                 if (player.CurrentAbility > 190)
@@ -190,7 +190,7 @@ namespace CMScouterTester
                 }
 
                 player.CurrentAbility += (short)10;
-                byte new_adjusted = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, player.Positioning);
+                decimal new_adjusted = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, player.Positioning);
 
                 if (i == 0)
                 {

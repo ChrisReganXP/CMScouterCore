@@ -39,7 +39,7 @@ namespace CMScouter.UI.Raters
             OffFieldRating = offField;
         }
 
-        public byte Rating { get => Ratings.OrderByDescending(r => r.PurchaseRating).First().PurchaseRating; }
+        public byte Rating { get => Ratings.OrderByDescending(r => r.AbilityRating).First().AbilityRating; }
 
         public RoleRating BestRole()
         {

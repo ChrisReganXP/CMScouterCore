@@ -70,7 +70,7 @@ namespace CMScouter.UI
 
             //_rater = new DefaultRater(IntrinsicMasker);
             //_rater = new InvestigationRater(IntrinsicMasker);
-            _rater = new CoreRater(IntrinsicMasker);
+            _rater = new GroupedAttributeRater(IntrinsicMasker);
         }
 
         public IIntrinsicMasker IntrinsicMasker { get; internal set; }
@@ -146,7 +146,7 @@ namespace CMScouter.UI
                 players = players.Where(x => filter(x)).ToList();
             }
 
-            return ConstructPlayerByScoutingValueDesc(request.PlayerType, request.NumberOfResults, players);
+            return ConstructPlayerByScoutingValueDesc(request.PlayerType, request.NumberOfResults, players, request.OutputDebug);
         }
 
         public string CreateExportSet(List<int> playerIds)
@@ -195,7 +195,7 @@ namespace CMScouter.UI
             return specificPlayerList.Where(x => filter(x));
         }
 
-        private List<PlayerView> ConstructPlayerByScoutingValueDesc(PlayerPosition? type, short numberOfResults, List<Player> preFilteredPlayers)
+        private List<PlayerView> ConstructPlayerByScoutingValueDesc(PlayerPosition? type, short numberOfResults, List<Player> preFilteredPlayers, bool outputDebug)
         {
             if (numberOfResults == 0)
             {
@@ -203,7 +203,10 @@ namespace CMScouter.UI
             }
 
             var playersToConstruct = preFilteredPlayers ?? _savegame.Players;
+
+            _rater.OutputDebug(outputDebug);
             var list = _displayHelper.ConstructPlayers(playersToConstruct, _rater).ToList();
+            _rater.OutputDebug(false);
 
             var scoutOrder = ScoutingOrdering(list, type);
             return scoutOrder.Take(numberOfResults).ToList();

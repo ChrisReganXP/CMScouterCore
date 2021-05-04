@@ -9,6 +9,8 @@ namespace CMScouter.UI
 {
     public interface IPlayerRater
     {
+        void OutputDebug(bool enabled);
+
         ScoutingInformation GetRatings(Player item);
 
         bool PlaysPosition(PlayerPosition type, PlayerData player);

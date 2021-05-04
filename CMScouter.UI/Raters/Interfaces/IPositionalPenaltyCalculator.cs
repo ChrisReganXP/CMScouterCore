@@ -10,6 +10,6 @@ namespace CMScouter.UI
 {
     interface IPositionalPenaltyCalculator
     {
-        byte ApplyPositionPenalty(byte rating, PlayerData player, PlayerPosition position, decimal penaltyReduction);
+        decimal ApplyPositionPenalty(decimal rating, PlayerData player, PlayerPosition position, decimal penaltyReduction);
     }
 }

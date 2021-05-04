@@ -10,7 +10,7 @@ namespace CMScouter.UI.Raters
 {
     class MadScientist_PenaltyCalculator : IPositionalPenaltyCalculator
     {
-        public byte ApplyPositionPenalty(byte rating, PlayerData player, PlayerPosition position, decimal penaltyReduction)
+        public decimal ApplyPositionPenalty(decimal rating, PlayerData player, PlayerPosition position, decimal penaltyReduction)
         {
             byte verticalPenalty = GetVerticalUnfamiliarity(player, position);
             byte horizontalPenalty = GetHorizontalUnfamiliarity(player, position);
@@ -18,7 +18,7 @@ namespace CMScouter.UI.Raters
             decimal initialPenalty = ((decimal)verticalPenalty + horizontalPenalty) / 40 * penaltyReduction;
             decimal finalPenalty = (1.079m - player.Versatility * 0.0395m) * initialPenalty;
 
-            return (byte)Math.Max(1, Math.Round(rating - finalPenalty));
+            return Math.Max(1, rating - finalPenalty);
         }
 
         private byte GetHorizontalUnfamiliarity(PlayerData player, PlayerPosition position)

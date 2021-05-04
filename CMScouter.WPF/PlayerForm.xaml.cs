@@ -42,14 +42,14 @@ namespace CMScouter.WPF
 
         protected void SetAttributeLabels(Label valueLabel, byte value, bool IsIntrinsic = false, bool IsInverted = false)
         {
-            byte maskedValue = 0;
+            decimal maskedValue = 0;
             if (IsIntrinsic)
             {
                 maskedValue = value;
                 value = masker.GetIntrinsicBasicMask(value, player.CurrentAbility);
             }
 
-            Color colour = GetAttributeColour(IsInverted ? (byte)(21 - value) : value);
+            Color colour = GetAttributeColour(IsInverted ? (21 - value) :value);
 
             valueLabel.Foreground = new SolidColorBrush(colour);
             valueLabel.Content = value.ToString();
@@ -60,7 +60,7 @@ namespace CMScouter.WPF
             }
         }
 
-        private static Color GetAttributeColour(byte value)
+        private static Color GetAttributeColour(decimal value)
         {
             if (value >= 21)
             {

@@ -38,5 +38,7 @@ namespace CMScouter.UI
         public short NumberOfResults { get; set; }
 
         public int Reputation { get; set; }
+
+        public bool OutputDebug { get; set; }
     }
 }

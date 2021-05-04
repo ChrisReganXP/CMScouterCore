@@ -342,6 +342,7 @@ namespace CMScouter.WPF
                 AvailabilityCriteria = availability,
                 Reputation = reputation,
                 ClubId = clubId,
+                OutputDebug = playerId.HasValue
             };
 
             pbrLoadPlayers.Visibility = Visibility.Visible;
