@@ -17,6 +17,8 @@ namespace CMScouter.WPF.DataClasses
 
         public byte Age { get; set; }
 
+        public string Nationality { get; set; }
+
         public short CurrentAbility { get; set; }
 
         public short PotentialAbility { get; set; }

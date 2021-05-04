@@ -6,18 +6,19 @@ namespace CMScouter.DataClasses
     {
         None,
 
-        [Description("Non Promotion")]
+        [Description("NP")]
         NonPromotion,
 
-        [Description("Manager Job")]
+        [Description("MJ")]
         ManagerJob,
 
+        [Description("RG")]
         Relegation,
 
-        [Description("Minimum Fee")]
+        [Description("MF")]
         MinimumFee,
 
-        [Description("Not Playing")]
+        [Description("NPl")]
         NotPlaying,
     }
 }

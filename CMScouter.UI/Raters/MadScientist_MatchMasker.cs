@@ -59,7 +59,6 @@ namespace CMScouter.UI.Raters
                 case DP.Creativity:
                 case DP.Decisions:
                     return positionalPenaltyCalculator.ApplyPositionPenalty(rating, player, position, maxPenalty);
-                    break;
 
                 default:
                     return rating;

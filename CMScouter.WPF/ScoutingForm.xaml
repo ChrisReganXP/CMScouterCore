@@ -5,15 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
         mc:Ignorable="d"
-        Title="Scouting" Height="900" Width="1450">
+        Title="CM 01/02 Scouting" Height="900" Width="1600" MinHeight="900" MinWidth="1600">
     
     <Window.Resources>
         <ItemsPanelTemplate x:Key="VSP">
             <VirtualizingStackPanel/>
         </ItemsPanelTemplate>
     </Window.Resources>
-    
+
     <DockPanel>
+
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Click="Open_Click" />
@@ -22,10 +23,10 @@
             </MenuItem>
         </Menu>
 
-        <StackPanel x:Name="stpSearchCriteria" Width="220" >
+        <StackPanel x:Name="stpSearchCriteria" Width="220" DockPanel.Dock="Left" >
             <Label>Player Type:</Label>
             <ComboBox Name="ddlPlayerType" Height="25" Margin="10"/>
-            
+
             <Label>Availability:</Label>
             <ComboBox Name="ddlAvailability" Height="25" Margin="10"/>
 
@@ -56,8 +57,10 @@
             <Label>Club:</Label>
             <ComboBox Name="cbxClubs" Height="25" Margin="10" ItemsPanel="{StaticResource VSP}"/>
 
-            <Label>Player ID:</Label>
-            <TextBox Name="tbxPlayerId" Height="20" Margin="10" />
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="10 0 0 0">Player ID:</Label>
+                <TextBox Name="tbxPlayerId" Height="20" Margin="10 0 0 0" Width="100" />
+            </StackPanel>
 
             <Button Click="btnSearch_Click" Width="120" Margin="20">Search</Button>
 
@@ -65,10 +68,12 @@
                 <Button Click="btnReset_Click" Width="100" Margin="10, 0, 0, 0">Reset</Button>
                 <Button Click="btnExport_Click" Width="100" Margin="10, 0, 0, 0">Export</Button>
             </StackPanel>
-            
+
         </StackPanel>
 
-        <DataGrid x:Name="dgvPlayers" Margin="45,10,10,10" Grid.ColumnSpan="3" Height="750" CanUserSortColumns="False" CanUserAddRows="False"
+        <ProgressBar x:Name="pbrLoadPlayers" Visibility="Collapsed" Height="20" Width="800" Margin="400 10 10 10" />
+
+        <DataGrid x:Name="dgvPlayers" Margin="20 25 1 10" Grid.ColumnSpan="3" Height="900" CanUserSortColumns="False" CanUserAddRows="False" HorizontalAlignment="Stretch" MaxWidth="1580"
                   ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
@@ -82,30 +87,23 @@
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
                 <DataGridTextColumn Header="Ability Rating" Binding="{Binding BestRating}" />
                 <DataGridTextColumn Header="Purchase Rating" Binding="{Binding PurchaseRating}" />
-                <DataGridTextColumn Header="Position" Binding="{Binding BestPosition}" Width="125" />
+                <DataGridTextColumn Header="Best Position" Binding="{Binding BestPosition}" Width="125" />
                 <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
                 <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />
                 <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
-                <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="90" />
-                <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="90" />
                 <DataGridTextColumn Header="Club" Binding="{Binding ClubName}" Width="90" />
+                <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="105" />
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="70" />
-                <DataGridTextColumn Header="Con Months" Binding="{Binding ContractMonths}" />
                 <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="70" />
+                <DataGridTextColumn Header="Months" Binding="{Binding ContractMonths}" Width="50" />
                 <DataGridTextColumn Header="Reputation" Binding="{Binding Reputation}" Width="80" />
+                <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="100" />
                 <DataGridTextColumn Header="Ability" Binding="{Binding CurrentAbility}" />
-                <DataGridTextColumn Header="Potential" Binding="{Binding PotentialAbility}" />
-                <DataGridTextColumn Header="GK R" Binding="{Binding GoalkeepingRating}" Width="60" />
-                <DataGridTextColumn Header="DF R" Binding="{Binding DefendingRating}" Width="60" />
-                <DataGridTextColumn Header="PM R" Binding="{Binding PlaymakingRating}" Width="60" />
-                <DataGridTextColumn Header="WP R" Binding="{Binding WidePlayRating}" Width="60" />
-                <DataGridTextColumn Header="SC R" Binding="{Binding ScoringRating}" Width="60" />
-                <DataGridTextColumn Header="ST R" Binding="{Binding StrengthRating}" Width="60" />
-                <DataGridTextColumn Header="SP R" Binding="{Binding SpeedRating}" Width="60" />
-                <DataGridTextColumn Header="RL R" Binding="{Binding ReliabilityRating}" Width="60" />
-                <DataGridTextColumn Header="IM R" Binding="{Binding ImpactRating}" Width="60" />
-            </DataGrid.Columns>
+                <DataGridTextColumn Header="Potential" Binding="{Binding PotentialAbility}" Width="60" />
+                <DataGridTextColumn Header="Nationality" Binding="{Binding Nationality}" Width="120" />
+                </DataGrid.Columns>
         </DataGrid>
+        
     </DockPanel>
 </Window>

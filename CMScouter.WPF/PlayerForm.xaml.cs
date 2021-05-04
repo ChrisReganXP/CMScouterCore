@@ -97,6 +97,7 @@ namespace CMScouter.WPF
 
         private void AddPersonalDetails()
         {
+            this.Title = player.GetKnownName();
             lblFullName.Content = player.GetKnownName();
             lblAlternateName.Content = player.GetAlternateName();
             lblNationality.Content = player.Nationality;

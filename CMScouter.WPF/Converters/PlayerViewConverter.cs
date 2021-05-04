@@ -21,6 +21,11 @@ namespace CMScouter.WPF.Converters
             dest.Value = source.Value;
             dest.WagePerWeek = source.WagePerWeek;
             dest.Age = source.Age;
+            dest.Nationality = source.Nationality;
+            if (!string.IsNullOrEmpty(source.SecondaryNationality))
+            {
+                dest.Nationality += " / " + source.SecondaryNationality;
+            }
 
             dest.CurrentAbility = source.CurrentAbility;
             dest.PotentialAbility = source.PotentialAbility;
@@ -41,24 +46,21 @@ namespace CMScouter.WPF.Converters
             dest.Reputation = source.ReputationDescription;
 
             dest.SquadStatus = source.Contract?.SquadStatus;
-            dest.SquadStatusValue = source.Contract?.SquadStatusValue ?? (byte)255;
+            dest.SquadStatusValue = source.Contract?.SquadStatusValue ?? 255;
             dest.TransferStatus = source.Contract?.TransferStatus;
-            dest.ReleaseFee = source.Contract?.ReleaseClause != CMScouter.DataClasses.ReleaseClauseType.None ? source.Contract.ReleaseClause.ToName(): string.Empty;
+
+            dest.ReleaseFee = string.Empty;
+
+            if (source.Contract?.ReleaseClause != ReleaseClauseType.None)
+            {
+                dest.ReleaseFee = $"{source.Contract.ReleaseValue.ToString("c0")} ({source.Contract.ReleaseClause.ToName()})";
+            }
 
             dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole().AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.Rating).First().Rating;
             dest.PurchaseRating = source.ScoutRatings.BestPosition.BestRole().PurchaseRating;
             dest.BestPosition = source.ScoutRatings.BestPosition.SetPosition.ToName();
             dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role.ToName();
             dest.Recommendation = source.ScoutRatings.OverallRating;
-            /*dest.GoalkeepingRating = source.ScoutRatings.GroupedRatings.goalkeepingRating;
-            dest.DefendingRating = source.ScoutRatings.GroupedRatings.defendingRating;
-            dest.PlaymakingRating = source.ScoutRatings.GroupedRatings.playmakingRating;
-            dest.WidePlayRating = source.ScoutRatings.GroupedRatings.wideplayRating;
-            dest.ScoringRating = source.ScoutRatings.GroupedRatings.scoringRating;
-            dest.ImpactRating = source.ScoutRatings.GroupedRatings.impactRating;
-            dest.ReliabilityRating = source.ScoutRatings.GroupedRatings.reliabilityRating;
-            dest.StrengthRating = source.ScoutRatings.GroupedRatings.strengthRating;
-            dest.SpeedRating = source.ScoutRatings.GroupedRatings.speedRating;*/
 
             return dest;
         }

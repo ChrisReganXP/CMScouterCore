@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CMScouter.UI
 {
@@ -212,8 +213,8 @@ namespace CMScouter.UI
         {
             if (type == null)
             {
-                // return list.OrderByDescending(x => x.PotentialAbility);
-                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().PurchaseRating);
+                // return list.OrderByDescending(x => x.WagePerWeek);
+                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().AbilityRating);
             }
 
             Dictionary<byte, int> scoreDistribution = new Dictionary<byte, int>();

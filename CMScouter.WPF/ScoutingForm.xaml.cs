@@ -13,6 +13,9 @@ using System.Windows.Controls;
 using CMScouter.WPF.ControlHelpers;
 using CMScouter.UI.DataClasses;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace CMScouter.WPF
 {
@@ -37,29 +40,20 @@ namespace CMScouter.WPF
             stpSearchCriteria.Visibility = Visibility.Collapsed;
 
             PopulateStaticSearchControls();
-
-            /*
-            ddlSearchTypes.Items.Add(PlayerSearch);
-            ddlSearchTypes.Items.Add(ClubSearch);
-            ddlSearchTypes.SelectedIndex = 0;*/
-
-            /*
-            ddlContractStatus.ValueMember = "Value";
-            ddlContractStatus.DisplayMember = "Text";
-            var contractStatusList = new[] { new { Value = -1, Text = "<All>" }, new { Value = 6, Text = "Expires 6 Months" }, new { Value = 12, Text = "Expires 12 Months" } };
-            ddlContractStatus.DataSource = contractStatusList;
-            ddlContractStatus.SelectedIndex = 0;*/
         }
 
         private void PopulatePlayerTypes()
         {
-            ddlPlayerType.Items.Clear();
-            ddlPlayerType.Items.Add("<All>");
+            ddlPlayerType.ItemsSource = null;
+            ddlPlayerType.DisplayMemberPath = "Name";
+            ddlPlayerType.SelectedValuePath = "Position";
+
+            List<KeyValuePair<int, string>> positions = new List<KeyValuePair<int, string>>();
+            var positionsArray = Enum.GetValues(typeof(PlayerPosition)).Cast<PlayerPosition>().Select(x => new { Position = (int)x, Name = x.ToName() }).ToList();
+            positionsArray.Insert(0, new { Position = -1, Name = "<All>" });
+
+            ddlPlayerType.ItemsSource = positionsArray;
             ddlPlayerType.SelectedIndex = 0;
-            foreach (var type in Enum.GetNames(typeof(PlayerPosition)))
-            {
-                ddlPlayerType.Items.Add(type);
-            }
         }
 
         private void PopulateAvailabilityTypes()
@@ -165,9 +159,6 @@ namespace CMScouter.WPF
 
             CustomiseSearchOptions();
 
-            /*DisplayInitialSearchOptions();*/
-            /*}*/
-
             Globals.Instance.SetGameDate(cmsUI.GameDate);
         }
 
@@ -177,42 +168,11 @@ namespace CMScouter.WPF
 
         private void DisplayPlayerList(List<PlayerView> playerList, ScoutingRequest request)
         {
-            /*
-            dgvPlayers.Columns.Clear();
-            */
-
-            /*var buttonColumn = new DataGridViewButtonColumn();
-            buttonColumn.HeaderText = "View";
-            buttonColumn.Name = "ViewButton";
-            buttonColumn.Text = "View";
-            buttonColumn.Width = 40;
-            buttonColumn.UseColumnTextForButtonValue = true;
-            dgvPlayers.Columns.Add(buttonColumn);*/
-
-            /*
-            dgvPlayers.Columns.Add(CreateGridViewColumn(50, "PlayerId", "Id"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(120, "Name", "Name"));
-
-            if (request.PlayerType != null)
-            {
-                dgvPlayers.Columns.Add(CreateGridViewColumn(30, "ScoutedRating", "Pos Rat"));
-                dgvPlayers.Columns.Add(CreateGridViewColumn(30, "ScoutedRole", "Role Rat"));
-            }
-
-            dgvPlayers.Columns.Add(CreateGridViewColumn(30, "BestRating", "Rat"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(30, "BestPosition", "Pos"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(30, "BestRole", "Role"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(100, "ClubName", "Club"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(70, "DescribedPosition", "Position"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(70, "Value", "Value", format: "c0"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(50, "Wage", "Wage", format: "c0"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(30, "Age", "Age"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(70, "Nationality", "Nation"));
-            dgvPlayers.Columns.Add(CreateGridViewColumn(70, "ContractExpiryDate", "Contract"));*/
-
             List<GridViewPlayer> playerViewList = CreatePlayerViews(playerList, request.PlayerType).ToList();
+
             dgvPlayers.ItemsSource = playerViewList;
             dgvPlayers.Visibility = Visibility.Visible;
+            
         }
 
         private IEnumerable<GridViewPlayer> CreatePlayerViews(List<PlayerView> originalPlayers, PlayerPosition? playerType)
@@ -234,253 +194,11 @@ namespace CMScouter.WPF
 
         #endregion
 
-        /*
-        private DataGridTextColumn CreateGridViewColumn(int width, string propertyName, string headerText, bool isDecimal = false, string format = null)
-        {
-            var c = new DataGridTextColumn() { Width = width, Binding = propertyName, Header = headerText, ReadOnly = true, Resizable = DataGridViewTriState.False, SortMode = DataGridViewColumnSortMode.Automatic };
-
-            if (isDecimal)
-            {
-                c.DefaultCellStyle.Format = "0.00";
-            }
-
-            if (!string.IsNullOrWhiteSpace(format))
-            {
-                c.DefaultCellStyle.Format = format;
-            }
-
-            return c;
-        }
-        */
-
-        /*
-        private DataTable CreateDataTable(List<PlayerView> playerList, ScoutingRequest request)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add(new DataColumn() { ColumnName = "PlayerId", DataType = typeof(int), DefaultValue = null, Unique = true });
-            dt.Columns.Add(new DataColumn() { ColumnName = "Name", DataType = typeof(string), DefaultValue = null });
-
-            if (request.PlayerType != null)
-            {
-                dt.Columns.Add(new DataColumn() { ColumnName = "ScoutedRating", DataType = typeof(byte), DefaultValue = null });
-                dt.Columns.Add(new DataColumn() { ColumnName = "ScoutedRole", DataType = typeof(string), DefaultValue = null });
-            }
-
-            dt.Columns.Add(new DataColumn() { ColumnName = "BestRating", DataType = typeof(byte), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "BestPosition", DataType = typeof(string), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "BestRole", DataType = typeof(string), DefaultValue = null });
-
-            dt.Columns.Add(new DataColumn() { ColumnName = "ClubName", DataType = typeof(string), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "DescribedPosition", DataType = typeof(string), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "Value", DataType = typeof(int), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "Wage", DataType = typeof(int), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "Age", DataType = typeof(short), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "Nationality", DataType = typeof(string), DefaultValue = null });
-            dt.Columns.Add(new DataColumn() { ColumnName = "ContractExpiryDate", DataType = typeof(string), DefaultValue = null });
-
-            foreach (var player in playerList)
-            {
-                DataRow dr = dt.NewRow();
-                dr["PlayerId"] = player.PlayerId;
-                dr["Name"] = player.GetKnownName();
-
-                if (request.PlayerType != null)
-                {
-                    dr["ScoutedRating"] = GetScoutedPositionRating(request.PlayerType, player.ScoutRatings);
-                    dr["ScoutedRole"] = GetScoutedRole(request.PlayerType, player.ScoutRatings);
-                }
-
-                dr["BestRating"] = player.ScoutRatings.BestPosition.BestRole().Rating;
-                dr["BestPosition"] = GetScoutedPosition(player.ScoutRatings.BestPosition.Position);
-                dr["BestRole"] = player.ScoutRatings.BestPosition.BestRole().Role;
-
-                dr["ClubName"] = player.ClubName;
-                dr["DescribedPosition"] = player.Positions.DescribedPosition;
-                dr["Value"] = player.Value;
-                dr["Wage"] = player.WagePerWeek;
-                dr["Age"] = player.Age;
-                dr["Nationality"] = player.Nationality;
-                dr["ContractExpiryDate"] = player.ContractExpiryDate == null ? string.Empty : player.ContractExpiryDate.Value.ToShortDateString();
-
-                dt.Rows.Add(dr);
-            }
-
-            return dt;
-        }*/
-
-        private string GetScoutedPositionRating(PlayerPosition? scoutedPosition, ScoutingInformation ratings)
-        {
-            if (scoutedPosition == null)
-            {
-                return ratings.BestPosition.BestRole().Role.ToString();
-            }
-
-            switch (scoutedPosition)
-            {
-                case PlayerPosition.GoalKeeper:
-                    return ratings.Goalkeeper.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.RightBack:
-                    return ratings.RightBack.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.CentreHalf:
-                    return ratings.CentreHalf.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.LeftBack:
-                    return ratings.LeftBack.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.RightWingBack:
-                    return ratings.RightWingBack.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.DefensiveMidfielder:
-                    return ratings.DefensiveMidfielder.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.LeftWingBack:
-                    return ratings.LeftWingBack.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.RightMidfielder:
-                    return ratings.RightMidfielder.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.CentralMidfielder:
-                    return ratings.CentreMidfielder.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.LeftMidfielder:
-                    return ratings.LeftMidfielder.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.RightWinger:
-                    return ratings.RightWinger.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.AttackingMidfielder:
-                    return ratings.AttackingMidfielder.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.LeftWinger:
-                    return ratings.LeftWinger.BestRole().AbilityRating.ToString();
-
-                case PlayerPosition.CentreForward:
-                    return ratings.CentreForward.BestRole().AbilityRating.ToString();
-
-                default:
-                    return ratings.BestPosition.BestRole().AbilityRating.ToString();
-            }
-        }
-
-        private string GetScoutedRole(PlayerPosition? scoutedPosition, ScoutingInformation ratings)
-        {
-            if (scoutedPosition == null)
-            {
-                return ratings.BestPosition.BestRole().Role.ToString();
-            }
-
-            switch (scoutedPosition)
-            {
-                case PlayerPosition.GoalKeeper:
-                    return ratings.Goalkeeper.BestRole().Role.ToString();
-
-                case PlayerPosition.RightBack:
-                    return ratings.RightBack.BestRole().Role.ToString();
-
-                case PlayerPosition.CentreHalf:
-                    return ratings.CentreHalf.BestRole().Role.ToString();
-
-                case PlayerPosition.LeftBack:
-                    return ratings.LeftBack.BestRole().Role.ToString();
-
-                case PlayerPosition.RightWingBack:
-                    return ratings.RightWingBack.BestRole().Role.ToString();
-
-                case PlayerPosition.DefensiveMidfielder:
-                    return ratings.DefensiveMidfielder.BestRole().Role.ToString();
-
-                case PlayerPosition.LeftWingBack:
-                    return ratings.LeftWingBack.BestRole().Role.ToString();
-
-                case PlayerPosition.RightMidfielder:
-                    return ratings.RightMidfielder.BestRole().Role.ToString();
-
-                case PlayerPosition.CentralMidfielder:
-                    return ratings.CentreMidfielder.BestRole().Role.ToString();
-
-                case PlayerPosition.LeftMidfielder:
-                    return ratings.LeftMidfielder.BestRole().Role.ToString();
-
-                case PlayerPosition.RightWinger:
-                    return ratings.RightWinger.BestRole().Role.ToString();
-
-                case PlayerPosition.AttackingMidfielder:
-                    return ratings.AttackingMidfielder.BestRole().Role.ToString();
-
-                case PlayerPosition.LeftWinger:
-                    return ratings.LeftWinger.BestRole().Role.ToString();
-
-                case PlayerPosition.CentreForward:
-                    return ratings.CentreForward.BestRole().Role.ToString();
-
-                default:
-                    return ratings.BestPosition.BestRole().Role.ToString();
-            }
-        }
-
-        private string GetScoutedPosition(PlayerPosition position)
-        {
-            switch (position)
-            {
-                case PlayerPosition.GoalKeeper:
-                    return "GK";
-
-                case PlayerPosition.RightBack:
-                    return "RB";
-
-                case PlayerPosition.CentreHalf:
-                    return "CD";
-
-                case PlayerPosition.LeftBack:
-                    return "LB";
-
-                case PlayerPosition.RightWingBack:
-                    return "RWB";
-
-                case PlayerPosition.DefensiveMidfielder:
-                    return "DM";
-
-                case PlayerPosition.LeftWingBack:
-                    return "LWB";
-
-                case PlayerPosition.RightMidfielder:
-                    return "RM";
-
-                case PlayerPosition.CentralMidfielder:
-                    return "CM";
-
-                case PlayerPosition.LeftMidfielder:
-                    return "LM";
-
-                case PlayerPosition.RightWinger:
-                    return "RW";
-
-                case PlayerPosition.AttackingMidfielder:
-                    return "AM";
-
-                case PlayerPosition.LeftWinger:
-                    return "LW";
-
-                case PlayerPosition.CentreForward:
-                    return "CF";
-
-                default:
-                    return "";
-            }
-        }
-
         private void PopulateStaticSearchControls()
         {
             PopulatePlayerTypes();
             PopulateAvailabilityTypes();
             PopulateReputationLevels();
-
-            /*
-            var clubNames = cmsUI.GetClubs().Select(x => x.Name).ToList();
-            clubNames.Sort();
-            cbxClubName.Items.AddRange(clubNames.ToArray());*/
         }
 
         private void CustomiseSearchOptions()
@@ -493,9 +211,12 @@ namespace CMScouter.WPF
 
         #region Execute Search
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
-            SearchForPlayer();
+            dgvPlayers.Visibility = Visibility.Hidden;
+            Mouse.OverrideCursor = Cursors.Wait;
+            await SearchForPlayers();
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -536,12 +257,11 @@ namespace CMScouter.WPF
             var result = dlg.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                //Save the file, assuming the DataContext is plain text (i.e. string)
                 File.WriteAllText(dlg.FileName, csv);
             }
         }
 
-        private void SearchForPlayer()
+        private async Task SearchForPlayers()
         {
             int playerIdNonNull;
             int? playerId;
@@ -572,15 +292,11 @@ namespace CMScouter.WPF
                 maxWage = long.MaxValue;
             }
 
-            PlayerPosition castType;
-            PlayerPosition? type;
-            if (!Enum.TryParse(ddlPlayerType.Text, out castType))
+            PlayerPosition? type = null;
+
+            if ((int)ddlPlayerType.SelectedValue >= 0)
             {
-                type = null;
-            }
-            else
-            {
-                type = castType;
+                type = (PlayerPosition)ddlPlayerType.SelectedValue;
             }
 
             int? nationId = (int)ddlNationality.SelectedValue == -1 ? (int?)null : (int)ddlNationality.SelectedValue;
@@ -628,7 +344,14 @@ namespace CMScouter.WPF
                 ClubId = clubId,
             };
 
-            var playerList = cmsUI.GetScoutResults(request);
+            pbrLoadPlayers.Visibility = Visibility.Visible;
+            pbrLoadPlayers.IsIndeterminate = true;
+
+            List<PlayerView> playerList = await Task.Run(() => cmsUI.GetScoutResults(request));
+
+            pbrLoadPlayers.IsIndeterminate = false;
+            pbrLoadPlayers.Visibility = Visibility.Collapsed;
+
             DisplayPlayerList(playerList, request);
         }
         #endregion
