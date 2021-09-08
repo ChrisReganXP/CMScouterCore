@@ -56,10 +56,10 @@ namespace CMScouter.WPF.Converters
                 dest.ReleaseFee = $"{source.Contract.ReleaseValue.ToString("c0")} ({source.Contract.ReleaseClause.ToName()})";
             }
 
-            dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole().AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.Rating).First().Rating;
-            dest.PurchaseRating = source.ScoutRatings.BestPosition.BestRole().PurchaseRating;
+            dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole.AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.Rating).First().Rating;
+            dest.PurchaseRating = source.ScoutRatings.BestPosition.BestRole.PurchaseRating;
             dest.BestPosition = source.ScoutRatings.BestPosition.SetPosition.ToName();
-            dest.BestRole = source.ScoutRatings.BestPosition.BestRole().Role.ToName();
+            dest.BestRole = source.ScoutRatings.BestPosition.BestRole.Role.ToName();
             dest.Recommendation = source.ScoutRatings.OverallRating;
 
             return dest;

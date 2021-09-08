@@ -31,45 +31,37 @@ namespace CMScouter.UI.Raters
 
         public byte OffFieldRating { get; }
 
-        public List<RoleRating> Ratings { get; set; }
+        public List<RoleRating> RoleRatings { get; set; }
 
         public PositionRating(byte offField)
         {
-            Ratings = new List<RoleRating>();
+            RoleRatings = new List<RoleRating>();
             OffFieldRating = offField;
         }
 
-        public byte Rating { get => Ratings.OrderByDescending(r => r.AbilityRating).First().AbilityRating; }
+        public RoleRating BestRole { get => RoleRatings.OrderByDescending(r => r.AbilityRating).First(); }
 
-        public RoleRating BestRole()
-        {
-            return Ratings.OrderByDescending(x => x.AbilityRating).First();
-        }
+        public byte Rating { get => BestRole.AbilityRating; }
     }
 
     public class ScoutingInformation
     {
         private List<PositionRating> _positionRatings = new List<PositionRating>();
 
-        public ScoutingInformation(List<PositionRating> scouting, decimal offField, GroupedRatings groupedRatings)
+        public ScoutingInformation(List<PositionRating> scouting, decimal offField)
         {
             _positionRatings = scouting;
             PersonalityRating = offField;
-            GroupedRatings = groupedRatings;
         }
 
         public List<PositionRating> PositionRatings { get => _positionRatings; }
 
-        public GroupedRatings GroupedRatings { get; }
-
         public decimal PersonalityRating { get; }
 
-        public byte OverallRating { get => this.ApplyPersonalityModifier(_positionRatings.OrderByDescending(r => r.Rating).First().Rating); }
-
-        private byte ApplyPersonalityModifier(byte rating) => RatingHelper.ModifyByte(rating, PersonalityRating);
+        public byte OverallRating { get => BestPosition.BestRole.PurchaseRating; }
 
         public PositionRating BestPosition { get => _positionRatings.OrderByDescending(r => r.Rating).First(); }
-
+        /*
         public PositionRating Goalkeeper { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.GoalKeeper); }
 
         public PositionRating RightBack { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.RightBack); }
@@ -96,7 +88,7 @@ namespace CMScouter.UI.Raters
 
         public PositionRating LeftWinger { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.LeftWinger); }
 
-        public PositionRating CentreForward { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.CentreForward); }
+        public PositionRating CentreForward { get => _positionRatings.FirstOrDefault(r => r.SetPosition == PlayerPosition.CentreForward); }*/
     }
 
 

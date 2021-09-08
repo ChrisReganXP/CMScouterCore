@@ -148,18 +148,18 @@ namespace CMScouter.UI
 
         public byte BestRating
         {
-            get { return ScoutRatings.BestPosition.BestRole().AbilityRating; }
+            get { return ScoutRatings.BestPosition.BestRole.AbilityRating; }
         }
 
         public string BestRole
         {
-            get { return ScoutRatings.BestPosition.BestRole().Role.ToString(); }
+            get { return ScoutRatings.BestPosition.BestRole.Role.ToString(); }
         }
 
         public RoleRating BestRoleRatingForPlayerType(PlayerPosition type)
         {
-            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.SetPosition == type).OrderByDescending(y => y.Ratings.OrderByDescending(z => z.AbilityRating)).First();
-            return bestPosition.Ratings.OrderByDescending(x => x.AbilityRating).First();
+            var bestPosition = ScoutRatings.PositionRatings.Where(x => x.SetPosition == type).OrderByDescending(y => y.RoleRatings.OrderByDescending(z => z.AbilityRating)).First();
+            return bestPosition.RoleRatings.OrderByDescending(x => x.AbilityRating).First();
         }
 
         public string CreateCSVText(List<PropertyInfo> csv_order, List<PropertyInfo> csv_attributes_order, List<PropertyInfo> csv_positions_order)
@@ -350,7 +350,7 @@ namespace CMScouter.UI
 
         public override string ToString()
         {
-            var bestRole = ScoutRatings.BestPosition.BestRole();
+            var bestRole = ScoutRatings.BestPosition.BestRole;
 
             return $"{FirstName} {SecondName} - {bestRole.Role}:{bestRole.PurchaseRating} - ({ClubName})";
         }

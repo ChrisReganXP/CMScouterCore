@@ -102,7 +102,7 @@ namespace CMScouterTester
             
             Assert.IsNotNull(players);
             Assert.IsTrue(players.Count > 0);
-            Assert.IsTrue(players.All(p => p.ScoutRatings.Goalkeeper.BestRole().AbilityRating > 70));
+            Assert.IsTrue(players.All(p => p.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.GoalKeeper).BestRole.AbilityRating > 70));
             Assert.IsTrue(players.All(p => p.CurrentAbility > 80));
         }
 
@@ -142,7 +142,7 @@ namespace CMScouterTester
 
             Assert.IsNotNull(players);
             Assert.IsTrue(players.Count >= 20);
-            Assert.IsTrue(players.All(p => p.ScoutRatings.CentreHalf.BestRole().AbilityRating > 50));
+            Assert.IsTrue(players.All(p => p.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.CentreHalf).BestRole.AbilityRating > 50));
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace CMScouterTester
 
             Assert.IsNotNull(players);
             Assert.IsTrue(players.Count >= 20);
-            Assert.IsTrue(players.All(p => p.ScoutRatings.AttackingMidfielder.BestRole().AbilityRating > 50));
+            Assert.IsTrue(players.All(p => p.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.AttackingMidfielder).BestRole.AbilityRating > 50));
         }
 
         [TestMethod]
@@ -164,10 +164,10 @@ namespace CMScouterTester
             Assert.IsNotNull(players);
             Assert.IsTrue(players.Count >= 1);
 
-            var keeper = players.OrderByDescending(p => p.ScoutRatings.Goalkeeper.BestRole().AbilityRating).First();
+            var keeper = players.OrderByDescending(p => p.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.GoalKeeper).BestRole.AbilityRating).First();
 
             Assert.IsNotNull(keeper);
-            Assert.IsTrue(keeper.ScoutRatings.Goalkeeper.BestRole().AbilityRating > 70);
+            Assert.IsTrue(keeper.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.GoalKeeper).BestRole.AbilityRating > 70);
         }
 
         [TestMethod]
@@ -198,7 +198,7 @@ namespace CMScouterTester
             var player = players.First(f => f.SecondName.Equals(playerSurname, StringComparison.InvariantCultureIgnoreCase));
 
             Assert.IsNotNull(player);
-            Assert.IsTrue(player.ScoutRatings.AttackingMidfielder.BestRole().AbilityRating > 70);
+            Assert.IsTrue(player.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.AttackingMidfielder).BestRole.AbilityRating > 70);
         }
 
         [TestMethod]
@@ -213,7 +213,7 @@ namespace CMScouterTester
             var player = players.First(f => f.SecondName.Equals(playerSurname, StringComparison.InvariantCultureIgnoreCase));
 
             Assert.IsNotNull(player);
-            Assert.IsTrue(player.ScoutRatings.CentreForward.BestRole().AbilityRating > 70);
+            Assert.IsTrue(player.ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.CentreForward).BestRole.AbilityRating > 70);
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace CMScouterTester
 
             Assert.IsNotNull(players);
             Assert.IsTrue(players.Count > 0);
-            Assert.IsTrue(players[0].ScoutRatings.CentreForward.Rating > 50);
+            Assert.IsTrue(players[0].ScoutRatings.PositionRatings.First(x => x.SetPosition == PlayerPosition.CentreForward).Rating > 50);
         }
     }
 }

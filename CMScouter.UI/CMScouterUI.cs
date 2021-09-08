@@ -1,5 +1,6 @@
 ﻿using CMScouter.DataClasses;
 using CMScouter.UI.Converters;
+using CMScouter.UI.DataClasses;
 using CMScouter.UI.Raters;
 using CMScouterFunctions.DataClasses;
 using System;
@@ -8,6 +9,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CMScouter.UI
@@ -70,7 +73,16 @@ namespace CMScouter.UI
 
             //_rater = new DefaultRater(IntrinsicMasker);
             //_rater = new InvestigationRater(IntrinsicMasker);
-            _rater = new GroupedAttributeRater(IntrinsicMasker);
+
+            GroupedRoleWeights tester = new GroupedRoleWeights(Roles.GK);
+            tester.Acceleration = 5;
+            tester.SpeedPercent = 100;
+
+            string testerJson = JsonSerializer.Serialize(tester);
+
+            GroupedRoleWeights weights = JsonSerializer.Deserialize<GroupedRoleWeights>(@"{""Role"" : 2, ""SpeedPercent"" : 100, ""Acceleration"": 5}");
+
+            _rater = new GroupedAttributeRater(IntrinsicMasker, weights);
         }
 
         public IIntrinsicMasker IntrinsicMasker { get; internal set; }
@@ -217,7 +229,7 @@ namespace CMScouter.UI
             if (type == null)
             {
                 // return list.OrderByDescending(x => x.WagePerWeek);
-                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole().AbilityRating);
+                return list.OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole.AbilityRating);
             }
 
             Dictionary<byte, int> scoreDistribution = new Dictionary<byte, int>();
