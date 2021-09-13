@@ -15,6 +15,12 @@
 
     <DockPanel>
 
+        <StatusBar DockPanel.Dock="Bottom" Height="30">
+            <StatusBarItem>
+                <Label Name="lblStatusInfo" Content="No Game Loaded" />
+            </StatusBarItem>
+        </StatusBar>
+
         <Menu DockPanel.Dock="Top" Name="TopMenu">
             <MenuItem Header="_File" Name="FileMenu">
                 <MenuItem Header="Open" Click="Open_Click" />
@@ -77,37 +83,39 @@
 
         <ProgressBar x:Name="pbrLoadPlayers" Visibility="Collapsed" Height="20" Width="800" Margin="400 10 10 10" />
 
-        <DataGrid x:Name="dgvPlayers" Margin="20 25 1 10" Grid.ColumnSpan="3" Height="900" CanUserSortColumns="False" CanUserAddRows="False" HorizontalAlignment="Stretch" MaxWidth="1580"
-                  ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Click="View_Click" Content="{Binding PlayerId}">
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
-                <DataGridTextColumn Header="Ability" Binding="{Binding BestRating}" />
-                <DataGridTextColumn Header="Overall" Binding="{Binding PurchaseRating}" Width="47" />
-                <DataGridTextColumn Header="Best Position" Binding="{Binding BestPosition}" Width="125" />
-                <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
-                <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />
-                <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
-                <DataGridTextColumn Header="Club" Binding="{Binding ClubName}" Width="90" />
-                <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="105" />
-                <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
-                <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="70" />
-                <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="70" />
-                <DataGridTextColumn Header="Months" Binding="{Binding ContractMonths}" Width="50" />
-                <DataGridTextColumn Header="Reputation" Binding="{Binding Reputation}" Width="80" />
-                <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="100" />
-                <DataGridTextColumn Header="Ability" Binding="{Binding CurrentAbility}" />
-                <DataGridTextColumn Header="Potential" Binding="{Binding PotentialAbility}" Width="60" />
-                <DataGridTextColumn Header="Nationality" Binding="{Binding Nationality}" Width="120" />
-                </DataGrid.Columns>
-        </DataGrid>
-        
+        <StackPanel DockPanel.Dock="Top">
+            <DataGrid Name="dgvPlayers" Margin="20 5 1 10" Grid.ColumnSpan="3" Height="800" CanUserSortColumns="False" CanUserAddRows="False" HorizontalAlignment="Stretch" MaxWidth="1580"
+                      ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Click="View_Click" Content="{Binding PlayerId}">
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
+                    <DataGridTextColumn Header="Ability" Binding="{Binding BestRating}" />
+                    <DataGridTextColumn Header="Overall" Binding="{Binding PurchaseRating}" Width="47" />
+                    <DataGridTextColumn Header="Best Position" Binding="{Binding BestPosition}" Width="125" />
+                    <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
+                    <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />
+                    <DataGridTextColumn Header="Squad" Binding="{Binding SquadStatus}" Width="90" />
+                    <DataGridTextColumn Header="Club" Binding="{Binding ClubName}" Width="90" />
+                    <DataGridTextColumn Header="Transfer" Binding="{Binding TransferStatus}" Width="105" />
+                    <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=c0}" Width="70" />
+                    <DataGridTextColumn Header="Wage" Binding="{Binding WagePerWeek, StringFormat=c0}" Width="70" />
+                    <DataGridTextColumn Header="Months" Binding="{Binding ContractMonths}" Width="50" />
+                    <DataGridTextColumn Header="Reputation" Binding="{Binding Reputation}" Width="80" />
+                    <DataGridTextColumn Header="Release Fee" Binding="{Binding ReleaseFee}" Width="100" />
+                    <DataGridTextColumn Header="Ability" Binding="{Binding CurrentAbility}" />
+                    <DataGridTextColumn Header="Potential" Binding="{Binding PotentialAbility}" Width="60" />
+                    <DataGridTextColumn Header="Nationality" Binding="{Binding Nationality}" Width="120" />
+                    </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </DockPanel>
+
 </Window>

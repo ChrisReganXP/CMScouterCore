@@ -195,13 +195,21 @@ namespace CMScouter.WPF
         private void LoadSaveGameFile(string fileName)
         {
             bool neverSeenBefore = false;
+            lblStatusInfo.Content = string.Empty;
 
-            SettingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
+            string errorResult = SettingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
+
+            lblStatusInfo.Content = errorResult;
 
             var newGame = settings.GetLastSavedGame();
             if (newGame == null)
             {
                 return;
+            }
+
+            if (string.IsNullOrEmpty((string)lblStatusInfo.Content))
+            {
+                lblStatusInfo.Content = "Loaded : " + newGame.FilePath;
             }
 
             cmsUI = new CMScouterUI(fileName, newGame.ValueMultiplier);
@@ -260,7 +268,6 @@ namespace CMScouter.WPF
 
             dgvPlayers.ItemsSource = playerViewList;
             dgvPlayers.Visibility = Visibility.Visible;
-            
         }
 
         private IEnumerable<GridViewPlayer> CreatePlayerViews(List<PlayerView> originalPlayers, PlayerPosition? playerType)

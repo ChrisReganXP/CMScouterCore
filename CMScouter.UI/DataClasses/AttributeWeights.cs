@@ -100,6 +100,11 @@ namespace CMScouter.UI.DataClasses
 
         public Roles Role { get; set; }
 
+        public GroupedRoleWeights()
+        {
+            Role = Roles.GK;
+        }
+
         public GroupedRoleWeights(Roles role)
         {
             Role = role;

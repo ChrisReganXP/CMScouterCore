@@ -14,7 +14,7 @@ namespace CMScouter.WPF
     {
         private const string _userSettingsFilename = "savegames.json";
 
-        private static string _assemblyPath = Assembly.GetEntryAssembly().Location;
+        private static string _assemblyPath = System.AppDomain.CurrentDomain.BaseDirectory;
 
         private static string GetSettingsFileName()
         {
@@ -44,14 +44,12 @@ namespace CMScouter.WPF
         {
             try
             {
-                Save(settings);
+                return Save(settings);
             }
             catch(Exception ex)
             {
                 return ex.Message;
             }
-
-            return null;
         }
 
         private static Settings Read(string path)
