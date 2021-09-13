@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouter.UI.Raters;
 using CMScouterFunctions.DataClasses;
 using System;
@@ -11,6 +12,6 @@ namespace CMScouter.UI
     {
         byte GetIntrinsicBasicMask(byte val, short currentAbility);
 
-        decimal GetIntrinsicMask(PlayerData player, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte intrinsicValue);
+        decimal GetIntrinsicMask(short currentAbility, PositionalData playerPosition, byte Versatility, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte intrinsicValue);
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
         mc:Ignorable="d"
-        Title="CM 01/02 Scouting" Height="900" Width="1600" MinHeight="900" MinWidth="1600">
+        Title="CM 01/02 Scouting" Height="900" Width="1600" MinHeight="900" MinWidth="1600" Left="20" Top="20">
     
     <Window.Resources>
         <ItemsPanelTemplate x:Key="VSP">
@@ -15,11 +15,15 @@
 
     <DockPanel>
 
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Open" Click="Open_Click" />
+        <Menu DockPanel.Dock="Top" Name="TopMenu">
+            <MenuItem Header="_File" Name="FileMenu">
+                <MenuItem Header="Open" Click="Open_Click" />
                 <Separator />
-                <MenuItem Header="_Exit" Click="Exit_Click" />
+                <MenuItem Header="Exit" Click="Exit_Click" />
+            </MenuItem>
+
+            <MenuItem Header="Settings" Name="SettingsMenu">
+                <MenuItem Header="Game Settings" Click="MenuItem_Click" IsEnabled="false" />
             </MenuItem>
         </Menu>
 
@@ -74,7 +78,7 @@
         <ProgressBar x:Name="pbrLoadPlayers" Visibility="Collapsed" Height="20" Width="800" Margin="400 10 10 10" />
 
         <DataGrid x:Name="dgvPlayers" Margin="20 25 1 10" Grid.ColumnSpan="3" Height="900" CanUserSortColumns="False" CanUserAddRows="False" HorizontalAlignment="Stretch" MaxWidth="1580"
-                  ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False">
+                  ItemsSource="{Binding}" ColumnWidth="45" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -85,8 +89,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
-                <DataGridTextColumn Header="Ability Rating" Binding="{Binding BestRating}" />
-                <DataGridTextColumn Header="Purchase Rating" Binding="{Binding PurchaseRating}" />
+                <DataGridTextColumn Header="Ability" Binding="{Binding BestRating}" />
+                <DataGridTextColumn Header="Overall" Binding="{Binding PurchaseRating}" Width="47" />
                 <DataGridTextColumn Header="Best Position" Binding="{Binding BestPosition}" Width="125" />
                 <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
                 <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />

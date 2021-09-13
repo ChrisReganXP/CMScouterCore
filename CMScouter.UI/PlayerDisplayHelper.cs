@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouter.UI.Converters;
 using CMScouterFunctions.DataClasses;
 using System;
@@ -19,13 +20,13 @@ namespace CMScouter.UI
             _gamedate = gameDate;
         }
 
-        public IEnumerable<PlayerView> ConstructPlayers(IEnumerable<Player> players, IPlayerRater rater)
+        public IEnumerable<PlayerView> ConstructPlayers(IEnumerable<Player> players, IPlayerRater rater, ConstructPlayerOptions options = null)
         {
             _rater = rater;
 
             foreach (var player in players)
             {
-                yield return ConstructPlayer(player);
+                yield return ConstructPlayer(player, options);
             }
         }
 
@@ -39,7 +40,7 @@ namespace CMScouter.UI
             return (byte)Math.Min(byte.MaxValue, age);
         }
 
-        public PlayerView ConstructPlayer(Player item)
+        public PlayerView ConstructPlayer(Player item, ConstructPlayerOptions options = null)
         {
             return new PlayerView()
             {
@@ -51,7 +52,7 @@ namespace CMScouter.UI
                 SecondaryNationality = GetLookupString<NationView>(item._staff.SecondaryNationId, _lookups.nations)?.Name,
                 Age = GetAge(item._staff.DOB),
                 Value = item._staff.Value,
-                WagePerWeek = item._staff.Wage,
+                WagePerWeek = item._contract?.WagePerWeek ?? item._staff.Wage,
                 ContractExpiryDate = item._staff.ContractExpiryDate,
 
                 ClubName = item._staff.ClubId == -1 ? string.Empty : GetLookupString(item._staff.ClubId, _lookups.clubNames),
@@ -157,7 +158,7 @@ namespace CMScouter.UI
                     Temperament = item._staff.Temperament,
                 },
 
-                ScoutRatings = _rater.GetRatings(item),
+                ScoutRatings = options == null ? _rater.GetRatings(item) : _rater.GetRating(item, options),
             };
         }
 

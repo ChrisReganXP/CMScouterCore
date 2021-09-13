@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CMScouter.UI.DataClasses;
+using CMScouter.DataContracts;
 
 namespace CMScouter.UI
 {
@@ -106,11 +107,11 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Playmaking] = 0;
             groupWeight[(int)AG.Wideplay] = 0;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 45;
+            groupWeight[(int)AG.Defending] = 40;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 5;
-            groupWeight[(int)AG.Strength] = 25;
+            groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.CB] = groupWeight;
         }
@@ -361,7 +362,7 @@ namespace CMScouter.UI
 
         private AttributeWeight[] GoalkeepingAttributes = new AttributeWeight[]
         {
-            new AttributeWeight{ Attribute = DP.Handling, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.OneOnOnes, Weight = 2, IsIntrinsic = true },
+            new AttributeWeight{ Attribute = DP.Handling, Weight = 15, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.OneOnOnes, Weight = 2, IsIntrinsic = true },
             new AttributeWeight{ Attribute = DP.Reflexes, Weight = 5, IsIntrinsic = true }, new AttributeWeight { Attribute = DP.Positioning, Weight = 5, IsIntrinsic = true },
             new AttributeWeight{ Attribute = DP.Agility, Weight = 4}
         };
@@ -374,7 +375,7 @@ namespace CMScouter.UI
 
         private AttributeWeight[] StrengthAttributes = new AttributeWeight[]
         {
-            new AttributeWeight{ Attribute = DP.Balance, Weight = 2 }, new AttributeWeight{ Attribute = DP.Jumping, Weight = 10 },
+            new AttributeWeight{ Attribute = DP.Balance, Weight = 2 }, new AttributeWeight{ Attribute = DP.Jumping, Weight = 13 },
             new AttributeWeight{ Attribute = DP.Stamina, Weight = 2 }, new AttributeWeight{ Attribute = DP.Strength, Weight = 10 }
         };
 
@@ -460,28 +461,46 @@ namespace CMScouter.UI
                     return false;
             }
         }
+        
+        public ScoutingInformation GetRating(Player player, ConstructPlayerOptions options)
+        {
+            return GetRatings(player, options);
+        }
 
         public ScoutingInformation GetRatings(Player player)
+        {
+            return GetRatings(player, null);
+        }
+
+        private ScoutingInformation GetRatings(Player player, ConstructPlayerOptions options)
         {
             byte offFieldRating = GetRatingsForPersonality(player);
             //decimal offFieldAdjustment = GetAdjustmentByOffFieldRating(offFieldRating);
 
             //New object
             List<PositionRating> positionRatings = new List<PositionRating>();
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightBack, PlayerPosition.RightBack, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftBack, PlayerPosition.LeftBack, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWingBack, PlayerPosition.RightWingBack, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.DefensiveMidfielder, PlayerPosition.DefensiveMidfielder, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWingBack, PlayerPosition.LeftWingBack, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightMidfielder, PlayerPosition.RightMidfielder, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentralMidfielder, PlayerPosition.CentralMidfielder, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftMidfielder, PlayerPosition.LeftMidfielder, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWinger, PlayerPosition.RightWinger, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.AttackingMidfielder, PlayerPosition.CentreForward, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWinger, PlayerPosition.LeftWinger, offFieldRating));
-            positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreForward, PlayerPosition.CentreForward, offFieldRating));
+
+            if (options == null)
+            {
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightBack, PlayerPosition.RightBack, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftBack, PlayerPosition.LeftBack, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWingBack, PlayerPosition.RightWingBack, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.DefensiveMidfielder, PlayerPosition.DefensiveMidfielder, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWingBack, PlayerPosition.LeftWingBack, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightMidfielder, PlayerPosition.RightMidfielder, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentralMidfielder, PlayerPosition.CentralMidfielder, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftMidfielder, PlayerPosition.LeftMidfielder, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightWinger, PlayerPosition.RightWinger, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.AttackingMidfielder, PlayerPosition.CentreForward, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.LeftWinger, PlayerPosition.LeftWinger, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.CentreForward, PlayerPosition.CentreForward, offFieldRating));
+            }
+            else
+            {
+                positionRatings.Add(GetRatingsForPosition(player, options.setPosition, options.movementPosition, offFieldRating));
+            }
 
             ScoutingInformation coreResults = new ScoutingInformation(positionRatings, offFieldRating);
 
@@ -971,7 +990,7 @@ namespace CMScouter.UI
                 return Math.Min((byte)20, val);
             }
 
-            return masker.GetIntrinsicMask(player, attribute, setPosition, movementPosition, val);
+            return masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, attribute, setPosition, movementPosition, val);
         }
 
         private byte[] GetWeights(Roles role)

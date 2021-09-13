@@ -1,36 +1,12 @@
-﻿using System;
+﻿using CMScouter.DataContracts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CMScouter.UI
 {
-    public class PlayerPositionView
+    public class PlayerPositionView : PositionalData
     {
-
-        public short GK { get; set; }
-
-        public short SW { get; set; }
-
-        public short DF { get; set; }
-
-        public short DM { get; set; }
-
-        public short MF { get; set; }
-
-        public short AM { get; set; }
-
-        public short ST { get; set; }
-
-        public short WingBack { get; set; }
-
-        public short FreeRole { get; set; }
-
-        public short Right { get; set; }
-
-        public short Left { get; set; }
-
-        public short Centre { get; set; }
-
         public string DescribedPosition
         {
             get

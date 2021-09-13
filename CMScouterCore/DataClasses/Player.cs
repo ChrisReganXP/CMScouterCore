@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using System;
 
 namespace CMScouterFunctions.DataClasses
@@ -96,7 +97,7 @@ namespace CMScouterFunctions.DataClasses
     }
 
 
-    public class PlayerData
+    public class PlayerData : PositionalData
     {
         [DataFileInfo(0)]
         public int PlayerId { get; set; }
@@ -115,42 +116,6 @@ namespace CMScouterFunctions.DataClasses
 
         [DataFileInfo(13)]
         public short WorldReputation { get; set; }
-
-        [DataFileInfo(15)]
-        public byte GK { get; set; }
-
-        [DataFileInfo(16)]
-        public byte SW { get; set; }
-
-        [DataFileInfo(17)]
-        public byte DF { get; set; }
-
-        [DataFileInfo(18)]
-        public byte DM { get; set; }
-
-        [DataFileInfo(19)]
-        public byte MF { get; set; }
-
-        [DataFileInfo(20)]
-        public byte AM { get; set; }
-
-        [DataFileInfo(21)]
-        public byte ST { get; set; }
-
-        [DataFileInfo(22)]
-        public byte WingBack { get; set; }
-
-        [DataFileInfo(24)]
-        public byte Left { get; set; }
-
-        [DataFileInfo(23)]
-        public byte Right { get; set; }
-
-        [DataFileInfo(25)]
-        public byte Centre { get; set; }
-
-        [DataFileInfo(26)]
-        public byte FreeRole { get; set; }
 
         [DataFileInfo(48)]
         public byte LeftFoot { get; set; }

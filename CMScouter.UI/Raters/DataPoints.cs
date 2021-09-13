@@ -30,6 +30,7 @@ namespace CMScouter.UI
         Jumping,
         LongShots,
         Marking,
+        NaturalFitness,
         OffTheBall,
         OneOnOnes,
         Pace,

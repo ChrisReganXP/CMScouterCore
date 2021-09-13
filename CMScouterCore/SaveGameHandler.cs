@@ -11,7 +11,7 @@ namespace CMScouterFunctions
     {
         const int ByteBlockSize = 268;
 
-        public static SaveGameData OpenSaveGameIntoMemory(string fileName)
+        public static SaveGameData OpenSaveGameIntoMemory(string fileName, decimal valueMultiplier)
         {
             SaveGameFile savegame = new SaveGameFile();
             savegame.FileName = fileName;
@@ -23,7 +23,7 @@ namespace CMScouterFunctions
 
             LoadGameData(savegame);
 
-            return PlayerLoader.LoadPlayers(savegame);
+            return PlayerLoader.LoadPlayers(savegame, valueMultiplier);
         }
 
         public static List<int> GetCountriesInRegion(Dictionary<int, Nation> nations, string regionName)

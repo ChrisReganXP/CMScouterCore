@@ -4,6 +4,7 @@ using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CMScouter.DataContracts;
 
 namespace CMScouter.UI
 {
@@ -14,5 +15,7 @@ namespace CMScouter.UI
         ScoutingInformation GetRatings(Player item);
 
         bool PlaysPosition(PlayerPosition type, PlayerData player);
+
+        ScoutingInformation GetRating(Player item, ConstructPlayerOptions options);
     }
 }

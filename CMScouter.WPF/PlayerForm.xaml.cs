@@ -1,4 +1,7 @@
-﻿using CMScouter.UI;
+﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
+using CMScouter.UI;
+using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +25,21 @@ namespace CMScouter.WPF
     {
         PlayerView player;
         IIntrinsicMasker masker;
+        CMScouterUI cmsUI;
 
-        public PlayerForm(PlayerView player, IIntrinsicMasker masker)
+        public PlayerForm(CMScouterUI cmsui, PlayerView player)
         {
+            this.cmsUI = cmsui;
             InitializeComponent();
             this.player = player;
-            this.masker = masker;
+            this.masker = cmsUI.IntrinsicMasker;
 
+            InitialiseRatingPanel();
+            BindPlayerDetails();
+        }
+
+        private void BindPlayerDetails()
+        {
             AddPersonalDetails();
             AddPositionDetails();
             AddPersonality();
@@ -38,15 +49,18 @@ namespace CMScouter.WPF
             AddPhysical();
             AddSetPieces();
             AddGoalkeeping();
+
+            AddRating();
         }
 
-        protected void SetAttributeLabels(Label valueLabel, byte value, bool IsIntrinsic = false, bool IsInverted = false)
+        protected void SetAttributeLabels(Label valueLabel, byte value, DP attribute, bool IsIntrinsic = false, bool IsInverted = false)
         {
             decimal maskedValue = 0;
             if (IsIntrinsic)
             {
                 maskedValue = value;
-                value = masker.GetIntrinsicBasicMask(value, player.CurrentAbility);
+                //value = masker.GetIntrinsicBasicMask(value, player.CurrentAbility);
+                value = (byte)masker.GetIntrinsicMask(player.CurrentAbility, player.Positions, player.Attributes.Versitility, attribute, (PlayerPosition)ddlPosition.SelectedValue, (PlayerPosition)ddlRunTo.SelectedValue, value);
             }
 
             Color colour = GetAttributeColour(IsInverted ? (21 - value) :value);
@@ -131,74 +145,120 @@ namespace CMScouter.WPF
 
         private void AddTechnical()
         {
-            SetAttributeLabels(lblAnticipation, player.Attributes.Anticipation, true);
-            SetAttributeLabels(lblCreativity, player.Attributes.Creativity, true);
-            SetAttributeLabels(lblCrossing, player.Attributes.Crossing, true);
-            SetAttributeLabels(lblDecisions, player.Attributes.Decisions, true);
-            SetAttributeLabels(lblDribbling, player.Attributes.Dribbling, true);
-            SetAttributeLabels(lblFinishing, player.Attributes.Finishing, true);
-            SetAttributeLabels(lblHeading, player.Attributes.Heading, true);
-            SetAttributeLabels(lblLongShots, player.Attributes.LongShots, true);
-            SetAttributeLabels(lblMarking, player.Attributes.Marking, true);
-            SetAttributeLabels(lblOffTheBall, player.Attributes.OffTheBall, true);
-            SetAttributeLabels(lblPassing, player.Attributes.Passing, true);
-            SetAttributeLabels(lblPositioning, player.Attributes.Positioning, true);
-            SetAttributeLabels(lblTackling, player.Attributes.Tackling, true);
-            SetAttributeLabels(lblTechnique, player.Attributes.Technique);
+            SetAttributeLabels(lblAnticipation, player.Attributes.Anticipation, DP.Anticipation, true);
+            SetAttributeLabels(lblCreativity, player.Attributes.Creativity, DP.Creativity, true);
+            SetAttributeLabels(lblCrossing, player.Attributes.Crossing, DP.Crossing, true);
+            SetAttributeLabels(lblDecisions, player.Attributes.Decisions, DP.Decisions, true);
+            SetAttributeLabels(lblDribbling, player.Attributes.Dribbling, DP.Dribbling, true);
+            SetAttributeLabels(lblFinishing, player.Attributes.Finishing, DP.Finishing, true);
+            SetAttributeLabels(lblHeading, player.Attributes.Heading, DP.Heading, true);
+            SetAttributeLabels(lblLongShots, player.Attributes.LongShots, DP.LongShots, true);
+            SetAttributeLabels(lblMarking, player.Attributes.Marking, DP.Marking, true);
+            SetAttributeLabels(lblOffTheBall, player.Attributes.OffTheBall, DP.OffTheBall, true);
+            SetAttributeLabels(lblPassing, player.Attributes.Passing, DP.Passing, true);
+            SetAttributeLabels(lblPositioning, player.Attributes.Positioning, DP.Positioning, true);
+            SetAttributeLabels(lblTackling, player.Attributes.Tackling, DP.Tackling, true);
+            SetAttributeLabels(lblTechnique, player.Attributes.Technique, DP.Technique);
         }
 
         private void AddMental()
         {
-            SetAttributeLabels(lblAggression, player.Attributes.Aggression);
-            SetAttributeLabels(lblBravery, player.Attributes.Bravery);
-            SetAttributeLabels(lblConsistency, player.Attributes.Consistency);
-            SetAttributeLabels(lblDirtyness, player.Attributes.Dirtiness, false, true);
-            SetAttributeLabels(lblFlair, player.Attributes.Flair);
-            SetAttributeLabels(lblImpMatches, player.Attributes.ImportantMatches);
-            SetAttributeLabels(lblInfluence, player.Attributes.Influence);
-            SetAttributeLabels(lblTeamwork, player.Attributes.Teamwork);
-            SetAttributeLabels(lblVersitility, player.Attributes.Versitility);
-            SetAttributeLabels(lblWorkRate, player.Attributes.WorkRate);
+            SetAttributeLabels(lblAggression, player.Attributes.Aggression, DP.Aggression);
+            SetAttributeLabels(lblBravery, player.Attributes.Bravery, DP.Bravery);
+            SetAttributeLabels(lblConsistency, player.Attributes.Consistency, DP.Consistency);
+            SetAttributeLabels(lblDirtyness, player.Attributes.Dirtiness, DP.Dirtiness, false, true);
+            SetAttributeLabels(lblFlair, player.Attributes.Flair, DP.Flair);
+            SetAttributeLabels(lblImpMatches, player.Attributes.ImportantMatches, DP.ImportantMatches);
+            SetAttributeLabels(lblInfluence, player.Attributes.Influence, DP.Influence);
+            SetAttributeLabels(lblTeamwork, player.Attributes.Teamwork, DP.Teamwork);
+            SetAttributeLabels(lblVersitility, player.Attributes.Versitility, DP.Versatility);
+            SetAttributeLabels(lblWorkRate, player.Attributes.WorkRate, DP.WorkRate);
         }
 
         private void AddPhysical()
         {
-            SetAttributeLabels(lblAcceleration, player.Attributes.Acceleration);
-            SetAttributeLabels(lblAgility, player.Attributes.Agility);
-            SetAttributeLabels(lblBalance, player.Attributes.Balance);
-            SetAttributeLabels(lblInjuryProne, player.Attributes.InjuryProneness, false, true);
-            SetAttributeLabels(lblJumping, player.Attributes.Jumping);
-            SetAttributeLabels(lblNatFitness, player.Attributes.NaturalFitness);
-            SetAttributeLabels(lblPace, player.Attributes.Pace);
-            SetAttributeLabels(lblStamina, player.Attributes.Stamina);
-            SetAttributeLabels(lblStrength, player.Attributes.Strength);
+            SetAttributeLabels(lblAcceleration, player.Attributes.Acceleration, DP.Acceleration);
+            SetAttributeLabels(lblAgility, player.Attributes.Agility, DP.Agility);
+            SetAttributeLabels(lblBalance, player.Attributes.Balance, DP.Balance);
+            SetAttributeLabels(lblInjuryProne, player.Attributes.InjuryProneness, DP.InjuryProneness, false, true);
+            SetAttributeLabels(lblJumping, player.Attributes.Jumping, DP.Jumping);
+            SetAttributeLabels(lblNatFitness, player.Attributes.NaturalFitness, DP.NaturalFitness);
+            SetAttributeLabels(lblPace, player.Attributes.Pace, DP.Pace);
+            SetAttributeLabels(lblStamina, player.Attributes.Stamina, DP.Stamina);
+            SetAttributeLabels(lblStrength, player.Attributes.Strength, DP.Strength);
         }
         
         private void AddSetPieces()
         {
-            SetAttributeLabels(lblCorners, player.Attributes.Corners);
-            SetAttributeLabels(lblFreeKicks, player.Attributes.FreeKicks);
-            SetAttributeLabels(lblPenalties, player.Attributes.Penalties, true);
-            SetAttributeLabels(lblThrowIns, player.Attributes.ThrowIns, true);
+            SetAttributeLabels(lblCorners, player.Attributes.Corners, DP.Corners);
+            SetAttributeLabels(lblFreeKicks, player.Attributes.FreeKicks, DP.FreeKicks);
+            SetAttributeLabels(lblPenalties, player.Attributes.Penalties, DP.Penalties, true);
+            SetAttributeLabels(lblThrowIns, player.Attributes.ThrowIns, DP.ThrowIns, true);
         }
 
         private void AddGoalkeeping()
         {
-            SetAttributeLabels(lblHandling, player.Attributes.Handling, true);
-            SetAttributeLabels(lblOneOnes, player.Attributes.OneOnOnes, true);
-            SetAttributeLabels(lblReflexes, player.Attributes.Reflexes, true);
+            SetAttributeLabels(lblHandling, player.Attributes.Handling, DP.Handling, true);
+            SetAttributeLabels(lblOneOnes, player.Attributes.OneOnOnes, DP.OneOnOnes, true);
+            SetAttributeLabels(lblReflexes, player.Attributes.Reflexes, DP.Reflexes, true);
         }
 
         private void AddPersonality()
         {
-            SetAttributeLabels(lblAdaptability, player.Attributes.Adaptability);
-            SetAttributeLabels(lblAmbition, player.Attributes.Ambition);
-            SetAttributeLabels(lblDetermination, player.Attributes.Determination);
-            SetAttributeLabels(lblLoyalty, player.Attributes.Loyalty);
-            SetAttributeLabels(lblPressure, player.Attributes.Pressure);
-            SetAttributeLabels(lblProfessionalism, player.Attributes.Professionalism);
-            SetAttributeLabels(lblSportsmanship, player.Attributes.Sportsmanship);
-            SetAttributeLabels(lblTemperament, player.Attributes.Temperament);
+            SetAttributeLabels(lblAdaptability, player.Attributes.Adaptability, DP.Adaptability);
+            SetAttributeLabels(lblAmbition, player.Attributes.Ambition, DP.Ambition);
+            SetAttributeLabels(lblDetermination, player.Attributes.Determination, DP.Determination);
+            SetAttributeLabels(lblLoyalty, player.Attributes.Loyalty, DP.Loyalty);
+            SetAttributeLabels(lblPressure, player.Attributes.Pressure, DP.Pressure);
+            SetAttributeLabels(lblProfessionalism, player.Attributes.Professionalism, DP.Professionalism);
+            SetAttributeLabels(lblSportsmanship, player.Attributes.Sportsmanship, DP.Sportsmanship);
+            SetAttributeLabels(lblTemperament, player.Attributes.Temperament, DP.Temperament);
+        }
+
+        private void AddRating()
+        {
+            lblRating.Content = player.ScoutRatings.BestPosition.BestRole.AbilityRating;
+        }
+
+        private void InitialiseRatingPanel()
+        {
+            ddlPosition.ItemsSource = null;
+            ddlPosition.DisplayMemberPath = "Name";
+            ddlPosition.SelectedValuePath = "Position";
+
+            ddlRunTo.ItemsSource = null;
+            ddlRunTo.DisplayMemberPath = "Name";
+            ddlRunTo.SelectedValuePath = "Position";
+
+            var positionsArray = Enum.GetValues(typeof(PlayerPosition)).Cast<PlayerPosition>().Select(x => new { Position = (int)x, Name = x == player.ScoutRatings.BestPosition.SetPosition ? x.ToName() + " (Best)" : x.ToName() }).ToList();
+
+            ddlPosition.ItemsSource = positionsArray;
+            ddlPosition.SelectedIndex = positionsArray.First(x => x.Position == (int)player.ScoutRatings.BestPosition.SetPosition).Position;
+
+            var movementsArray = Enum.GetValues(typeof(PlayerPosition)).Cast<PlayerPosition>().Select(x => new { Position = (int)x, Name = x.ToName() }).ToList();
+
+            ddlRunTo.ItemsSource = movementsArray;
+            ddlRunTo.SelectedIndex = movementsArray.First(x => x.Position == (int)player.ScoutRatings.BestPosition.MovementPosition).Position;
+        }
+
+        private void ddlPosition_DropDownClosed(object sender, EventArgs e)
+        {
+            ConstructPlayerOptions options = new ConstructPlayerOptions();
+            options.setPosition = (PlayerPosition)ddlPosition.SelectedValue;
+
+            if ((ComboBox)sender == ddlPosition)
+            {
+                ddlRunTo.SelectedValue = ddlPosition.SelectedValue;
+            }
+
+            options.movementPosition = (PlayerPosition)ddlRunTo.SelectedValue;
+
+            if (options.setPosition >= 0 && options.movementPosition >= 0)
+            {
+                player = cmsUI.GetPlayerByPlayerId(player.PlayerId, options);
+
+                BindPlayerDetails();
+            }
         }
     }
 }

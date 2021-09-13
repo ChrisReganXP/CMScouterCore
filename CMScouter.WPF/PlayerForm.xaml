@@ -37,12 +37,12 @@
                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblAlternateName"/></TextBlock>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"></TextBlock>
-                    
+
                     <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblNationality"/></TextBlock>
                     <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblSecondNation"/></TextBlock>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"></TextBlock>
-                    
+
                     <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"><Label Name="lblPosition"/></TextBlock>
                     <TextBlock Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"><Label Name="lblAge"/></TextBlock>
 
@@ -61,10 +61,10 @@
                     <TextBlock Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2"><Label Name="lblExpiry"/></TextBlock>
 
                     <TextBlock Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4"><Label Name="lblClub"/></TextBlock>
-                    
+
                 </Grid>
             </GroupBox>
-            
+
             <GroupBox Header="Positions" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -138,7 +138,7 @@
 
             </GroupBox>
         </StackPanel>
-        
+
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="WhiteSmoke" Height="350">
             <GroupBox Header="Technical" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
                 <Grid>
@@ -196,7 +196,7 @@
                     <TextBlock Grid.Row="6" Grid.Column="3"><Label Name="lblTechnique"/></TextBlock>
                 </Grid>
             </GroupBox>
-            
+
             <GroupBox Header="Mental" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -250,7 +250,7 @@
 
                 </Grid>
             </GroupBox>
-            
+
             <GroupBox Header="Physical" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -321,10 +321,10 @@
 
                         <TextBlock Grid.Row="1" Grid.Column="0"><Label>Free Kicks</Label></TextBlock>
                         <TextBlock Grid.Row="1" Grid.Column="1"><Label Name="lblFreeKicks"/></TextBlock>
-                        
+
                         <TextBlock Grid.Row="2" Grid.Column="0"><Label>Penalties</Label></TextBlock>
                         <TextBlock Grid.Row="2" Grid.Column="1"><Label Name="lblPenalties"/></TextBlock>
-                        
+
                         <TextBlock Grid.Row="3" Grid.Column="0"><Label>Throw Ins</Label></TextBlock>
                         <TextBlock Grid.Row="3" Grid.Column="1"><Label Name="lblThrowIns"/></TextBlock>
 
@@ -355,11 +355,8 @@
                 </GroupBox>
             </StackPanel>
         </StackPanel>
-        
-        <Grid DockPanel.Dock="Bottom"  Height="350">
-            
-        </Grid>
-        <Grid DockPanel.Dock="Bottom" Margin="10 0 10 0">
+
+        <StackPanel DockPanel.Dock="Top" Margin="10 0 10 0">
             <GroupBox Header="Personality" >
                 <StackPanel Orientation="Horizontal">
                     <Label>Adaptability</Label>
@@ -387,6 +384,31 @@
                     <Label Name="lblTemperament" />
                 </StackPanel>
             </GroupBox>
-        </Grid>
+        </StackPanel>
+
+
+        <StackPanel DockPanel.Dock="Bottom">
+            <GroupBox Header="Ratings" Margin="10, 10, 10, 10" Padding="25, 15, 25, 15">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="Margin" Value="20,0,0,0"/>
+                        </Style>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="Margin" Value="10,0,10,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Label>Position: </Label>
+                    <ComboBox Name="ddlPosition" DropDownClosed="ddlPosition_DropDownClosed" />
+                
+                    <Label>Run To: </Label>
+                    <ComboBox Name="ddlRunTo" DropDownClosed="ddlPosition_DropDownClosed"/>
+
+                    <Label>Rating:</Label>
+                    <Label Name="lblRating"></Label>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
     </DockPanel>
 </Window>

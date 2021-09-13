@@ -26,10 +26,32 @@ namespace CMScouter.WPF
     {
         private CMScouterUI cmsUI;
 
+        private Settings settings;
+
         public ScoutingForm()
         {
             InitializeComponent();
+            HandleInitialSettings();
             PopulateInitialItems();
+        }
+
+        private void HandleInitialSettings()
+        {
+            settings = SettingsManager.LoadSavedGameSettings();
+            var lastGame = settings.GetLastSavedGame();
+            if (lastGame == null)
+            {
+                return;
+            }
+
+            MenuItem loadLastGame = new MenuItem() { Header = $"Load Last Game ({lastGame.FileName})", Name = "menLastGame" };
+            loadLastGame.Click += LoadLastGame_Click;
+            FileMenu.Items.Insert(1, loadLastGame);
+        }
+
+        private void LoadLastGame_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSaveGameFile(settings.GetLastSavedGame().FilePath);
         }
 
         private void PopulateInitialItems()
@@ -131,6 +153,23 @@ namespace CMScouter.WPF
             cbxClubs.SelectedIndex = 0;
         }
 
+        public void PerformInitialSearch()
+        {
+            if (settings.GetLastSavedGame() == null || settings.GetLastSavedGame().UserManagedTeam < 0)
+            {
+                return;
+            }
+
+            if (dgvPlayers.Items.Count > 0)
+            {
+                return;
+            }
+
+            cbxClubs.SelectedValue = settings.GetLastSavedGame().UserManagedTeam;
+            PerformSearch();
+            cbxClubs.SelectedIndex = 0;
+        }
+
         #region Menu Events
 
         private void Exit_Click(object sender, EventArgs e)
@@ -155,11 +194,60 @@ namespace CMScouter.WPF
 
         private void LoadSaveGameFile(string fileName)
         {
-            cmsUI = new CMScouterUI(fileName);
+            bool neverSeenBefore = false;
+
+            SettingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
+
+            var newGame = settings.GetLastSavedGame();
+            if (newGame == null)
+            {
+                return;
+            }
+
+            cmsUI = new CMScouterUI(fileName, newGame.ValueMultiplier);
 
             CustomiseSearchOptions();
 
             Globals.Instance.SetGameDate(cmsUI.GameDate);
+
+            if (neverSeenBefore)
+            {
+                ShowSaveGameSettingsDialog();
+            }
+            else
+            {
+                cmsUI.UpdateInflationValue(newGame.ValueMultiplier);
+                PerformInitialSearch();
+            }
+
+            ChangeMenusOnSaveGameLoad();
+        }
+
+        private void ChangeMenusOnSaveGameLoad()
+        {
+            try
+            {
+                var lastGame = (MenuItem)FileMenu.Items[1];
+                if (lastGame.Name == "menLastGame")
+                {
+                    lastGame.Header = "Reload";
+                }
+
+            }
+            catch { }
+
+            try
+            {
+                var settingsMenuItem = (MenuItem)SettingsMenu.Items[0];
+                settingsMenuItem.IsEnabled = true;
+            }
+            catch { }
+        }
+
+        private void ShowSaveGameSettingsDialog()
+        {
+            SaveGameSettingsDialog sgd = new SaveGameSettingsDialog(this, settings, cmsUI);
+            sgd.Show();
         }
 
         #endregion
@@ -188,7 +276,7 @@ namespace CMScouter.WPF
             GridViewPlayer gvp = (sender as Button).DataContext as GridViewPlayer;
             PlayerView player = cmsUI.GetPlayerByPlayerId(new List<int>() { gvp.PlayerId }).First();
 
-            PlayerForm details = new PlayerForm(player, cmsUI.IntrinsicMasker);
+            PlayerForm details = new PlayerForm(cmsUI, player);
             details.Show();
         }
 
@@ -211,12 +299,19 @@ namespace CMScouter.WPF
 
         #region Execute Search
 
-        private async void btnSearch_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
+            PerformSearch();
+        }
+
+        private async void PerformSearch()
+        {
+            LockUIDuringSearch();
             dgvPlayers.Visibility = Visibility.Hidden;
             Mouse.OverrideCursor = Cursors.Wait;
             await SearchForPlayers();
             Mouse.OverrideCursor = Cursors.Arrow;
+            UnlockUIDuringSearch();
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -356,5 +451,31 @@ namespace CMScouter.WPF
             DisplayPlayerList(playerList, request);
         }
         #endregion
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSaveGameSettingsDialog();
+        }
+
+        private void LockUIDuringSearch()
+        {
+            try
+            {
+                var settingsItem = (MenuItem)SettingsMenu.Items[0];
+                settingsItem.IsEnabled = false;
+            }
+            catch { }
+        }
+
+        private void UnlockUIDuringSearch()
+        {
+            try
+            {
+                var settingsItem = (MenuItem)SettingsMenu.Items[0];
+                settingsItem.IsEnabled = true;
+            }
+            catch { }
+        }
+
     }
 }

@@ -101,11 +101,11 @@ namespace CMScouterTester
             player.CurrentAbility = 100;
             player.Versatility = 20;
 
-            var rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
+            var rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
             Assert.IsTrue(rating == 15);
 
             player.Versatility = 1;
-            rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
+            rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
             Assert.IsTrue(rating == 15);
         }
 
@@ -121,11 +121,11 @@ namespace CMScouterTester
             player.CurrentAbility = 100;
             player.Versatility = 20;
 
-            var rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
+            var rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
             Assert.IsTrue(rating == 14);
 
             player.Versatility = 10;
-            rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
+            rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
             Assert.IsTrue(rating == 13);
         }
 
@@ -143,14 +143,14 @@ namespace CMScouterTester
             player.CurrentAbility = 100;
             player.Versatility = 20;
 
-            var rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
+            var rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightBack, player.Positioning);
             Assert.IsTrue(rating == 9);
 
-            rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
+            rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
             Assert.IsTrue(rating == 8);
 
             player.Versatility = 10;
-            rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
+            rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.RightBack, PlayerPosition.RightWingBack, player.Positioning);
             Assert.IsTrue(rating == 1);
         }
 
@@ -170,11 +170,11 @@ namespace CMScouterTester
             player.CurrentAbility = 100;
             player.Versatility = 20;
 
-            var rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.OffTheBall, PlayerPosition.CentreForward, PlayerPosition.CentreForward, player.OffTheBall);
+            var rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.OffTheBall, PlayerPosition.CentreForward, PlayerPosition.CentreForward, player.OffTheBall);
             Assert.IsTrue(rating == 10);
 
             player.Versatility = 8;
-            rating = masker.GetIntrinsicMask(player, CMScouter.UI.DP.OffTheBall, PlayerPosition.CentreForward, PlayerPosition.CentreForward, player.OffTheBall);
+            rating = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.OffTheBall, PlayerPosition.CentreForward, PlayerPosition.CentreForward, player.OffTheBall);
             Assert.IsTrue(rating == 1);
         }
 
@@ -190,7 +190,7 @@ namespace CMScouterTester
                 }
 
                 player.CurrentAbility += (short)10;
-                decimal new_adjusted = masker.GetIntrinsicMask(player, CMScouter.UI.DP.Positioning, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, player.Positioning);
+                decimal new_adjusted = masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, CMScouter.UI.DP.Positioning, PlayerPosition.CentreHalf, PlayerPosition.CentreHalf, player.Positioning);
 
                 if (i == 0)
                 {

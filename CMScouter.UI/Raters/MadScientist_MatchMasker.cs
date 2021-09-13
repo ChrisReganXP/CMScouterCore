@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Diagnostics;
@@ -40,35 +41,35 @@ namespace CMScouter.UI.Raters
             return Math.Min(99, Math.Max(1, valueAspect + abilityAspect + otherAspect));
         }
 
-        public decimal GetIntrinsicMask(PlayerData player, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte val)
+        public decimal GetIntrinsicMask(short currentAbility, PositionalData playerPosition, byte Versatility, DP attribute, PlayerPosition setPosition, PlayerPosition movementPosition, byte val)
         {
-            decimal ratingCA = GetIntrinsicMaskedByAbility(val, player.CurrentAbility);
+            decimal ratingCA = GetIntrinsicMaskedByAbility(val, currentAbility);
 
-            decimal ratingPos = AdjustForSetPosition(ratingCA, player, attribute, setPosition);
+            decimal ratingPos = AdjustForSetPosition(ratingCA, playerPosition, Versatility, attribute, setPosition);
 
             decimal ratingMove = -1;
             if (movementPosition != setPosition)
             {
-               ratingMove = AdjustForMovementPosition(ratingPos, player, attribute, movementPosition);
+               ratingMove = AdjustForMovementPosition(ratingPos, playerPosition, Versatility, attribute, movementPosition);
             }
 
             LogDebug($"CA rating = {ratingCA}, Pos Rating = {ratingPos}, Move Rating {(ratingMove == -1 ? ratingPos : ratingMove)}");
             return Math.Min(45, ratingMove == -1 ? ratingPos : ratingMove);
         }
 
-        private decimal AdjustForSetPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position)
+        private decimal AdjustForSetPosition(decimal rating, PositionalData player, byte Versatility, DP attribute, PlayerPosition position)
         {
             byte maxPenalty = 20;
-            return AdjustForPosition(rating, player, attribute, position, maxPenalty);
+            return AdjustForPosition(rating, player, Versatility, attribute, position, maxPenalty);
         }
 
-        private decimal AdjustForMovementPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position)
+        private decimal AdjustForMovementPosition(decimal rating, PositionalData player, byte Versatility, DP attribute, PlayerPosition position)
         {
             byte maxPenalty = 5;
-            return AdjustForPosition(rating, player, attribute, position, maxPenalty);
+            return AdjustForPosition(rating, player, Versatility, attribute, position, maxPenalty);
         }
 
-        private decimal AdjustForPosition(decimal rating, PlayerData player, DP attribute, PlayerPosition position, byte maxPenalty)
+        private decimal AdjustForPosition(decimal rating, PositionalData player, byte Versatility, DP attribute, PlayerPosition position, byte maxPenalty)
         {
             switch (attribute)
             {
@@ -78,7 +79,7 @@ namespace CMScouter.UI.Raters
                 case DP.OffTheBall:
                 case DP.Creativity:
                 case DP.Decisions:
-                    return positionalPenaltyCalculator.ApplyPositionPenalty(rating, player, position, maxPenalty);
+                    return positionalPenaltyCalculator.ApplyPositionPenalty(rating, player, Versatility, position, maxPenalty);
 
                 default:
                     return rating;

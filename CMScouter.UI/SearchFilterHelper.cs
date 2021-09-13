@@ -112,27 +112,58 @@ namespace CMScouter.UI
 
         public void CreateReputationFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => request.Reputation <= 0 || x._player.Reputation <= request.Reputation);
+            if (request.Reputation <= 0)
+            {
+                return;
+            }
+
+            filters.Add(x => x._player.Reputation <= request.Reputation);
         }
 
         public void CreateAgeFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => (request.MinAge == 0 || GetAge(x._staff.DOB) >= request.MinAge) && (request.MaxAge == 0 || GetAge(x._staff.DOB) <= request.MaxAge));
+            if (request.MinAge > 0)
+            {
+                filters.Add(x => GetAge(x._staff.DOB) >= request.MinAge);
+            }
+
+            if (request.MaxAge > 0 && request.MaxAge < byte.MaxValue)
+            {
+                filters.Add(x => GetAge(x._staff.DOB) <= request.MaxAge);
+            }
         }
 
         public void CreateWageFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => request.MaxWage == null || x._contract == null || x._contract?.WagePerWeek <= request.MaxWage);
+            if (request.MaxWage == null || request.MaxWage == long.MaxValue)
+            {
+                return;
+            }
+
+            filters.Add(x => x._contract == null || x._contract?.WagePerWeek <= request.MaxWage);
         }
 
         public void CreateEUNationalityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => !request.EUNationalityOnly || IsEUNationality(x._staff));
+            if (!request.EUNationalityOnly)
+            {
+                return;
+            }
+
+            filters.Add(x => IsEUNationality(x._staff));
         }
 
         public void CreateValueFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => (request.MinValue == null || x._staff.IsOverValue(request.MinValue.Value)) && (request.MaxValue == null || x._staff.IsUnderValue(request.MaxValue.Value)));
+            if (request.MinValue != null)
+            {
+                filters.Add(x => x._staff.IsOverValue(request.MinValue.Value));
+            }
+
+            if (request.MaxValue != null && request.MaxValue != int.MaxValue)
+            {
+                filters.Add(x => x._staff.IsUnderValue(request.MaxValue.Value));
+            }
         }
 
         public void CreateContractStatusFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
@@ -148,7 +179,12 @@ namespace CMScouter.UI
 
         public void CreatePositionFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
         {
-            filters.Add(x => (request.PlayerType == null || _playerRater.PlaysPosition(request.PlayerType.Value, x._player)));
+            if (request.PlayerType == null)
+            {
+                return;
+            }
+
+            filters.Add(x => _playerRater.PlaysPosition(request.PlayerType.Value, x._player));
         }
 
         public void CreateAvailabilityFilter(ScoutingRequest request, List<Func<Player, bool>> filters)

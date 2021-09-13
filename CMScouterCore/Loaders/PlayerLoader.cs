@@ -7,9 +7,10 @@ namespace CMScouterFunctions
 {
     internal static class PlayerLoader
     {
-        public static SaveGameData LoadPlayers(SaveGameFile savegame)
+        public static SaveGameData LoadPlayers(SaveGameFile savegame, decimal valueMultiplier)
         {
             SaveGameData saveData = new SaveGameData();
+            saveData.ValueMultiplier = valueMultiplier;
 
             Dictionary<int, Club_Comp> clubcomps = DataFileLoaders.GetDataFileClubCompetitionDictionary(savegame);
 

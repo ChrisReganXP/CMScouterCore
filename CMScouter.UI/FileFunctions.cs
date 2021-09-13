@@ -8,9 +8,9 @@ namespace CMScouter.UI
 {
     internal static class FileFunctions
     {
-        public static SaveGameData LoadSaveGameFile(string fileName)
+        public static SaveGameData LoadSaveGameFile(string fileName, decimal valueMultiplier)
         {
-            return SaveGameHandler.OpenSaveGameIntoMemory(fileName);
+            return SaveGameHandler.OpenSaveGameIntoMemory(fileName, valueMultiplier);
         }
     }
 }

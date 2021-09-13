@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,18 @@ namespace CMScouter.UI.Raters
 {
     class MadScientist_PenaltyCalculator : IPositionalPenaltyCalculator
     {
-        public decimal ApplyPositionPenalty(decimal rating, PlayerData player, PlayerPosition position, decimal penaltyReduction)
+        public decimal ApplyPositionPenalty(decimal rating, PositionalData player, byte Versatility, PlayerPosition position, decimal penaltyReduction)
         {
             byte verticalPenalty = GetVerticalUnfamiliarity(player, position);
             byte horizontalPenalty = GetHorizontalUnfamiliarity(player, position);
 
             decimal initialPenalty = ((decimal)verticalPenalty + horizontalPenalty) / 40 * penaltyReduction;
-            decimal finalPenalty = (1.079m - player.Versatility * 0.0395m) * initialPenalty;
+            decimal finalPenalty = (1.079m - Versatility * 0.0395m) * initialPenalty;
 
             return Math.Max(1, rating - finalPenalty);
         }
 
-        private byte GetHorizontalUnfamiliarity(PlayerData player, PlayerPosition position)
+        private byte GetHorizontalUnfamiliarity(PositionalData player, PlayerPosition position)
         {
             byte knowledge = 20;
 
@@ -57,7 +58,7 @@ namespace CMScouter.UI.Raters
             return (byte)(20 - knowledge);
         }
 
-        private byte GetVerticalUnfamiliarity(PlayerData player, PlayerPosition position)
+        private byte GetVerticalUnfamiliarity(PositionalData player, PlayerPosition position)
         {
             byte knowledge = 20;
             decimal difficulty = 1;

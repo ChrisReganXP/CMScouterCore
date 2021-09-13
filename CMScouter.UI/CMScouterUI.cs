@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouter.UI.Converters;
 using CMScouter.UI.DataClasses;
 using CMScouter.UI.Raters;
@@ -58,9 +59,9 @@ namespace CMScouter.UI
 
         public DateTime GameDate;
 
-        public CMScouterUI(string fileName)
+        public CMScouterUI(string fileName, decimal valueMultiplier)
         {
-            SaveGameData file = FileFunctions.LoadSaveGameFile(fileName);
+            SaveGameData file = FileFunctions.LoadSaveGameFile(fileName, valueMultiplier);
 
             _savegame = file;
 
@@ -158,7 +159,17 @@ namespace CMScouter.UI
                 players = players.Where(x => filter(x)).ToList();
             }
 
+            if (filters.Count == 0)
+            {
+                return new List<PlayerView>();
+            }
+
             return ConstructPlayerByScoutingValueDesc(request.PlayerType, request.NumberOfResults, players, request.OutputDebug);
+        }
+
+        public PlayerView GetPlayerByPlayerId(int playerId, ConstructPlayerOptions options)
+        {
+            return _displayHelper.ConstructPlayers(_savegame.Players.Where(x => x._player.PlayerId == playerId), _rater, options).FirstOrDefault();
         }
 
         public string CreateExportSet(List<int> playerIds)
@@ -190,6 +201,11 @@ namespace CMScouter.UI
             }
 
             return csv.ToString();
+        }
+
+        public void UpdateInflationValue(decimal inflation)
+        {
+            _savegame.ValueMultiplier = inflation;
         }
 
         private List<PlayerView> ConstructPlayerByFilter(Func<Player, bool> filter)

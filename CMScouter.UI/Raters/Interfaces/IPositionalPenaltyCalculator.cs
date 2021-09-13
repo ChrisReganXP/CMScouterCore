@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace CMScouter.UI
 {
     interface IPositionalPenaltyCalculator
     {
-        decimal ApplyPositionPenalty(decimal rating, PlayerData player, PlayerPosition position, decimal penaltyReduction);
+        decimal ApplyPositionPenalty(decimal rating, PositionalData player, byte Versatility, PlayerPosition position, decimal penaltyReduction);
     }
 }

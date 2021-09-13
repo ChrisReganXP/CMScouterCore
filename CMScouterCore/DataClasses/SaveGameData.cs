@@ -21,6 +21,11 @@ namespace CMScouterFunctions.DataClasses
 
         public DateTime GameDate { get; set; }
 
-        public decimal ValueMultiplier { get { return 2.5m; } }
+        public decimal ValueMultiplier { get; set; }
+
+        public SaveGameData()
+        {
+            ValueMultiplier = 1;
+        }
     }
 }
