@@ -61,14 +61,6 @@ namespace CMScouter.UI
 
         public CMScouterUI(string fileName, decimal valueMultiplier)
         {
-            SaveGameData file = FileFunctions.LoadSaveGameFile(fileName, valueMultiplier);
-
-            _savegame = file;
-
-            GameDate = _savegame.GameDate;
-
-            ConstructLookups();
-
             // IntrinsicMasker = new DefaultIntrinsicMasker();
             IntrinsicMasker = new MadScientist_MatchMasker();
 
@@ -84,6 +76,19 @@ namespace CMScouter.UI
             GroupedRoleWeights weights = JsonSerializer.Deserialize<GroupedRoleWeights>(@"{""Role"" : 2, ""SpeedPercent"" : 100, ""Acceleration"": 5}");
 
             _rater = new GroupedAttributeRater(IntrinsicMasker, weights);
+
+            LoadGameData(fileName, valueMultiplier);
+        }
+
+        private void LoadGameData(string fileName, decimal valueMultiplier)
+        {
+            SaveGameData file = FileFunctions.LoadSaveGameFile(fileName, valueMultiplier);
+
+            _savegame = file;
+
+            GameDate = _savegame.GameDate;
+
+            ConstructLookups();
         }
 
         public IIntrinsicMasker IntrinsicMasker { get; internal set; }
@@ -205,7 +210,7 @@ namespace CMScouter.UI
 
         public void UpdateInflationValue(decimal inflation)
         {
-            _savegame.ValueMultiplier = inflation;
+            LoadGameData(_savegame.FileName, inflation);
         }
 
         private List<PlayerView> ConstructPlayerByFilter(Func<Player, bool> filter)

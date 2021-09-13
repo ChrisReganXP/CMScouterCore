@@ -5,6 +5,8 @@ namespace CMScouterFunctions.DataClasses
 {
     public class SaveGameData
     {
+        public string FileName { get; set; }
+
         public Dictionary<int, string> FirstNames { get; set; }
 
         public Dictionary<int, string> Surnames { get; set; }
@@ -25,6 +27,7 @@ namespace CMScouterFunctions.DataClasses
 
         public SaveGameData()
         {
+            FileName = string.Empty;
             ValueMultiplier = 1;
         }
     }

@@ -46,6 +46,8 @@ namespace CMScouterFunctions
 
             ContractConverter converter = new ContractConverter(gameData);
 
+            List<Contract> extraContract = new List<Contract>();
+
             for (int i = 0; i < bytes.Count; i++)
             {
                 var item = bytes[i];
@@ -56,6 +58,10 @@ namespace CMScouterFunctions
                     if (!dic.ContainsKey(contract.PlayerId))
                     {
                         dic.Add(contract.PlayerId, contract);
+                    }
+                    else
+                    {
+                        extraContract.Add(contract);
                     }
                 }
             }

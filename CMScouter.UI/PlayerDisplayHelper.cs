@@ -51,8 +51,8 @@ namespace CMScouter.UI
                 Nationality = GetLookupString<NationView>(item._staff.NationId, _lookups.nations)?.Name,
                 SecondaryNationality = GetLookupString<NationView>(item._staff.SecondaryNationId, _lookups.nations)?.Name,
                 Age = GetAge(item._staff.DOB),
-                Value = item._staff.Value,
-                WagePerWeek = item._contract?.WagePerWeek ?? item._staff.Wage,
+                Value = item._contract == null ? 0 : item._staff.Value,
+                WagePerWeek = item._contract == null ? 0 : item._contract?.WagePerWeek ?? item._staff.Wage,
                 ContractExpiryDate = item._staff.ContractExpiryDate,
 
                 ClubName = item._staff.ClubId == -1 ? string.Empty : GetLookupString(item._staff.ClubId, _lookups.clubNames),

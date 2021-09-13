@@ -81,7 +81,7 @@ namespace CMScouter.WPF
 
             _cmsui.UpdateInflationValue(_newgame.ValueMultiplier);
             this.Close();
-            _parent.PerformInitialSearch();
+            _parent.RefreshAfterSettingsSave();
         }
 
         private bool ValidateSettings(int club, decimal inflation)

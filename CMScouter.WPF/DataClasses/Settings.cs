@@ -60,6 +60,7 @@ namespace CMScouter.WPF.DataClasses
         public SavedGameSettings()
         {
             UserManagedTeam = -1;
+            ValueMultiplier = 1;
         }
 
         public string FileName { get => Path.GetFileName(FilePath); }

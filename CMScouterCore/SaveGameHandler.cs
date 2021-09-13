@@ -23,7 +23,10 @@ namespace CMScouterFunctions
 
             LoadGameData(savegame);
 
-            return PlayerLoader.LoadPlayers(savegame, valueMultiplier);
+            var data = PlayerLoader.LoadPlayers(savegame, valueMultiplier);
+            data.FileName = fileName;
+
+            return data;
         }
 
         public static List<int> GetCountriesInRegion(Dictionary<int, Nation> nations, string regionName)

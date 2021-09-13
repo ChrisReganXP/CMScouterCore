@@ -35,6 +35,14 @@ namespace CMScouter.WPF
             PopulateInitialItems();
         }
 
+        public void RefreshAfterSettingsSave()
+        {
+            /*
+            var savedgame = settings.GetLastSavedGame();
+            cmsUI.UpdateInflationValue(savedgame.ValueMultiplier);*/
+            PerformInitialSearch();
+        }
+
         private void HandleInitialSettings()
         {
             settings = SettingsManager.LoadSavedGameSettings();
@@ -153,7 +161,7 @@ namespace CMScouter.WPF
             cbxClubs.SelectedIndex = 0;
         }
 
-        public void PerformInitialSearch()
+        private void PerformInitialSearch()
         {
             if (settings.GetLastSavedGame() == null || settings.GetLastSavedGame().UserManagedTeam < 0)
             {
