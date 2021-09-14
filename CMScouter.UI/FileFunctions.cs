@@ -1,4 +1,5 @@
-﻿using CMScouterFunctions;
+﻿using CMScouter.DataContracts;
+using CMScouterFunctions;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,16 @@ namespace CMScouter.UI
     {
         public static SaveGameData LoadSaveGameFile(string fileName, decimal valueMultiplier)
         {
-            return SaveGameHandler.OpenSaveGameIntoMemory(fileName, valueMultiplier);
+            try
+            {
+                return SaveGameHandler.OpenSaveGameIntoMemory(fileName, valueMultiplier);
+            }
+            catch (LoadSaveFileException ex)
+            {
+                var data = new SaveGameData();
+                data.LoadingFailures.Add(ex.Message);
+                return data;
+            }
         }
     }
 }

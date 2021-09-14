@@ -1,4 +1,5 @@
-﻿using CMScouterFunctions.DataClasses;
+﻿using CMScouter.DataContracts;
+using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,6 +64,8 @@ namespace CMScouterFunctions
                 if (br.ReadInt32() == 4)
                 {
                     savegame.IsCompressed = true;
+
+                    throw new LoadSaveFileException("Save Game Is Compressed And Cannot Be Read. Please Re-Save Uncompressed.");
                 }
 
                 sr.BaseStream.Seek(4, SeekOrigin.Current);

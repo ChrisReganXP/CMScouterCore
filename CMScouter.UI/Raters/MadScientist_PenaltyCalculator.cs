@@ -83,6 +83,11 @@ namespace CMScouter.UI.Raters
                     difficulty = 1.5m;
                     break;
 
+                case PlayerPosition.DefensiveMidfielder:
+                    knowledge = player.DM;
+                    difficulty = 1.5m;
+                    break;
+
                 case PlayerPosition.LeftMidfielder:
                 case PlayerPosition.CentralMidfielder:
                 case PlayerPosition.RightMidfielder:

@@ -69,7 +69,7 @@ namespace CMScouter.DataClasses
         LeftWinger,
 
         [Description("Centre Forward")]
-        [LinkedRoles(Roles.TM, Roles.ST, Roles.PO, Roles.CF)]
+        [LinkedRoles(Roles.TM, Roles.ST, Roles.PO)]
         CentreForward,
     }
 
@@ -115,9 +115,6 @@ namespace CMScouter.DataClasses
         ST,
 
         [Description("Poacher")]
-        PO,
-
-        [Description("Centre Forward")]
-        CF,
+        PO
     }
 }

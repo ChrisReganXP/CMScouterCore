@@ -82,17 +82,17 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
+            groupWeight[(int)AG.Impact] = 8;
+            groupWeight[(int)AG.Reliability] = 8;
 
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 20;
+            groupWeight[(int)AG.Playmaking] = 8;
+            groupWeight[(int)AG.Wideplay] = 15;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 10;
+            groupWeight[(int)AG.Defending] = 15;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 40;
-            groupWeight[(int)AG.Strength] = 0;
+            groupWeight[(int)AG.Speed] = 35;
+            groupWeight[(int)AG.Strength] = 5;
 
             groupedWeightings[(int)Roles.AFB] = groupWeight;
         }
@@ -101,16 +101,16 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 20;
+            groupWeight[(int)AG.Impact] = 15;
             groupWeight[(int)AG.Reliability] = 5;
 
             groupWeight[(int)AG.Playmaking] = 0;
             groupWeight[(int)AG.Wideplay] = 0;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 40;
+            groupWeight[(int)AG.Defending] = 35;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 5;
+            groupWeight[(int)AG.Speed] = 15;
             groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.CB] = groupWeight;
@@ -139,13 +139,13 @@ namespace CMScouter.UI
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
 
-            groupWeight[(int)AG.Impact] = 20;
-            groupWeight[(int)AG.Reliability] = 20;
+            groupWeight[(int)AG.Impact] = 15;
+            groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 5;
+            groupWeight[(int)AG.Playmaking] = 10;
             groupWeight[(int)AG.Wideplay] = 0;
             groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 10;
+            groupWeight[(int)AG.Defending] = 20;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
             groupWeight[(int)AG.Speed] = 15;
@@ -180,13 +180,13 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Impact] = 5;
             groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 25;
-            groupWeight[(int)AG.Scoring] = 10;
+            groupWeight[(int)AG.Playmaking] = 15;
+            groupWeight[(int)AG.Wideplay] = 20;
+            groupWeight[(int)AG.Scoring] = 5;
             groupWeight[(int)AG.Defending] = 5;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 30;
+            groupWeight[(int)AG.Speed] = 35;
             groupWeight[(int)AG.Strength] = 5;
 
             groupedWeightings[(int)Roles.WM] = groupWeight;
@@ -237,14 +237,14 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Impact] = 10;
             groupWeight[(int)AG.Reliability] = 10;
 
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 15;
-            groupWeight[(int)AG.Scoring] = 30;
+            groupWeight[(int)AG.Playmaking] = 5;
+            groupWeight[(int)AG.Wideplay] = 0;
+            groupWeight[(int)AG.Scoring] = 35;
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 10;
+            groupWeight[(int)AG.Speed] = 20;
+            groupWeight[(int)AG.Strength] = 20;
 
             groupedWeightings[(int)Roles.ST] = groupWeight;
         }
@@ -262,8 +262,8 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Defending] = 0;
             groupWeight[(int)AG.Goalkeeping] = 0;
 
-            groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 15;
+            groupWeight[(int)AG.Speed] = 20;
+            groupWeight[(int)AG.Strength] = 5;
 
             groupedWeightings[(int)Roles.PO] = groupWeight;
         }
@@ -285,25 +285,6 @@ namespace CMScouter.UI
             groupWeight[(int)AG.Strength] = 30;
 
             groupedWeightings[(int)Roles.TM] = groupWeight;
-        }
-
-        private void AddCF()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 5;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 15;
-            groupWeight[(int)AG.Wideplay] = 15;
-            groupWeight[(int)AG.Scoring] = 25;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 15;
-
-            groupedWeightings[(int)Roles.CF] = groupWeight;
         }
 
         private void AddOffField()
@@ -349,15 +330,17 @@ namespace CMScouter.UI
 
         private AttributeWeight[] ScoringAttributes = new AttributeWeight[]
         {
-            new AttributeWeight{ Attribute = DP.Finishing, Weight = 8, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Heading, Weight = 14, IsIntrinsic = true },
+            new AttributeWeight{ Attribute = DP.Finishing, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Heading, Weight = 10, IsIntrinsic = true },
             new AttributeWeight{ Attribute = DP.LongShots, Weight = 1, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.OffTheBall, Weight = 20, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Technique, Weight = 5 }, new AttributeWeight{ Attribute = DP.Flair, Weight = 2 }
+            new AttributeWeight{ Attribute = DP.Technique, Weight = 5 }, new AttributeWeight{ Attribute = DP.Flair, Weight = 2 },
+            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 5, IsIntrinsic = true }
         };
 
         private AttributeWeight[] DefendingAttributes = new AttributeWeight[]
         {
-            new AttributeWeight{ Attribute = DP.Heading, Weight = 5, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Marking, Weight = 10, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Positioning, Weight = 30, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Tackling, Weight = 30, IsIntrinsic = true }
+            new AttributeWeight{ Attribute = DP.Heading, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Marking, Weight = 15, IsIntrinsic = true },
+            new AttributeWeight{ Attribute = DP.Positioning, Weight = 30, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Tackling, Weight = 30, IsIntrinsic = true },
+            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 5, IsIntrinsic = true }
         };
 
         private AttributeWeight[] GoalkeepingAttributes = new AttributeWeight[]
@@ -407,7 +390,6 @@ namespace CMScouter.UI
             AddPO();
             AddTM();
             AddST();
-            AddCF();
         }
 
         public bool PlaysPosition(PlayerPosition type, PlayerData player)

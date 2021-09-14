@@ -80,11 +80,21 @@ namespace CMScouter.UI
             LoadGameData(fileName, valueMultiplier);
         }
 
+        public List<string> GetLoadingFailures()
+        {
+            return _savegame.LoadingFailures;
+        }
+
         private void LoadGameData(string fileName, decimal valueMultiplier)
         {
             SaveGameData file = FileFunctions.LoadSaveGameFile(fileName, valueMultiplier);
 
             _savegame = file;
+
+            if (_savegame.LoadingFailures.Any())
+            {
+                return;
+            }
 
             GameDate = _savegame.GameDate;
 

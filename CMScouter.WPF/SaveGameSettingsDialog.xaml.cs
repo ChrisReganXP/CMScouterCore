@@ -91,7 +91,7 @@ namespace CMScouter.WPF
                 return false;
             }
 
-            if (inflation <= 1 || inflation > 10)
+            if (inflation < 1 || inflation > 10)
             {
                 return false;
             }

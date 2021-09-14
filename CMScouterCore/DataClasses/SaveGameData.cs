@@ -25,8 +25,11 @@ namespace CMScouterFunctions.DataClasses
 
         public decimal ValueMultiplier { get; set; }
 
+        public List<string> LoadingFailures { get; set; }
+
         public SaveGameData()
         {
+            LoadingFailures = new List<string>();
             FileName = string.Empty;
             ValueMultiplier = 1;
         }

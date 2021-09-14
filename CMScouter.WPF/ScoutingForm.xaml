@@ -15,7 +15,7 @@
 
     <DockPanel>
 
-        <StatusBar DockPanel.Dock="Bottom" Height="30">
+        <StatusBar DockPanel.Dock="Bottom" Height="35">
             <StatusBarItem>
                 <Label Name="lblStatusInfo" Content="No Game Loaded" />
             </StatusBarItem>
@@ -24,12 +24,13 @@
         <Menu DockPanel.Dock="Top" Name="TopMenu">
             <MenuItem Header="_File" Name="FileMenu">
                 <MenuItem Header="Open" Click="Open_Click" />
+                <MenuItem Header="Reload" Click="LoadLastGame_Click" Visibility="Collapsed" Name="menLastGame" />
                 <Separator />
                 <MenuItem Header="Exit" Click="Exit_Click" />
             </MenuItem>
 
             <MenuItem Header="Settings" Name="SettingsMenu">
-                <MenuItem Header="Game Settings" Click="MenuItem_Click" IsEnabled="false" />
+                <MenuItem Header="Game Settings" Click="SettingsMenu_Click" IsEnabled="false" Name="menSettings" />
             </MenuItem>
         </Menu>
 
