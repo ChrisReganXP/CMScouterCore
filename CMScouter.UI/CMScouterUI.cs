@@ -288,7 +288,7 @@ namespace CMScouter.UI
             byte cumulativePercent = 0;
             for (byte i = 1; i < 100; i++)
             {
-                cumulativePercent += scoreDistribution.ContainsKey(i) ? (byte)Math.Round(scoreDistribution[i] / (decimal)list.Count() * 100) : 0;
+                cumulativePercent += scoreDistribution.ContainsKey(i) ? (byte)Math.Round(scoreDistribution[i] / (decimal)list.Count() * 100) : (byte)0;
                 Debug.WriteLine(cumulativePercent);
             }
 

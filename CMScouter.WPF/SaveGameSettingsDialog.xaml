@@ -37,7 +37,7 @@
         </StackPanel>
         
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 10 10 10" HorizontalAlignment="Left">
-            <TextBox Name="tbxInflation" Width="40" Text="1.00" ToolTip="If you have adjusted the financial values with a patcher, match it here"></TextBox>
+            <TextBox Name="tbxInflation" Width="40" Text="1.00" ToolTip="If you have adjusted the financial values with a patcher, match it here" PreviewTextInput="tbxInflation_ValidateTyping"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 10 10 10">
