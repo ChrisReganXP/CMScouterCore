@@ -1,6 +1,7 @@
 ﻿using CMScouter.WPF.DataClasses;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,7 @@ namespace CMScouter.WPF
     {
         private const string _userSettingsFilename = "savegames.json";
 
-        private static string _assemblyPath = System.AppDomain.CurrentDomain.BaseDirectory;
+        private static string _assemblyPath = Process.GetCurrentProcess().MainModule.FileName;
 
         private static string GetSettingsFileName()
         {
@@ -46,7 +47,7 @@ namespace CMScouter.WPF
             {
                 return Save(settings);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex.Message;
             }
