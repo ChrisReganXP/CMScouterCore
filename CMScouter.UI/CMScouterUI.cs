@@ -16,8 +16,20 @@ using System.Threading.Tasks;
 
 namespace CMScouter.UI
 {
+    class CustomSearch
+    {
+        public string SearchName { get; set; }
+
+        public string SearchId { get; set; }
+
+        public List<PlayerView> SearchMethod { get; set; }
+    }
+
+
     public class CMScouterUI
     {
+        private List<CustomSearch> customSearches = new List<CustomSearch>();
+
         private static List<PropertyInfo> csv_order = new List<PropertyInfo>()
         {
             typeof(PlayerView).GetProperty(nameof(PlayerView.FirstName)), typeof(PlayerView).GetProperty(nameof(PlayerView.SecondName)), typeof(PlayerView).GetProperty(nameof(PlayerView.CurrentAbility)), typeof(PlayerView).GetProperty(nameof(PlayerView.PotentialAbility))
@@ -78,6 +90,8 @@ namespace CMScouter.UI
             _rater = new GroupedAttributeRater(IntrinsicMasker, weights);
 
             LoadGameData(fileName, valueMultiplier);
+
+            SetupCustomSearches();
         }
 
         public List<string> GetLoadingFailures()
@@ -102,6 +116,18 @@ namespace CMScouter.UI
         }
 
         public IIntrinsicMasker IntrinsicMasker { get; internal set; }
+
+        public List<Tuple<string, string>> GetCustomSearchList()
+        {
+            return customSearches.Select(x => new Tuple<string, string>(x.SearchId, x.SearchName)).ToList();
+        }
+
+        private void SetupCustomSearches()
+        {
+            customSearches.Add(new CustomSearch() { SearchName = "Highest CA", SearchId = "CA", SearchMethod = this.GetHighestCA() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest PA", SearchId = "PA", SearchMethod = this.GetHighestPA() });
+            customSearches.Add(new CustomSearch() { SearchName = "Unfulfilled Potential", SearchId = "YG", SearchMethod = this.GetHighestUnfulfilledPotential() });
+        }
 
         public List<Club> GetClubs()
         {
@@ -153,8 +179,25 @@ namespace CMScouter.UI
             {
                 filters.Add(x => x._player.PlayerId == request.PlayerId.Value);
             }
-            else
+
+            if (!string.IsNullOrEmpty(request.CustomSearch))
             {
+                switch (request.CustomSearch.ToUpper())
+                {
+                    case "CA":
+                        return GetHighestCA();
+                    case "PA":
+                        return GetHighestPA();
+                    case "YG":
+                        return GetHighestUnfulfilledPotential();
+                    default:
+                        break;
+                }
+            }
+
+            if (filters.Count == 0)
+            {
+                filterHelper.CreateTextFilter(request, filters);
                 filterHelper.CreateClubFilter(request, filters);
                 filterHelper.CreatePositionFilter(request, filters);
                 filterHelper.CreatePlayerBasedFilter(request, filters);
@@ -221,6 +264,34 @@ namespace CMScouter.UI
         public void UpdateInflationValue(decimal inflation)
         {
             LoadGameData(_savegame.FileName, inflation);
+        }
+
+        public List<PlayerView> GetHighestCA()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.CurrentAbility > 170);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => x.CurrentAbility).ToList();
+        }
+
+        public List<PlayerView> GetHighestPA()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.PotentialAbility > 170);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => x.PotentialAbility).ToList();
+        }
+
+        public List<PlayerView> GetHighestUnfulfilledPotential()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.PotentialAbility > 150 && GetAge(x._staff.DOB) <= 24);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => x.PotentialAbility - x.CurrentAbility).ToList();
+        }
+
+        private byte GetAge(DateTime date)
+        {
+            var age = _savegame.GameDate.Year - date.Year;
+
+            // leap years
+            if (date.Date > _savegame.GameDate.AddYears(-age)) age--;
+
+            return (byte)Math.Min(byte.MaxValue, age);
         }
 
         private List<PlayerView> ConstructPlayerByFilter(Func<Player, bool> filter)

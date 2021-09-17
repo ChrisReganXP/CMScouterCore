@@ -3,6 +3,7 @@ using CMScouterFunctions;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace CMScouter.UI
@@ -86,6 +87,17 @@ namespace CMScouter.UI
                 default:
                     return new List<Player>();
             }
+        }
+
+        public void CreateTextFilter(ScoutingRequest request, List<Func<Player, bool>> filters)
+        {
+            if (string.IsNullOrWhiteSpace(request.TextSearch) || request.TextSearch.Trim().Length < 4)
+            {
+                return;
+            }
+
+            Func<Player, bool> filter = x => x._staff.GetNameVarients(_savegame.FirstNames, _savegame.Surnames, _savegame.CommonNames).Any(y => CultureInfo.CurrentCulture.CompareInfo.IndexOf(y.ToUpper(), request.TextSearch.Trim().ToUpper(), CompareOptions.IgnoreNonSpace) >= 0);
+            filters.Add(filter);
         }
 
         public void CreateClubFilter(ScoutingRequest request, List<Func<Player, bool>> filters)

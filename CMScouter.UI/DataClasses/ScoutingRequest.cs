@@ -5,6 +5,8 @@ namespace CMScouter.UI
 {
     public class ScoutingRequest
     {
+        public string TextSearch { get; set; }
+
         public int? PlayerId { get; set; }
 
         public int? ClubId { get; set; }
@@ -40,5 +42,7 @@ namespace CMScouter.UI
         public int Reputation { get; set; }
 
         public bool OutputDebug { get; set; }
+
+        public string CustomSearch { get; set; }
     }
 }

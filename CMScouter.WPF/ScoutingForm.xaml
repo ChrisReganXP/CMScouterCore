@@ -35,29 +35,43 @@
         </Menu>
 
         <StackPanel x:Name="stpSearchCriteria" Width="220" DockPanel.Dock="Left" >
+            <Label>Text Search:</Label>
+            <TextBox Name="tbxTextSearch" Height="20" Margin="8" />
+
             <Label>Player Type:</Label>
-            <ComboBox Name="ddlPlayerType" Height="25" Margin="10"/>
+            <ComboBox Name="ddlPlayerType" Height="25" Margin="8" />
 
             <Label>Availability:</Label>
-            <ComboBox Name="ddlAvailability" Height="25" Margin="10"/>
+            <ComboBox Name="ddlAvailability" Height="25" Margin="8" />
 
             <Label>Maximum Reputation:</Label>
-            <ComboBox Name="ddlReputation" Height="25" Margin="10"/>
+            <ComboBox Name="ddlReputation" Height="25" Margin="8" />
 
             <Label>Max Value:</Label>
-            <TextBox Name="tbxMaxValue" Height="20" Margin="10"/>
+            <TextBox Name="tbxMaxValue" Height="20" Margin="8" />
 
-            <Label>Max Age:</Label>
-            <TextBox Name="tbxMaxAge" Height="20" Margin="10" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Row="0" Grid.Column="0">Max Age:</Label>
+                <TextBox Grid.Row="1" Grid.Column="0" Name="tbxMaxAge" Height="20" Margin="10" Width="40" />
 
-            <Label>Max Wage:</Label>
-            <TextBox Name="tbxMaxWage" Height="20" Margin="10" />
+                <Label Grid.Row="0" Grid.Column="1">Max Wage:</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Name="tbxMaxWage" Height="20" Margin="10" Width="100" />
+            </Grid>
 
             <Label>Based In:</Label>
-            <ComboBox Name="ddlPlayerBased" Height="25" Margin="10"/>
+            <ComboBox Name="ddlPlayerBased" Height="25" Margin="8" />
 
             <Label>Nationality:</Label>
-            <ComboBox Name="ddlNationality" Height="25" Margin="10"/>
+            <ComboBox Name="ddlNationality" Height="25" Margin="8" />
 
             <StackPanel Orientation="Horizontal">
                 <Label>EU National</Label>
@@ -67,6 +81,9 @@
 
             <Label>Club:</Label>
             <ComboBox Name="cbxClubs" Height="25" Margin="10" ItemsPanel="{StaticResource VSP}"/>
+
+            <Label>Custom Search:</Label>
+            <ComboBox Name="cbxCustomSearch" Height="25" Margin="8" />
 
             <StackPanel Orientation="Horizontal">
                 <Label Margin="10 0 0 0">Player ID:</Label>

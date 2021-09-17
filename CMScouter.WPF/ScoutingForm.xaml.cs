@@ -202,6 +202,23 @@ namespace CMScouter.WPF
             PopulatePlayerBased();
             PopulateClubs();
             stpSearchCriteria.Visibility = Visibility.Visible;
+
+            PopulateCustomSearches();
+        }
+
+        private void PopulateCustomSearches()
+        {
+            var customSearches = cmsUI.GetCustomSearchList();
+            if (customSearches?.Count == 0)
+            {
+                cbxCustomSearch.IsEnabled = false;
+                return;
+            }
+
+            customSearches.Insert(0, new Tuple<string, string>("", "<None>"));
+            cbxCustomSearch.ItemsSource = customSearches;
+            cbxCustomSearch.DisplayMemberPath = "Item2";
+            cbxCustomSearch.SelectedIndex = 0;
         }
 
         #endregion
@@ -424,6 +441,12 @@ namespace CMScouter.WPF
 
         private async Task SearchForPlayers()
         {
+            string customSearchID = null;
+            if (cbxCustomSearch.SelectedIndex > 0)
+            {
+                customSearchID = ((Tuple<string, string>)cbxCustomSearch.SelectedValue).Item1;
+            }
+
             int playerIdNonNull;
             int? playerId;
             if (!int.TryParse(tbxPlayerId.Text, out playerIdNonNull))
@@ -490,7 +513,9 @@ namespace CMScouter.WPF
 
             ScoutingRequest request = new ScoutingRequest()
             {
+                CustomSearch = customSearchID,
                 PlayerId = playerId,
+                TextSearch = tbxTextSearch.Text,
                 PlayerType = type,
                 MaxValue = maxValue,
                 EUNationalityOnly = cbxEUNational.IsChecked == true,

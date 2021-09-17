@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CMScouterFunctions.DataClasses
 {
@@ -83,6 +84,20 @@ namespace CMScouterFunctions.DataClasses
         public bool IsUnderValue(int value)
         {
             return value >= Value;
+        }
+
+        public List<string> GetNameVarients(Dictionary<int, string> firstNames, Dictionary<int, string> surnames, Dictionary<int, string> commonNames)
+        {
+            List<string> names = new List<string>();
+            string firstName = firstNames[FirstNameId];
+            string secondName = surnames[SecondNameId];
+            string commonName = commonNames[CommonNameId];
+
+            names.Add(firstName + secondName);
+            names.Add(secondName + "," + firstName);
+            names.Add(commonName);
+
+            return names;
         }
     }
 
