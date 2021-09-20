@@ -89,11 +89,11 @@ namespace CMScouterFunctions.DataClasses
         public List<string> GetNameVarients(Dictionary<int, string> firstNames, Dictionary<int, string> surnames, Dictionary<int, string> commonNames)
         {
             List<string> names = new List<string>();
-            string firstName = firstNames[FirstNameId];
-            string secondName = surnames[SecondNameId];
-            string commonName = commonNames[CommonNameId];
+            string firstName = firstNames[FirstNameId].Replace(" ", "");
+            string secondName = surnames[SecondNameId].Replace(" ", "");
+            string commonName = commonNames[CommonNameId].Replace(" ", "");
 
-            names.Add(firstName + secondName);
+            names.Add(firstName + "" + secondName);
             names.Add(secondName + "," + firstName);
             names.Add(commonName);
 

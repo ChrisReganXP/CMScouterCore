@@ -181,14 +181,15 @@ namespace CMScouter.WPF
             if (ddlPlayerType.SelectedIndex == 0
                 && ddlAvailability.SelectedIndex == 0
                 && ddlReputation.SelectedIndex == 0
-                && string.IsNullOrEmpty(tbxMaxAge.Text)
-                && string.IsNullOrEmpty(tbxMaxValue.Text)
-                && string.IsNullOrEmpty(tbxMaxWage.Text)
+                && string.IsNullOrWhiteSpace(tbxMaxAge.Text)
+                && string.IsNullOrWhiteSpace(tbxMaxValue.Text)
+                && string.IsNullOrWhiteSpace(tbxMaxWage.Text)
                 && ddlPlayerBased.SelectedIndex == 0
                 && ddlNationality.SelectedIndex == 0
                 && cbxEUNational.IsChecked == false
                 && cbxClubs.SelectedIndex == 0
-                && string.IsNullOrEmpty(tbxPlayerId.Text))
+                && string.IsNullOrWhiteSpace(tbxPlayerId.Text)
+                && string.IsNullOrWhiteSpace(tbxTextSearch.Text))
             {
                 return true;
             }
@@ -411,6 +412,7 @@ namespace CMScouter.WPF
             tbxMaxWage.Clear();
             tbxPlayerId.Clear();
             cbxEUNational.IsChecked = false;
+            tbxTextSearch.Clear();
         }
 
         private void ExportCurrentResults()

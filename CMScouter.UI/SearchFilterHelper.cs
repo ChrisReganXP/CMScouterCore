@@ -96,7 +96,7 @@ namespace CMScouter.UI
                 return;
             }
 
-            Func<Player, bool> filter = x => x._staff.GetNameVarients(_savegame.FirstNames, _savegame.Surnames, _savegame.CommonNames).Any(y => CultureInfo.CurrentCulture.CompareInfo.IndexOf(y.ToUpper(), request.TextSearch.Trim().ToUpper(), CompareOptions.IgnoreNonSpace) >= 0);
+            Func<Player, bool> filter = x => x._staff.GetNameVarients(_savegame.FirstNames, _savegame.Surnames, _savegame.CommonNames).Any(y => CultureInfo.CurrentCulture.CompareInfo.IndexOf(y.ToUpper(), request.TextSearch.Replace(" ","").ToUpper(), CompareOptions.IgnoreNonSpace) >= 0);
             filters.Add(filter);
         }
 
