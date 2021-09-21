@@ -20,24 +20,39 @@ namespace CMScouter.WPF
         {
             _assemblyPath = path;
         }
-        
+
         private const string _defaultWeightingFile = "DefaultWeights.json";
+        private const string _customWeightingFile = "CustomWeights.json";
 
         private string GetDefaultWeightingFileName()
         {
             return Path.GetDirectoryName(_assemblyPath) + Path.DirectorySeparatorChar + _defaultWeightingFile;
         }
 
+        private string GetCustomWeightingFileName()
+        {
+            return Path.GetDirectoryName(_assemblyPath) + Path.DirectorySeparatorChar + _customWeightingFile;
+        }
+
         public WeightCollection GetWeightings()
         {
+            WeightCollection full = new WeightCollection();
+
             if (File.Exists(GetDefaultWeightingFileName()))
             {
-                return Read(GetDefaultWeightingFileName());
+                var defaults = Read(GetDefaultWeightingFileName());
+                full.GroupedWeights.AddRange(defaults.GroupedWeights);
+                full.IndividualWeights.AddRange(defaults.IndividualWeights);
             }
-            else
+
+            if (File.Exists(GetCustomWeightingFileName()))
             {
-                return new WeightCollection();
+                var customs = Read(GetCustomWeightingFileName());
+                full.GroupedWeights.AddRange(customs.GroupedWeights);
+                full.IndividualWeights.AddRange(customs.IndividualWeights);
             }
+
+            return full;
         }
 
         private WeightCollection Read(string path)
