@@ -26,13 +26,17 @@ namespace CMScouter.WPF
         SavedGameSettings _newgame;
         CMScouterUI _cmsui;
         ScoutingForm _parent;
+        SettingsManager _settingsManager;
+        WeightingManager _weightingManager;
 
-        public SaveGameSettingsDialog(ScoutingForm parent, Settings settings, CMScouterUI cmsUI)
+        public SaveGameSettingsDialog(ScoutingForm parent, SettingsManager settingsManager, Settings settings, CMScouterUI cmsUI, WeightingManager weightingManager)
         {
+            _settingsManager = settingsManager;
             _newgame = settings.GetLastSavedGame();
             _cmsui = cmsUI;
             _settings = settings;
             _parent = parent;
+            _weightingManager = weightingManager;
 
             InitializeComponent();
             BindData();
@@ -62,6 +66,18 @@ namespace CMScouter.WPF
             {
                 tbxInflation.Text = _newgame.ValueMultiplier.ToString();
             }
+
+            cbxWeightings.DisplayMemberPath = "Name";
+            cbxWeightings.SelectedValuePath = "ID";
+            var weights = _weightingManager.GetWeightings();
+            var weightList = weights.GroupedWeights.Select(x => new { x.ID, x.Name }).ToList();
+            weightList.AddRange(weights.IndividualWeights.Select(x => new { x.ID, x.Name }).ToList());
+            cbxWeightings.ItemsSource = weightList;
+
+            if (_newgame.SelectedWeighting != Guid.Empty)
+            {
+                cbxWeightings.SelectedValue = _newgame.SelectedWeighting;
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -69,6 +85,7 @@ namespace CMScouter.WPF
             decimal selectedInflation;
             decimal.TryParse(tbxInflation.Text, out selectedInflation);
             int selectedClub = (int)cbxClubs.SelectedValue;
+            Guid selectedWeighting = (Guid)cbxWeightings.SelectedValue;
 
             if (!ValidateSettings(selectedClub, selectedInflation))
             {
@@ -77,10 +94,24 @@ namespace CMScouter.WPF
 
             _newgame.UserManagedTeam = selectedClub;
             _newgame.ValueMultiplier = selectedInflation;
+            _newgame.SelectedWeighting = selectedWeighting;
 
-            SettingsManager.SaveUserSettings(_settings);
+            _settingsManager.SaveUserSettings(_settings);
 
             _cmsui.UpdateInflationValue(_newgame.ValueMultiplier);
+
+            var selectedGroupWeight = _weightingManager.GetWeightings().GroupedWeights.FirstOrDefault(x => x.ID == selectedWeighting);
+            var selectedIndividualWeight = _weightingManager.GetWeightings().IndividualWeights.FirstOrDefault(x => x.ID == selectedWeighting);
+
+            if (selectedGroupWeight != null)
+            {
+                _cmsui.UpdateGroupedWeighting(selectedGroupWeight);
+            }
+            else
+            {
+                _cmsui.UpdateIndividualWeighting(selectedIndividualWeight);
+            }
+
             this.Close();
             _parent.RefreshAfterSettingsSave();
         }

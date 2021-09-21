@@ -406,6 +406,9 @@
 
                     <Label>Rating:</Label>
                     <Label Name="lblRating"></Label>
+
+                    <!--<Label>Use Potential:</Label>
+                    <CheckBox Name="cbxPotential" Unchecked="cbxPotential_Checked" Checked="cbxPotential_Checked"></CheckBox>-->
                 </StackPanel>
             </GroupBox>
         </StackPanel>

@@ -21,7 +21,7 @@ namespace CMScouterTester
         [ClassInitialize]
         public static void TestSetup(TestContext context)
         {
-            cmsUI = new CMScouterUI(EstorilSave, 1);
+            cmsUI = new CMScouterUI(EstorilSave, 1, null, Guid.Empty);
         }
 
         [TestMethod]

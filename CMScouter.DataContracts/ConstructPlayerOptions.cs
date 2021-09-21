@@ -7,8 +7,9 @@ namespace CMScouter.DataContracts
 {
     public class ConstructPlayerOptions
     {
-        public PlayerPosition setPosition { get; set; }
+        public PlayerPosition? setPosition { get; set; }
 
-        public PlayerPosition movementPosition { get; set; }
+        public PlayerPosition? movementPosition { get; set; }
+        public bool UsePotential { get; set; }
     }
 }

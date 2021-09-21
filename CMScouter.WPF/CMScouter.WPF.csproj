@@ -16,4 +16,11 @@
     <ProjectReference Include="..\CMScouter.UI\CMScouter.UI.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Update="DefaultWeights.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</None>
+	</ItemGroup>
+
 </Project>

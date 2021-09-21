@@ -7,6 +7,7 @@ using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -24,7 +25,6 @@ namespace CMScouter.UI
 
         public List<PlayerView> SearchMethod { get; set; }
     }
-
 
     public class CMScouterUI
     {
@@ -61,7 +61,7 @@ namespace CMScouter.UI
             typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.RightFoot)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Sportsmanship)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Stamina)), 
             typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Strength)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Tackling)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Teamwork)), 
             typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Technique)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Temperament)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.ThrowIns)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Versitility)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.WorkRate))
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Versatility)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.WorkRate))
 
         };
 
@@ -71,25 +71,50 @@ namespace CMScouter.UI
 
         public DateTime GameDate;
 
-        public CMScouterUI(string fileName, decimal valueMultiplier)
+        public CMScouterUI(string fileName, decimal valueMultiplier, string weightFileName, Guid weightingSelected)
         {
             // IntrinsicMasker = new DefaultIntrinsicMasker();
             IntrinsicMasker = new MadScientist_MatchMasker();
 
-            //_rater = new DefaultRater(IntrinsicMasker);
-            //_rater = new InvestigationRater(IntrinsicMasker);
-
-            GroupedRoleWeights tester = new GroupedRoleWeights(Roles.GK);
-            tester.Acceleration = 5;
-            tester.SpeedPercent = 100;
-
-            string testerJson = JsonSerializer.Serialize(tester);
-
-            GroupedRoleWeights weights = JsonSerializer.Deserialize<GroupedRoleWeights>(@"{""Role"" : 2, ""SpeedPercent"" : 100, ""Acceleration"": 5}");
-
-            _rater = new GroupedAttributeRater(IntrinsicMasker, weights);
-
             LoadGameData(fileName, valueMultiplier);
+
+            WeightCollection collection;
+
+            using (StreamReader sw = new StreamReader(weightFileName))
+            {
+                try
+                {
+                    collection = JsonSerializer.Deserialize<WeightCollection>(sw.ReadToEnd());
+                }
+                catch
+                {
+                    collection = new WeightCollection();
+                    collection.GroupedWeights.Add(new GroupedAttributeRater(IntrinsicMasker, null).DefaultGroupedWeights());
+                    collection.IndividualWeights.Add(new IndividualAttributeRater(IntrinsicMasker, null).GetDefaultWeights());
+                }
+            }
+
+            IndividualWeightSet selectedIndividualWeights = collection.IndividualWeights.FirstOrDefault(x => x.ID == weightingSelected);
+            GroupedWeightSet selectedGroupWeights = null;
+            if (selectedIndividualWeights != null)
+            {
+                _rater = new IndividualAttributeRater(IntrinsicMasker, selectedIndividualWeights);
+            }
+            else
+            {
+                selectedGroupWeights = collection.GroupedWeights.FirstOrDefault(x => x.ID == weightingSelected);
+                if (selectedGroupWeights == null)
+                {
+                    selectedGroupWeights = collection.GroupedWeights.First();
+                }
+
+                if (selectedGroupWeights == null)
+                {
+                    return;
+                }
+
+                _rater = new GroupedAttributeRater(IntrinsicMasker, selectedGroupWeights);
+            }
 
             SetupCustomSearches();
         }
@@ -153,6 +178,12 @@ namespace CMScouter.UI
         {
             Func<Player, bool> filter = new Func<Player, bool>(x => playerIds.Contains(x._player.PlayerId));
             return ConstructPlayerByFilter(filter);
+        }
+
+        public PlayerView GetPlayerByPlayerId(int playerId)
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => playerId == x._player.PlayerId);
+            return ConstructPlayerByFilter(filter).FirstOrDefault();
         }
 
         public List<PlayerView> GetPlayersBySecondName(string playerName)
@@ -230,6 +261,12 @@ namespace CMScouter.UI
             return _displayHelper.ConstructPlayers(_savegame.Players.Where(x => x._player.PlayerId == playerId), _rater, options).FirstOrDefault();
         }
 
+        public PlayerView GetPlayerPotential(int playerId)
+        {
+            ConstructPlayerOptions options = new ConstructPlayerOptions() { UsePotential = true };
+            return _displayHelper.ConstructPlayers(_savegame.Players.Where(x => x._player.PlayerId == playerId), _rater, options).FirstOrDefault();
+        }
+
         public string CreateExportSet(List<int> playerIds)
         {
             if (playerIds == null)
@@ -264,6 +301,18 @@ namespace CMScouter.UI
         public void UpdateInflationValue(decimal inflation)
         {
             LoadGameData(_savegame.FileName, inflation);
+        }
+
+        public void UpdateGroupedWeighting(GroupedWeightSet weights)
+        {
+            _rater = new GroupedAttributeRater(IntrinsicMasker, weights);
+            LoadGameData(_savegame.FileName, _savegame.ValueMultiplier);
+        }
+
+        public void UpdateIndividualWeighting(IndividualWeightSet weights)
+        {
+            _rater = new IndividualAttributeRater(IntrinsicMasker, weights);
+            LoadGameData(_savegame.FileName, _savegame.ValueMultiplier);
         }
 
         public List<PlayerView> GetHighestCA()

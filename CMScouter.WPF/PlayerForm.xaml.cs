@@ -34,12 +34,13 @@ namespace CMScouter.WPF
             this.player = player;
             this.masker = cmsUI.IntrinsicMasker;
 
-            InitialiseRatingPanel();
             BindPlayerDetails();
         }
 
         private void BindPlayerDetails()
         {
+            InitialiseRatingPanel();
+
             AddPersonalDetails();
             AddPositionDetails();
             AddPersonality();
@@ -60,7 +61,7 @@ namespace CMScouter.WPF
             {
                 maskedValue = value;
                 //value = masker.GetIntrinsicBasicMask(value, player.CurrentAbility);
-                value = (byte)masker.GetIntrinsicMask(player.CurrentAbility, player.Positions, player.Attributes.Versitility, attribute, (PlayerPosition)ddlPosition.SelectedValue, (PlayerPosition)ddlRunTo.SelectedValue, value);
+                value = (byte)masker.GetIntrinsicMask(player.CurrentAbility, player.Positions, player.Attributes.Versatility, attribute, (PlayerPosition)ddlPosition.SelectedValue, (PlayerPosition)ddlRunTo.SelectedValue, value);
             }
 
             Color colour = GetAttributeColour(IsInverted ? (21 - value) :value);
@@ -171,7 +172,7 @@ namespace CMScouter.WPF
             SetAttributeLabels(lblImpMatches, player.Attributes.ImportantMatches, DP.ImportantMatches);
             SetAttributeLabels(lblInfluence, player.Attributes.Influence, DP.Influence);
             SetAttributeLabels(lblTeamwork, player.Attributes.Teamwork, DP.Teamwork);
-            SetAttributeLabels(lblVersitility, player.Attributes.Versitility, DP.Versatility);
+            SetAttributeLabels(lblVersitility, player.Attributes.Versatility, DP.Versatility);
             SetAttributeLabels(lblWorkRate, player.Attributes.WorkRate, DP.WorkRate);
         }
 
@@ -259,6 +260,25 @@ namespace CMScouter.WPF
 
                 BindPlayerDetails();
             }
+        }
+
+        private void cbxPotential_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is CheckBox))
+            {
+                return;
+            }
+
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                this.player = cmsUI.GetPlayerPotential(this.player.PlayerId);
+            }
+            else
+            {
+                this.player = cmsUI.GetPlayerByPlayerId(this.player.PlayerId);
+            }
+
+            BindPlayerDetails();
         }
     }
 }

@@ -39,9 +39,9 @@ namespace CMScouter.UI.Raters
             OffFieldRating = offField;
         }
 
-        public RoleRating BestRole { get => RoleRatings.OrderByDescending(r => r.AbilityRating).First(); }
+        public RoleRating BestRole { get => RoleRatings.OrderByDescending(r => r.AbilityRating).FirstOrDefault(); }
 
-        public byte Rating { get => BestRole.AbilityRating; }
+        public byte Rating { get => BestRole?.AbilityRating ?? 0; }
     }
 
     public class ScoutingInformation

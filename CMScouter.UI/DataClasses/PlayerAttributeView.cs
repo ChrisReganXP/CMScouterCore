@@ -87,7 +87,7 @@ namespace CMScouter.UI
 
         public byte Teamwork { get; set; }
 
-        public byte Versitility { get; set; }
+        public byte Versatility { get; set; }
 
         public byte WorkRate { get; set; }
 

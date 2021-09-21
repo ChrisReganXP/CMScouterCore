@@ -12,7 +12,7 @@ using CMScouter.DataContracts;
 
 namespace CMScouter.UI
 {
-    internal class GroupedAttributeRater : IPlayerRater
+    internal class GroupedAttributeRater : BaseRater, IPlayerRater
     {
         public void OutputDebug(bool enabled)
         {
@@ -31,422 +31,295 @@ namespace CMScouter.UI
             Debug.WriteLine(debug);
         }
 
-        /*
-            GK: Anticipation, Decisions, Handling, Heading, Positioning, Reflexes, Tackling, One on Ones
-            Full backs: Anticipation, Crossing, Decisions, Dribbling, Marking, Positioning, Tackling, Team work
-            Centre Backs: Anticipation, Decisions, Heading, Marking, Positioning, Tackling, Strength
-            Wingers: Agility, Balance, Crossing, Dribbling, Flair(If you please), Set pieces(If you please), Passing, Teamwork
-            Centre Mids: Have pretty much everything, but can vary if you want a more defensive or more attacking player
-            Strikers: Decisions, Finishing, Heading (depending on the striker), Movement (Depending on the striker) Natural Fitness, Strength (depending on the striker).
-        */
+        GroupedWeightSet weights;
 
-        private void AddGK()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 6;
-            groupWeight[(int)AG.Reliability] = 14;
-
-            groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 70;
-
-            groupWeight[(int)AG.Speed] = 0;
-            groupWeight[(int)AG.Strength] = 10;
-
-            groupedWeightings[(int)Roles.GK] = groupWeight;
-        }
-
-        private void AddDFB()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 10;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 45;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 20;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.DFB] = groupWeight;
-        }
-
-        private void AddAFB()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 8;
-            groupWeight[(int)AG.Reliability] = 8;
-
-            groupWeight[(int)AG.Playmaking] = 8;
-            groupWeight[(int)AG.Wideplay] = 15;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 15;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 35;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.AFB] = groupWeight;
-        }
-
-        private void AddCB()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 15;
-            groupWeight[(int)AG.Reliability] = 5;
-
-            groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 35;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 30;
-
-            groupedWeightings[(int)Roles.CB] = groupWeight;
-        }
-
-        private void AddWB()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 5;
-            groupWeight[(int)AG.Wideplay] = 15;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 25;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 30;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.WB] = groupWeight;
-        }
-
-        private void AddDM()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 15;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 0;
-            groupWeight[(int)AG.Defending] = 20;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 30;
-
-            groupedWeightings[(int)Roles.HM] = groupWeight;
-        }
-
-        private void AddCM()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 15;
-            groupWeight[(int)AG.Reliability] = 15;
-
-            groupWeight[(int)AG.Playmaking] = 20;
-            groupWeight[(int)AG.Wideplay] = 5;
-            groupWeight[(int)AG.Scoring] = 5;
-            groupWeight[(int)AG.Defending] = 10;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 20;
-
-            groupedWeightings[(int)Roles.CM] = groupWeight;
-        }
-
-        private void AddWM()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 5;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 15;
-            groupWeight[(int)AG.Wideplay] = 20;
-            groupWeight[(int)AG.Scoring] = 5;
-            groupWeight[(int)AG.Defending] = 5;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 35;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.WM] = groupWeight;
-        }
-
-        private void AddAM()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 5;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 35;
-            groupWeight[(int)AG.Wideplay] = 20;
-            groupWeight[(int)AG.Scoring] = 10;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 15;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.AM] = groupWeight;
-        }
-
-        private void AddWG()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 5;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 10;
-            groupWeight[(int)AG.Wideplay] = 25;
-            groupWeight[(int)AG.Scoring] = 15;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 35;
-            groupWeight[(int)AG.Strength] = 0;
-
-            groupedWeightings[(int)Roles.WG] = groupWeight;
-        }
-
-        private void AddST()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 5;
-            groupWeight[(int)AG.Wideplay] = 0;
-            groupWeight[(int)AG.Scoring] = 35;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 20;
-            groupWeight[(int)AG.Strength] = 20;
-
-            groupedWeightings[(int)Roles.ST] = groupWeight;
-        }
-
-        private void AddPO()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 10;
-            groupWeight[(int)AG.Reliability] = 10;
-
-            groupWeight[(int)AG.Playmaking] = 0;
-            groupWeight[(int)AG.Wideplay] = 10;
-            groupWeight[(int)AG.Scoring] = 45;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 20;
-            groupWeight[(int)AG.Strength] = 5;
-
-            groupedWeightings[(int)Roles.PO] = groupWeight;
-        }
-
-        private void AddTM()
-        {
-            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
-
-            groupWeight[(int)AG.Impact] = 15;
-            groupWeight[(int)AG.Reliability] = 5;
-
-            groupWeight[(int)AG.Playmaking] = 5;
-            groupWeight[(int)AG.Wideplay] = 5;
-            groupWeight[(int)AG.Scoring] = 30;
-            groupWeight[(int)AG.Defending] = 0;
-            groupWeight[(int)AG.Goalkeeping] = 0;
-
-            groupWeight[(int)AG.Speed] = 10;
-            groupWeight[(int)AG.Strength] = 30;
-
-            groupedWeightings[(int)Roles.TM] = groupWeight;
-        }
-
-        private void AddOffField()
-        {
-            byte[] person = new byte[Enum.GetNames(typeof(DP)).Length];
-            person.AW(DP.Adaptability, 0);
-            person.AW(DP.Ambition, 0);
-            person.AW(DP.Determination, 20);
-            person.AW(DP.Loyalty, 4);
-            person.AW(DP.Pressure, 6);
-            person.AW(DP.Professionalism, 4);
-            person.AW(DP.Sportsmanship, 0);
-            person.AW(DP.Temperament, 3);
-            weightings[weightings.Length - 1] = person;
-        }
-
-        byte[][] weightings;
-        byte[][] groupedWeightings;
-
-        private AttributeWeight[] ImpactAttributes = new AttributeWeight[]
-            { new AttributeWeight{ Attribute = DP.Aggression, Weight = 10 }, new AttributeWeight{ Attribute = DP.Bravery, Weight = 10 } };
-
-        private AttributeWeight[] ReliabilityAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Consistency, Weight = 10}, new AttributeWeight{ Attribute = DP.ImportantMatches, Weight = 4},
-            new AttributeWeight{ Attribute = DP.Teamwork, Weight = 4}, new AttributeWeight{ Attribute = DP.WorkRate, Weight = 4},
-        };
-
-        private AttributeWeight[] PlaymakingAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Creativity, Weight = 4, IsIntrinsic = true}, new AttributeWeight{ Attribute = DP.LongShots, Weight = 1, IsIntrinsic = true }, new AttributeWeight { Attribute = DP.Dribbling, Weight = 2, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Passing, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Technique, Weight = 8 }, new AttributeWeight{ Attribute = DP.Anticipation, Weight = 4, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Decisions, Weight = 2, IsIntrinsic = true}, new AttributeWeight{ Attribute = DP.OffTheBall, Weight = 8, IsIntrinsic = true }, new AttributeWeight { Attribute = DP.Crossing, Weight = 2, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Teamwork, Weight = 4 }, new AttributeWeight{ Attribute = DP.WorkRate, Weight = 3 }
-        };
-
-        private AttributeWeight[] WidePlayAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Crossing, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Dribbling, Weight = 8, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.OffTheBall, Weight = 7, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Passing, Weight = 4, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Technique, Weight = 6 }, new AttributeWeight{ Attribute = DP.Flair, Weight = 4 }
-        };
-
-        private AttributeWeight[] ScoringAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Finishing, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Heading, Weight = 10, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.LongShots, Weight = 1, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.OffTheBall, Weight = 20, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Technique, Weight = 5 }, new AttributeWeight{ Attribute = DP.Flair, Weight = 2 },
-            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 5, IsIntrinsic = true }
-        };
-
-        private AttributeWeight[] DefendingAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Heading, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Marking, Weight = 15, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Positioning, Weight = 30, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Tackling, Weight = 30, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 5, IsIntrinsic = true }
-        };
-
-        private AttributeWeight[] GoalkeepingAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Handling, Weight = 15, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.OneOnOnes, Weight = 2, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Reflexes, Weight = 5, IsIntrinsic = true }, new AttributeWeight { Attribute = DP.Positioning, Weight = 5, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Agility, Weight = 4}
-        };
-
-        private AttributeWeight[] SpeedAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Acceleration, Weight = 10 }, new AttributeWeight{ Attribute = DP.Agility, Weight = 6 },
-            new AttributeWeight{ Attribute = DP.Pace, Weight = 10 }, new AttributeWeight{ Attribute = DP.Stamina, Weight = 3 }
-        };
-
-        private AttributeWeight[] StrengthAttributes = new AttributeWeight[]
-        {
-            new AttributeWeight{ Attribute = DP.Balance, Weight = 2 }, new AttributeWeight{ Attribute = DP.Jumping, Weight = 13 },
-            new AttributeWeight{ Attribute = DP.Stamina, Weight = 2 }, new AttributeWeight{ Attribute = DP.Strength, Weight = 10 }
-        };
-
-
-        private byte[] OffFieldAttributes = new byte[] { (byte)DP.Adaptability, (byte)DP.Ambition, (byte)DP.Determination, (byte)DP.Loyalty, (byte)DP.Pressure, (byte)DP.Professionalism, (byte)DP.Sportsmanship, (byte)DP.Temperament, (byte)DP.Versatility };
-
-        private IIntrinsicMasker masker;
-
-        // rename
-        public GroupedAttributeRater(IIntrinsicMasker Masker, GroupedRoleWeights weights)
-        {
-            masker = Masker;
-
-            // last one is the off field
-            weightings = new byte[Enum.GetNames(typeof(Roles)).Count() + 1][];
-            AddOffField();
-
-            groupedWeightings = new byte[Enum.GetNames(typeof(Roles)).Count() + 1][];
-            AddGK();
-            AddDFB();
-            AddAFB();
-            AddCB();
-            AddDM();
-            AddWB();
-            AddCM();
-            AddWM();
-            AddAM();
-            AddWG();
-            AddPO();
-            AddTM();
-            AddST();
-        }
-
-        public bool PlaysPosition(PlayerPosition type, PlayerData player)
-        {
-            switch (type)
+        private AttributeWeights OffField { get => new AttributeWeights()
             {
-                case PlayerPosition.GoalKeeper:
-                    return player.GK >= 19;
-
-                case PlayerPosition.RightBack:
-                    return player.DF >= 15 && player.Right >= 15; // add WBs
-
-                case PlayerPosition.CentreHalf:
-                    return player.DF >= 15 && player.Centre >= 15;
-
-                case PlayerPosition.LeftBack:
-                    return player.DF >= 15 && player.Left >= 15;
-
-                case PlayerPosition.RightWingBack:
-                    return (player.WingBack >= 15 && player.Right >= 15) || (player.DF == 20 && player.Right == 20);
-
-                case PlayerPosition.DefensiveMidfielder:
-                    return (player.DM >= 15 && player.Centre >= 15) || (player.Centre == 20 && (player.DF == 20 || player.MF == 20));
-
-                case PlayerPosition.LeftWingBack:
-                    return (player.WingBack >= 15 && player.Left >= 15) || (player.DF == 20 && player.Left == 20);
-
-                case PlayerPosition.RightMidfielder:
-                    return (player.MF >= 15 && player.Right >= 15) || (player.Right == 20 && player.AM == 20);
-
-                case PlayerPosition.CentralMidfielder:
-                    return (player.MF >= 15 && player.Centre >= 15) ||
-                        (player.DM == 20 && player.Centre >= 15) || (player.AM == 20 && player.Centre == 20);
-
-                case PlayerPosition.LeftMidfielder:
-                    return (player.MF >= 15 && player.Left >= 15) || (player.Left == 20 && player.AM == 20);
-
-                case PlayerPosition.RightWinger:
-                    return (player.AM >= 15 && player.Right >= 15) || (player.Right == 20 && (player.MF == 20 || player.ST == 20));
-
-                case PlayerPosition.AttackingMidfielder:
-                    return (player.AM >= 15 && player.Centre >= 15) || (player.Centre == 20 && (player.MF == 20 || player.ST == 20));
-
-                case PlayerPosition.LeftWinger:
-                    return (player.AM >= 15 && player.Left >= 15) || (player.Left == 20 && (player.MF == 20 || player.ST == 20));
-
-                case PlayerPosition.CentreForward:
-                    return (player.ST >= 15 && player.Centre >= 15) || (player.ST == 20) || (player.AM == 20 && player.Centre == 20);
-
-                default:
-                    return false;
-            }
+                Determination = 20,
+                Loyalty = 4,
+                Pressure = 6,
+                Professionalism = 4,
+                Temperament = 3
+            };
         }
-        
-        public ScoutingInformation GetRating(Player player, ConstructPlayerOptions options)
+
+        public GroupedWeightSet DefaultGroupedWeights()
         {
-            return GetRatings(player, options);
+            GroupedWeightSet groupedWeightSet = new GroupedWeightSet("Default");
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.GK,
+                ImpactPercent = 6,
+                ReliabilityPercent = 14,
+                PlaymakingPercent = 0,
+                WideplayPercent = 0,
+                ScoringPercent = 0,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 70,
+                SpeedPercent = 0,
+                StrengthPercent = 10
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.DFB,
+                ImpactPercent = 10,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 0,
+                WideplayPercent = 10,
+                ScoringPercent = 0,
+                DefendingPercent = 45,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 20,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.AFB,
+                ImpactPercent = 8,
+                ReliabilityPercent = 8,
+                PlaymakingPercent = 8,
+                WideplayPercent = 15,
+                ScoringPercent = 0,
+                DefendingPercent = 15,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 35,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.CB,
+                ImpactPercent = 15,
+                ReliabilityPercent = 5,
+                PlaymakingPercent = 0,
+                WideplayPercent = 0,
+                ScoringPercent = 0,
+                DefendingPercent = 35,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 15,
+                StrengthPercent = 30
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.WB,
+                ImpactPercent = 10,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 5,
+                WideplayPercent = 15,
+                ScoringPercent = 0,
+                DefendingPercent = 25,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 30,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.HM,
+                ImpactPercent = 15,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 10,
+                WideplayPercent = 0,
+                ScoringPercent = 0,
+                DefendingPercent = 20,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 15,
+                StrengthPercent = 30
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.CM,
+                ImpactPercent = 15,
+                ReliabilityPercent = 15,
+                PlaymakingPercent = 20,
+                WideplayPercent = 5,
+                ScoringPercent = 5,
+                DefendingPercent = 10,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 10,
+                StrengthPercent = 20
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.WM,
+                ImpactPercent = 5,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 15,
+                WideplayPercent = 20,
+                ScoringPercent = 5,
+                DefendingPercent = 5,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 35,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.AM,
+                ImpactPercent = 5,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 35,
+                WideplayPercent = 20,
+                ScoringPercent = 10,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 15,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.WG,
+                ImpactPercent = 5,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 10,
+                WideplayPercent = 25,
+                ScoringPercent = 15,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 35,
+                StrengthPercent = 0
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.ST,
+                ImpactPercent = 10,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 5,
+                WideplayPercent = 0,
+                ScoringPercent = 35,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 20,
+                StrengthPercent = 20
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.PO,
+                ImpactPercent = 10,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 0,
+                WideplayPercent = 10,
+                ScoringPercent = 45,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 20,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.TM,
+                ImpactPercent = 15,
+                ReliabilityPercent = 5,
+                PlaymakingPercent = 5,
+                WideplayPercent = 5,
+                ScoringPercent = 30,
+                DefendingPercent = 0,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 10,
+                StrengthPercent = 30
+            });
+
+            groupedWeightSet.ImpactWeights = new AttributeWeights()
+            {
+                Aggression = 10,
+                Bravery = 10
+            };
+
+            groupedWeightSet.ReliabilityWeights = new AttributeWeights()
+            {
+                Consistency = 10,
+                ImportantMatches = 4,
+                Teamwork = 4,
+                WorkRate = 4,
+            };
+
+            groupedWeightSet.PlaymakingWeights = new AttributeWeights()
+            {
+                Creativity = 4,
+                LongShots = 1,
+                Dribbling = 2,
+                Passing = 10,
+                Technique = 8,
+                Anticipation = 4,
+                Decisions = 2,
+                OffTheBall = 8,
+                Crossing = 2,
+                Teamwork = 4,
+                WorkRate = 3,
+            };
+
+            groupedWeightSet.WideplayWeights = new AttributeWeights()
+            {
+                Crossing = 10,
+                Dribbling = 8,
+                OffTheBall = 7,
+                Passing = 4,
+                Technique = 6,
+                Flair = 4
+            };
+
+            groupedWeightSet.ScoringWeights = new AttributeWeights()
+            {
+                Finishing = 10,
+                Heading = 10,
+                LongShots = 1,
+                OffTheBall = 20,
+                Technique = 5,
+                Flair = 2,
+                Anticipation = 5
+            };
+
+            groupedWeightSet.DefendingWeights = new AttributeWeights()
+            {
+                Heading = 10,
+                Marking = 15,
+                Positioning = 30,
+                Tackling = 30,
+                Anticipation = 5,
+            };
+
+            groupedWeightSet.GoalkeepingWeights = new AttributeWeights()
+            {
+                Handling = 15,
+                OneonOnes = 2,
+                Reflexes = 5,
+                Positioning = 5,
+                Agility = 4,
+            };
+
+            groupedWeightSet.SpeedWeights = new AttributeWeights()
+            {
+                Acceleration = 10,
+                Agility = 6,
+                Pace = 10,
+                Stamina = 3,
+            };
+
+            groupedWeightSet.StrengthWeights = new AttributeWeights()
+            {
+                Balance = 2,
+                Jumping = 13,
+                Stamina = 2,
+                Strength = 10,
+            };
+
+            return groupedWeightSet;
+        }
+
+        public GroupedAttributeRater(IIntrinsicMasker Masker, GroupedWeightSet Weights)
+        {
+            base.masker = Masker;
+            weights = Weights;
         }
 
         public ScoutingInformation GetRatings(Player player)
@@ -454,15 +327,13 @@ namespace CMScouter.UI
             return GetRatings(player, null);
         }
 
-        private ScoutingInformation GetRatings(Player player, ConstructPlayerOptions options)
+        public ScoutingInformation GetRatings(Player player, ConstructPlayerOptions options)
         {
             byte offFieldRating = GetRatingsForPersonality(player);
-            //decimal offFieldAdjustment = GetAdjustmentByOffFieldRating(offFieldRating);
 
-            //New object
             List<PositionRating> positionRatings = new List<PositionRating>();
 
-            if (options == null)
+            if (options == null || options.setPosition == null || options.movementPosition == null)
             {
                 positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, offFieldRating));
                 positionRatings.Add(GetRatingsForPosition(player, PlayerPosition.RightBack, PlayerPosition.RightBack, offFieldRating));
@@ -481,7 +352,7 @@ namespace CMScouter.UI
             }
             else
             {
-                positionRatings.Add(GetRatingsForPosition(player, options.setPosition, options.movementPosition, offFieldRating));
+                positionRatings.Add(GetRatingsForPosition(player, options.setPosition.Value, options.movementPosition.Value, offFieldRating));
             }
 
             ScoutingInformation coreResults = new ScoutingInformation(positionRatings, offFieldRating);
@@ -489,71 +360,15 @@ namespace CMScouter.UI
             return coreResults;
         }
 
-        private byte[] GetValues(Player player)
-        {
-            byte[] values = new byte[Enum.GetNames(typeof(DP)).Length];
-            values.AW(DP.Acceleration, player._player.Acceleration);
-            values.AW(DP.Aggression, player._player.Aggression);
-            values.AW(DP.Agility, player._player.Agility);
-            values.AW(DP.Anticipation, player._player.Anticipation);
-            values.AW(DP.Balance, player._player.Balance);
-            values.AW(DP.Bravery, player._player.Bravery);
-            values.AW(DP.Consistency, player._player.Consistency);
-            values.AW(DP.Corners, player._player.Corners);
-            values.AW(DP.Creativity, player._player.Creativity);
-            values.AW(DP.Crossing, player._player.Crossing);
-            values.AW(DP.Decisions, player._player.Decisions);
-            values.AW(DP.Dirtiness, player._player.Dirtiness);
-            values.AW(DP.Dribbling, player._player.Dribbling);
-            values.AW(DP.Finishing, player._player.Finishing);
-            values.AW(DP.FreeKicks, player._player.FreeKicks);
-            values.AW(DP.Flair, player._player.Flair);
-            values.AW(DP.Handling, player._player.Handling);
-            values.AW(DP.Heading, player._player.Heading);
-            values.AW(DP.ImportantMatches, player._player.ImportantMatches);
-            values.AW(DP.Influence, player._player.Influence);
-            values.AW(DP.InjuryProneness, player._player.InjuryProneness);
-            values.AW(DP.Jumping, player._player.Jumping);
-            values.AW(DP.LongShots, player._player.LongShots);
-            values.AW(DP.Marking, player._player.Marking);
-            values.AW(DP.OffTheBall, player._player.OffTheBall);
-            values.AW(DP.OneOnOnes, player._player.OneOnOnes);
-            values.AW(DP.Pace, player._player.Pace);
-            values.AW(DP.Passing, player._player.Passing);
-            values.AW(DP.Penalties, player._player.Penalties);
-            values.AW(DP.Positioning, player._player.Positioning);
-            values.AW(DP.Reflexes, player._player.Reflexes);
-            values.AW(DP.Stamina, player._player.Stamina);
-            values.AW(DP.Strength, player._player.Strength);
-            values.AW(DP.Tackling, player._player.Tackling);
-            values.AW(DP.Teamwork, player._player.Teamwork);
-            values.AW(DP.Technique, player._player.Technique);
-            values.AW(DP.ThrowIns, player._player.ThrowIns);
-            values.AW(DP.Versatility, player._player.Versatility);
-            values.AW(DP.WorkRate, player._player.WorkRate);
-            values.AW(DP.LeftFoot, player._player.Left);
-            values.AW(DP.RightFoot, player._player.Right);
-
-            values.AW(DP.Adaptability, player._staff.Adaptability);
-            values.AW(DP.Ambition, player._staff.Ambition);
-            values.AW(DP.Determination, player._staff.Determination);
-            values.AW(DP.Loyalty, player._staff.Loyalty);
-            values.AW(DP.Pressure, player._staff.Pressure);
-            values.AW(DP.Professionalism, player._staff.Professionalism);
-            values.AW(DP.Sportsmanship, player._staff.Sportsmanship);
-            values.AW(DP.Temperament, player._staff.Temperament);
-
-            return values;
-        }
-
         private PositionRating GetRatingsForPosition(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, byte offFieldRating)
         {
             PositionRating positionRatings = new PositionRating(offField: offFieldRating) { SetPosition = setPosition, MovementPosition = movementPosition };
+            GroupedRatings playerGroupedRatings = null;
 
             List<Roles> roles = setPosition.GetAttributeValue<LinkedRoles, List<Roles>>(x => x.Roles);
             foreach (var role in roles)
             {
-                var rating = GetRatingForTypeAndRole(player, setPosition, movementPosition, role);
+                var rating = GetRatingForTypeAndRole(player, setPosition, movementPosition, role, ref playerGroupedRatings);
                 rating.PurchaseRating = ApplyOffFieldAdjustment(rating.AbilityRating, offFieldRating, rating.Debug);
                 positionRatings.RoleRatings.Add(rating);
             }
@@ -561,10 +376,9 @@ namespace CMScouter.UI
             return positionRatings;
         }
 
-        private RoleRating GetRatingForTypeAndRole(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role)
+        private RoleRating GetRatingForTypeAndRole(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings)
         {
             RatingRoleDebug roleDebug = new RatingRoleDebug();
-            GroupedRatings playerGroupedRatings = null;
 
             var rating = CalculateRating(player, setPosition, movementPosition, role, ref playerGroupedRatings, ref roleDebug);
 
@@ -573,11 +387,7 @@ namespace CMScouter.UI
 
         private byte GetRatingsForPersonality(Player player)
         {
-            string mentalDebugString;
-            byte[] values = GetValues(player);
-
-            // TODO use a different method!
-            byte offField = GetGroupingScore(OffFieldAttributes, values, weightings[weightings.Length - 1], false, player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, out mentalDebugString);
+            byte offField = GetGroupingScore(player, PlayerPosition.GoalKeeper, PlayerPosition.GoalKeeper, OffField);
 
             return offField;
         }
@@ -585,39 +395,28 @@ namespace CMScouter.UI
         private byte CalculateRating(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings, ref RatingRoleDebug debug)
         {
             RatingRoleDebug roleDebug;
-            var weights = GetWeights(role);
 
             LogDebug($"*** {role} ***");
 
             playerGroupedRatings = playerGroupedRatings ?? CreatePlayerGroupedRatings(player, setPosition, movementPosition);
 
-            //var values = GetValues(player);
-            decimal result = RatePlayerInRole(player, setPosition, role, weights, playerGroupedRatings, out roleDebug);
+            decimal result = RatePlayerInRole(player, setPosition, role, GetWeightsForRole(role), playerGroupedRatings, out roleDebug);
 
             var proportion = result;
 
             debug = roleDebug;
 
-            /*
-            decimal BestRating = 90;
-            decimal WorstRating = 35;
-            decimal spreadForNewRatings = 98;
-
-            result = Math.Max(result, WorstRating);
-            result = Math.Min(result, BestRating);
-
-            // function to reset to 1-99 from above expected range
-            proportion = (((decimal)result - WorstRating) * spreadForNewRatings) / (BestRating - WorstRating);
-            proportion += 1;*/
-
             return (byte)proportion;
+        }
+
+        private GroupedRoleWeights GetWeightsForRole(Roles role)
+        {
+            return weights.RoleWeights.FirstOrDefault(x => x.Role == role);
         }
 
         private GroupedRatings CreatePlayerGroupedRatings(Player player, PlayerPosition setPosition, PlayerPosition movementPosition)
         {
             var playerGroupedRatings = new GroupedRatings();
-
-            byte[] values = GetValues(player);
 
             if (setPosition == movementPosition)
             {
@@ -628,185 +427,43 @@ namespace CMScouter.UI
                 LogDebug($"{setPosition} -> {movementPosition}");
             }
 
-            LogDebug("Impact");
-            playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, ImpactAttributes, values);
-            LogDebug("Reliability");
-            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, ReliabilityAttributes, values);
-            LogDebug("Playmaking");
-            playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, PlaymakingAttributes, values);
-            LogDebug("Wideplay");
-            playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, WidePlayAttributes, values);
-            LogDebug("Scoring");
-            playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, ScoringAttributes, values);
-            LogDebug("Defending");
-            playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, DefendingAttributes, values);
-            LogDebug("Goalkeeping");
-            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, GoalkeepingAttributes, values);
-            LogDebug("Speed");
-            playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, SpeedAttributes, values);
-            LogDebug("Strength");
-            playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, StrengthAttributes, values);
+            playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, weights.ImpactWeights);
+            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, weights.ReliabilityWeights);
+            playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, weights.PlaymakingWeights);
+            playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, weights.WideplayWeights);
+            playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, weights.ScoringWeights);
+            playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, weights.DefendingWeights);
+            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, weights.GoalkeepingWeights);
+            playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, weights.SpeedWeights);
+            playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, weights.StrengthWeights);
+
 
             return playerGroupedRatings;
         }
 
-        private byte RatePlayerInRole(Player player, PlayerPosition type, Roles role, byte[] weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
+        private byte RatePlayerInRole(Player player, PlayerPosition type, Roles role, GroupedRoleWeights weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
         {
-            /*
-            byte mentalWeight = weights.GW(DP.MentalityWeight);
-            byte physicalWeight = weights.GW(DP.PhysicalityWeight);
-            byte technicalWeight = weights.GW(DP.TechnicalWeight);
-
-
-            var mental = GetGroupingScore(MentalAttributes, values, weights, false, out mentalDebugString);
-            var physical = GetGroupingScore(PhysicalAttributes, values, weights, false, out physicalDebugString);
-            var technical = GetGroupingScore(TechnicalAttributes, values, weights, true, out technicalDebugString);
-
-            decimal mentalScore = Weight(mental, mentalWeight);
-            decimal physicalScore = Weight(physical, physicalWeight, weights.GW(DP.PhysicalInflation));
-            decimal technicalScore = Weight(technical, technicalWeight, weights.GW(DP.TechnicalInflation));
-
-            decimal adjust = (decimal)(mentalWeight + physicalWeight + technicalWeight) / 100;
-            */
-
-            
-
-            decimal mentalRating = ApplyWeightToGroup(playerGroupedRatings.impactRating, weights[(int)AG.Impact]) + ApplyWeightToGroup(playerGroupedRatings.reliabilityRating, weights[(int)AG.Reliability]);
-            decimal mentalWeighting = weights[(int)AG.Impact] + weights[(int)AG.Reliability];
-
-            //mentalRating = Math.Min(mentalRating * 1.2m, mentalWeighting);
-
-            const decimal fb_wp = 1.1m;
-            decimal wp_adj = 1;
-
-            /*
-            switch (type)
+            debug = new RatingRoleDebug();
+            if (weights == null)
             {
-                case PlayerType.RightBack:
-                case PlayerType.LeftBack:
-                    wp_adj = fb_wp;
-                    break;
-            }*/
+                return (byte)0;
+            }
 
-            const decimal pm_adj_all = 1.08m;
-            decimal pm_adj = 1;
+            decimal mentalRating = ApplyWeightToGroup(playerGroupedRatings.impactRating, weights.ImpactPercent) + ApplyWeightToGroup(playerGroupedRatings.reliabilityRating, weights.ReliabilityPercent);
+            decimal mentalWeighting = weights.ImpactPercent + weights.ReliabilityPercent;
 
-            /*
-            switch (type)
-            {
-                default:
-                    pm_adj = pm_adj_all;
-            }*/
+            decimal technicalRating = ApplyWeightToGroup(playerGroupedRatings.playmakingRating, weights.PlaymakingPercent)
+                + ApplyWeightToGroup(playerGroupedRatings.wideplayRating, weights.WideplayPercent)
+                + ApplyWeightToGroup(playerGroupedRatings.scoringRating, weights.ScoringPercent) + ApplyWeightToGroup(playerGroupedRatings.defendingRating, weights.DefendingPercent)
+                + ApplyWeightToGroup(playerGroupedRatings.goalkeepingRating, weights.GoalkeepingPercent);
+            decimal technicalWeighting = weights.PlaymakingPercent + weights.WideplayPercent + weights.ScoringPercent + weights.DefendingPercent + weights.GoalkeepingPercent;
 
-            decimal technicalRating = ApplyWeightToGroup((byte)(playerGroupedRatings.playmakingRating * pm_adj), weights[(int)AG.Playmaking])
-                + ApplyWeightToGroup((byte)(playerGroupedRatings.wideplayRating * wp_adj), weights[(int)AG.Wideplay]) 
-                + ApplyWeightToGroup(playerGroupedRatings.scoringRating, weights[(int)AG.Scoring]) + ApplyWeightToGroup(playerGroupedRatings.defendingRating, weights[(int)AG.Defending]) 
-                + ApplyWeightToGroup(playerGroupedRatings.goalkeepingRating, weights[(int)AG.Goalkeeping]);
-            decimal technicalWeighting = weights[(int)AG.Playmaking] + weights[(int)AG.Wideplay] + weights[(int)AG.Scoring] + weights[(int)AG.Defending] + weights[(int)AG.Goalkeeping];
+            decimal physicalRating = ApplyWeightToGroup(playerGroupedRatings.speedRating, weights.SpeedPercent) + ApplyWeightToGroup(playerGroupedRatings.strengthRating, weights.StrengthPercent);
+            decimal physicalWeighting = weights.SpeedPercent + weights.StrengthPercent;
 
-            /*
-            switch (role)
-            {
-                case Roles.GK:
-                    technicalRating = technicalRating * 0.85m;
-                    break;
-
-                case Roles.CB:
-                    technicalRating = technicalRating * 0.85m;
-                    break;
-
-                case Roles.DFB:
-                    technicalRating = technicalRating * 0.9m;
-                    break;
-
-                case Roles.AFB:
-                    technicalRating = technicalRating * 0.95m;
-                    break;
-
-                case Roles.TM:
-                    technicalRating = technicalRating * 0.95m;
-                    break;
-
-                default:
-                    technicalRating = Math.Min(technicalRating * 1.2m, technicalWeighting);
-                    break;
-            }*/
-
-            decimal physicalRating = ApplyWeightToGroup(playerGroupedRatings.speedRating, weights[(int)AG.Speed]) + ApplyWeightToGroup(playerGroupedRatings.strengthRating, weights[(int)AG.Strength]);
-            decimal physicalWeighting = weights[(int)AG.Speed] + weights[(int)AG.Strength];
-
-            //physicalRating = Math.Min(physicalRating * 1.15m, physicalWeighting);
 
             decimal rating = mentalRating + technicalRating + physicalRating;
-
-            const decimal fb_adj = 1.1m;
-            const decimal dm_adj = 1.15m;
-            const decimal cm_adj = 1.14m;
-            const decimal am_adj = 1.1m;
-            const decimal wm_adj = 1.06m;
-            const decimal wg_adj = 1.08m;
-            const decimal fw_adj = 1.15m;
-
-            decimal rat_adj = 1m;
-
-            /*
-            switch (type)
-            {
-                case PlayerType.RightBack:
-                case PlayerType.LeftBack:
-                    rat_adj = fb_adj;
-                    break;
-
-                case PlayerType.DefensiveMidfielder:
-                    rat_adj = dm_adj;
-                    break;
-
-                case PlayerType.CentralMidfielder:
-                    rat_adj = cm_adj;
-                    break;
-
-                case PlayerType.AttackingMidfielder:
-                    rat_adj = am_adj;
-                    break;
-
-                case PlayerType.RightMidfielder:
-                case PlayerType.LeftMidfielder:
-                    rat_adj = wm_adj;
-                    break;
-
-                case PlayerType.RightWinger:
-                case PlayerType.LeftWinger:
-                    rat_adj = wg_adj;
-                    break;
-
-                case PlayerType.CentreForward:
-                    switch (role)
-                    {
-                        case Roles.TM:
-                            break;
-                        default:
-                            rat_adj = fw_adj;
-                            break;
-                    }
-                    break;
-            }*/
-
-            rating = Math.Min(99, rat_adj * rating);
-
-            /*
-            switch (role)
-            {
-                case Roles.HM:
-                    if (type == PlayerType.CentralMidfielder)
-                    {
-                        rating = rating * 0.95m;
-                    }
-                    break; 
-
-                case Roles.PO:
-                    rating = rating * 0.95m;
-                    break;
-            }*/
+            rating = Math.Min(99, rating);
 
             debug = new RatingRoleDebug()
             {
@@ -852,154 +509,56 @@ namespace CMScouter.UI
             return unadjustedScore;
         }
 
-        private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeight[] attributes, byte[] values)
+        private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeights weights)
         {
             decimal rating = 0;
             int combinedWeights = 0;
-            byte realValue;
 
-            foreach (var i in attributes)
-            {
-                byte weight = (byte)i.Weight;
-
-                if (weight == 0)
-                {
-                    continue;
-                }
-
-                combinedWeights += weight;
-                realValue = values[(int)i.Attribute];
-                string attribute = Enum.GetNames(typeof(DP))[(int)i.Attribute];
-
-                decimal value = Adj(realValue, i.IsIntrinsic, i.Attribute, player._player, setPosition, movementPosition);
-
-                /*
-                decimal cappedValue = Math.Min(20, value);
-                if (value > 20)
-                {
-                    decimal remainder = (value - 20) / 2;
-                    cappedValue += remainder;
-                }
-
-                decimal weightedValue = cappedValue * weight;*/
-                decimal weightedValue = value * weight;
-
-                rating += weightedValue;
-
-                LogDebug($"{attribute} real={realValue} masked={value} weighted={weightedValue} ({weight})");
-            }
+            ScoreAttribute(DP.Acceleration, player._player, setPosition, movementPosition, player._player.Acceleration, weights.Acceleration, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Aggression, player._player, setPosition, movementPosition, player._player.Aggression, weights.Aggression, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Agility, player._player, setPosition, movementPosition, player._player.Agility, weights.Agility, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Anticipation, player._player, setPosition, movementPosition, player._player.Anticipation, weights.Anticipation, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Balance, player._player, setPosition, movementPosition, player._player.Balance, weights.Balance, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Bravery, player._player, setPosition, movementPosition, player._player.Bravery, weights.Bravery, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Consistency, player._player, setPosition, movementPosition, player._player.Consistency, weights.Consistency, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Creativity, player._player, setPosition, movementPosition, player._player.Creativity, weights.Creativity, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Crossing, player._player, setPosition, movementPosition, player._player.Crossing, weights.Crossing, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Decisions, player._player, setPosition, movementPosition, player._player.Decisions, weights.Decisions, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Determination, player._player, setPosition, movementPosition, player._staff.Determination, weights.Determination, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Dribbling, player._player, setPosition, movementPosition, player._player.Dribbling, weights.Dribbling, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Finishing, player._player, setPosition, movementPosition, player._player.Finishing, weights.Finishing, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Flair, player._player, setPosition, movementPosition, player._player.Flair, weights.Flair, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Handling, player._player, setPosition, movementPosition, player._player.Handling, weights.Handling, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Heading, player._player, setPosition, movementPosition, player._player.Heading, weights.Heading, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.ImportantMatches, player._player, setPosition, movementPosition, player._player.ImportantMatches, weights.ImportantMatches, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Influence, player._player, setPosition, movementPosition, player._player.Influence, weights.Influence, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Jumping, player._player, setPosition, movementPosition, player._player.Jumping, weights.Jumping, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.LongShots, player._player, setPosition, movementPosition, player._player.LongShots, weights.LongShots, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Marking, player._player, setPosition, movementPosition, player._player.Marking, weights.Marking, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.NaturalFitness, player._player, setPosition, movementPosition, player._player.NaturalFitness, weights.NaturalFitness, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.OffTheBall, player._player, setPosition, movementPosition, player._player.OffTheBall, weights.OffTheBall, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.OneOnOnes, player._player, setPosition, movementPosition, player._player.OneOnOnes, weights.OneonOnes, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Pace, player._player, setPosition, movementPosition, player._player.Pace, weights.Pace, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Passing, player._player, setPosition, movementPosition, player._player.Passing, weights.Passing, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Positioning, player._player, setPosition, movementPosition, player._player.Positioning, weights.Positioning, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Pressure, player._player, setPosition, movementPosition, player._staff.Pressure, weights.Pressure, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Professionalism, player._player, setPosition, movementPosition, player._staff.Professionalism, weights.Professionalism, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Reflexes, player._player, setPosition, movementPosition, player._player.Reflexes, weights.Reflexes, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Stamina, player._player, setPosition, movementPosition, player._player.Stamina, weights.Stamina, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Strength, player._player, setPosition, movementPosition, player._player.Strength, weights.Strength, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Tackling, player._player, setPosition, movementPosition, player._player.Tackling, weights.Tackling, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Teamwork, player._player, setPosition, movementPosition, player._player.Teamwork, weights.Teamwork, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Technique, player._player, setPosition, movementPosition, player._player.Technique, weights.Technique, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Temperament, player._player, setPosition, movementPosition, player._staff.Temperament, weights.Temperament, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Versatility, player._player, setPosition, movementPosition, player._player.Versatility, weights.Versatility, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.WorkRate, player._player, setPosition, movementPosition, player._player.WorkRate, weights.WorkRate, ref combinedWeights, ref rating);
 
             int maxScore = 20 * combinedWeights;
-
-            var result = GetRatingAdjustedForMaxScoreDifficulty(rating, maxScore);
-
-            LogDebug($"{rating} out of {maxScore} = {result}");
-
-            return result;
-        }
-
-        private byte GetRatingAdjustedForMaxScoreDifficulty(decimal rating, int maxScore)
-        {
-            const int maxScoreMidpoint = 300;
-            const int curveWeight = 800;
 
             decimal ratio = rating / maxScore;
             int easyratio = (int)(ratio * 100);
 
             return Math.Min((byte)99, (byte)easyratio);
-
-
-            /*
-            int flaw = (int)(100 - (100 * ratio));
-            int flawweight = maxScore - maxScoreMidpoint;
-            decimal adjuster = (decimal)flawweight / (curveWeight - (maxScore / 2.5m));
-            int scoreadjust = (int)(flaw * adjuster);
-            return Math.Min((byte)99, (byte)(easyratio + scoreadjust));*/
         }
-
-        private byte GetGroupingScore(byte[] attributes, byte[] values, byte[] weights, bool isIntrinsic, Player player, PlayerPosition setPosition, PlayerPosition movementPosition, out string debugString)
-        {
-            decimal rating = 0;
-            int combinedWeights = 0;
-            byte realValue;
-            debugString = string.Empty;
-
-            if (values.Length != weights.Length || Enum.GetNames(typeof(DP)).Length != values.Length)
-            {
-                throw new ApplicationException("Unbalanced");
-            }
-
-            //for (int i = 0; i < weights.Length; i++)
-            foreach (var i in attributes)
-            {
-                byte weight = weights[i];
-
-                if (weight == 0)
-                {
-                    continue;
-                }
-
-                combinedWeights += weight;
-                realValue = values[i];
-                string attribute = Enum.GetNames(typeof(DP))[i];
-
-                decimal value = Adj(realValue, isIntrinsic, (DP)i, player._player, setPosition, movementPosition);
-
-                decimal cappedValue = Math.Min(20, value);
-                if (value > 20)
-                {
-                    decimal remainder = (value - 20) / 2;
-                    cappedValue += remainder;
-                }
-
-                decimal weightedValue = cappedValue * weight;
-
-                rating += weightedValue;
-
-                debugString += $"{attribute} : {value}-{weight}({realValue}) ";
-            }
-
-            int maxScore = 20 * combinedWeights;
-
-            var result = (byte)((rating / maxScore) * 100);
-            return Math.Min((byte)99, result);
-        }
-
-        private decimal Adj(byte val, bool isIntrinsic, DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition)
-        {
-            if (!isIntrinsic)
-            {
-                return Math.Min((byte)20, val);
-            }
-
-            return masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, attribute, setPosition, movementPosition, val);
-        }
-
-        private byte[] GetWeights(Roles role)
-        {
-            return groupedWeightings[(int)role];
-        }
-
     }
-}
-
-public class GroupedRatings
-{
-    public byte impactRating;
-
-    public byte reliabilityRating;
-
-    public byte playmakingRating;
-
-    public byte wideplayRating;
-
-    public byte scoringRating;
-
-    public byte defendingRating;
-
-    public byte goalkeepingRating;
-
-    public byte speedRating;
-
-    public byte strengthRating;
 }

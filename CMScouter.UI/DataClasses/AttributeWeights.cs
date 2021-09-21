@@ -1,24 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using CMScouter.DataClasses;
 
 namespace CMScouter.UI.DataClasses
 {
+    public class WeightCollection
+    {
+        public List<IndividualWeightSet> IndividualWeights { get; set; }
+
+        public List<GroupedWeightSet> GroupedWeights { get; set; }
+
+        public WeightCollection()
+        {
+            IndividualWeights = new List<IndividualWeightSet>();
+
+            GroupedWeights = new List<GroupedWeightSet>();
+        }
+    }
+
     public class AttributeWeights
     {
+        [DataMember(Name = "Determination", EmitDefaultValue = false)]
+        public byte Determination { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
         public byte Anticipation { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public byte Creativity { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public byte Crossing { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public byte Decisions { get; set; }
 
+        [DataMember(Name = "Dribbling", EmitDefaultValue = false)]
         public byte Dribbling { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public byte Finishing { get; set; }
 
         public byte Heading { get; set; }
@@ -51,7 +75,7 @@ namespace CMScouter.UI.DataClasses
 
         public byte Teamwork { get; set; }
 
-        public byte Versitility { get; set; }
+        public byte Versatility { get; set; }
 
         public byte WorkRate { get; set; }
 
@@ -76,9 +100,75 @@ namespace CMScouter.UI.DataClasses
         public byte OneonOnes { get; set; }
 
         public byte Reflexes { get; set; }
+
+        public byte Loyalty { get; set; }
+
+        public byte Pressure { get; set; }
+
+        public byte Professionalism { get; set; }
+
+        public byte Temperament { get; set; }
     }
 
-    public class GroupedRoleWeights : AttributeWeights
+    public class IndividualRoleWeights : AttributeWeights
+    {
+        public Roles Role { get; set; }
+
+        public IndividualRoleWeights()
+        {
+            Role = Roles.GK;
+        }
+
+        public IndividualRoleWeights(Roles role)
+        {
+            Role = role;
+        }
+    }
+
+    public class IndividualWeightSet
+    {
+        public string Name { get; set; }
+
+        public Guid ID { get; set; }
+
+        public AttributeWeights GKWeights { get; set; }
+
+        public AttributeWeights RBWeights { get; set; }
+
+        public AttributeWeights CBWeights { get; set; }
+
+        public AttributeWeights LBWeights { get; set; }
+
+        public AttributeWeights DMWeights { get; set; }
+
+        public AttributeWeights WBWeights { get; set; }
+
+        public AttributeWeights RMWeights { get; set; }
+
+        public AttributeWeights CMWeights { get; set; }
+
+        public AttributeWeights LMWeights { get; set; }
+
+        public AttributeWeights RWWeights { get; set; }
+
+        public AttributeWeights AMWeights { get; set; }
+
+        public AttributeWeights LWWeights { get; set; }
+
+        public AttributeWeights CFWeights { get; set; }
+
+        public IndividualWeightSet()
+        {
+            Name = "unknown";
+        }
+
+        public IndividualWeightSet(string name)
+        {
+            Name = name;
+        }
+    }
+
+    public class GroupedRoleWeights
     {
         public byte SpeedPercent { get; set; }
 
@@ -108,6 +198,45 @@ namespace CMScouter.UI.DataClasses
         public GroupedRoleWeights(Roles role)
         {
             Role = role;
+        }
+    }
+
+    public class GroupedWeightSet
+    {
+        public string Name { get; set; }
+
+        public Guid ID { get; set; }
+
+        public AttributeWeights SpeedWeights { get; set; }
+
+        public AttributeWeights StrengthWeights { get; set; }
+
+        public AttributeWeights PlaymakingWeights { get; set; }
+
+        public AttributeWeights ScoringWeights { get; set; }
+
+        public AttributeWeights DefendingWeights { get; set; }
+
+        public AttributeWeights WideplayWeights { get; set; }
+
+        public AttributeWeights ImpactWeights { get; set; }
+
+        public AttributeWeights ReliabilityWeights { get; set; }
+
+        public AttributeWeights GoalkeepingWeights { get; set; }
+
+        public List<GroupedRoleWeights> RoleWeights { get; set; }
+
+        public GroupedWeightSet()
+        {
+            Name = "unknown";
+            RoleWeights = new List<GroupedRoleWeights>();
+        }
+
+        public GroupedWeightSet(string name)
+        {
+            Name = name;
+            RoleWeights = new List<GroupedRoleWeights>();
         }
     }
 }

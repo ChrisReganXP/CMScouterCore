@@ -16,6 +16,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace CMScouter.WPF
 {
@@ -24,9 +25,17 @@ namespace CMScouter.WPF
     /// </summary>
     public partial class ScoutingForm : Window
     {
+        private static string _assemblyPath = Process.GetCurrentProcess().MainModule.FileName;
+
+        private SettingsManager settingsManager;
+
         private CMScouterUI cmsUI;
 
         private Settings settings;
+
+        private static string DefaultWeightingPath { get => Path.GetDirectoryName(_assemblyPath) + "\\DefaultWeights.json"; }
+
+        private WeightingManager weightingManager;
 
         public ScoutingForm()
         {
@@ -39,7 +48,8 @@ namespace CMScouter.WPF
 
         private void HandleInitialSettings()
         {
-            settings = SettingsManager.LoadSavedGameSettings();
+            settingsManager = new SettingsManager(_assemblyPath); 
+            settings = settingsManager.LoadSavedGameSettings();
             var lastGame = settings.GetLastSavedGame();
             if (lastGame == null)
             {
@@ -47,6 +57,8 @@ namespace CMScouter.WPF
             }
 
             AddLastGameMenuItem();
+
+            weightingManager = new WeightingManager(DefaultWeightingPath);
         }
 
         private void PopulateInitialItems()
@@ -276,7 +288,7 @@ namespace CMScouter.WPF
             lblStatusInfo.Content = string.Empty;
 
             string currentFileName = dgvPlayers.Visibility == Visibility.Hidden ? null : settings.GetLastSavedGame()?.FilePath;
-            string errorResult = SettingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
+            string errorResult = settingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
 
             lblStatusInfo.Content = errorResult;
 
@@ -291,7 +303,7 @@ namespace CMScouter.WPF
                 lblStatusInfo.Content = "Loaded : " + newGame.FilePath;
             }
 
-            cmsUI = new CMScouterUI(fileName, newGame.ValueMultiplier);
+            cmsUI = new CMScouterUI(fileName, newGame.ValueMultiplier, DefaultWeightingPath, newGame.SelectedWeighting);
 
             if (cmsUI.GetLoadingFailures().Any())
             {
@@ -325,7 +337,7 @@ namespace CMScouter.WPF
 
         private void ShowSaveGameSettingsDialog()
         {
-            SaveGameSettingsDialog sgd = new SaveGameSettingsDialog(this, settings, cmsUI);
+            SaveGameSettingsDialog sgd = new SaveGameSettingsDialog(this, settingsManager, settings, cmsUI, weightingManager);
             sgd.Show();
         }
 

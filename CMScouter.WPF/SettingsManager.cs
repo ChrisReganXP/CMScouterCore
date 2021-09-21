@@ -11,18 +11,23 @@ using System.Threading.Tasks;
 
 namespace CMScouter.WPF
 {
-    public static class SettingsManager
+    public class SettingsManager
     {
+        private static string _assemblyPath;
+
+        public SettingsManager(string path)
+        {
+            _assemblyPath = path;
+        }
+        
         private const string _userSettingsFilename = "savegames.json";
 
-        private static string _assemblyPath = Process.GetCurrentProcess().MainModule.FileName;
-
-        private static string GetSettingsFileName()
+        private string GetSettingsFileName()
         {
             return Path.GetDirectoryName(_assemblyPath) + Path.DirectorySeparatorChar + _userSettingsFilename;
         }
 
-        public static Settings LoadSavedGameSettings()
+        public Settings LoadSavedGameSettings()
         {
             // if default settings exist
             if (File.Exists(GetSettingsFileName()))
@@ -35,13 +40,13 @@ namespace CMScouter.WPF
             }
         }
 
-        public static string SaveNewlyOpenedGame(string filePath, Settings settings, out bool neverSeenBefore)
+        public string SaveNewlyOpenedGame(string filePath, Settings settings, out bool neverSeenBefore)
         {
             neverSeenBefore = settings.RememberSavedGame(filePath);
             return SaveUserSettings(settings);
         }
 
-        public static string SaveUserSettings(Settings settings)
+        public string SaveUserSettings(Settings settings)
         {
             try
             {
@@ -53,7 +58,7 @@ namespace CMScouter.WPF
             }
         }
 
-        private static Settings Read(string path)
+        private Settings Read(string path)
         {
             Settings settings = null;
 
@@ -72,7 +77,7 @@ namespace CMScouter.WPF
             return settings;
         }
 
-        private static string Save(Settings settings)
+        private string Save(Settings settings)
         {
             string settingsJson = JsonSerializer.Serialize(settings);
 

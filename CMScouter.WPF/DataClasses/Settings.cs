@@ -57,6 +57,8 @@ namespace CMScouter.WPF.DataClasses
 
         public int UserManagedTeam { get; set; }
 
+        public Guid SelectedWeighting { get; set; }
+
         public SavedGameSettings()
         {
             UserManagedTeam = -1;

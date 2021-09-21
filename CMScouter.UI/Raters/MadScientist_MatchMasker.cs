@@ -10,7 +10,7 @@ namespace CMScouter.UI.Raters
     {
         private IPositionalPenaltyCalculator positionalPenaltyCalculator;
 
-        private bool outputDebug;
+        private readonly bool outputDebug;
 
         private void LogDebug(string debug)
         {

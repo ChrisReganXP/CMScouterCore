@@ -42,7 +42,13 @@ namespace CMScouter.UI
 
         public PlayerView ConstructPlayer(Player item, ConstructPlayerOptions options = null)
         {
-            return new PlayerView()
+            short originalCurrentAbility = item._player.CurrentAbility;
+            if (options?.UsePotential == true)
+            {
+                item._player.CurrentAbility = item._player.PotentialAbility;
+            }
+
+            var constructedPlayer = new PlayerView()
             {
                 PlayerId = item._player.PlayerId,
                 FirstName = GetLookupString(item._staff.FirstNameId, _lookups.firstNames),
@@ -133,7 +139,7 @@ namespace CMScouter.UI
                     ImportantMatches = item._player.ImportantMatches,
                     Influence = item._player.Influence,
                     Teamwork = item._player.Teamwork,
-                    Versitility = item._player.Versatility,
+                    Versatility = item._player.Versatility,
                     WorkRate = item._player.WorkRate,
 
                     Handling = item._player.Handling,
@@ -158,8 +164,12 @@ namespace CMScouter.UI
                     Temperament = item._staff.Temperament,
                 },
 
-                ScoutRatings = options == null ? _rater.GetRatings(item) : _rater.GetRating(item, options),
+                ScoutRatings = options == null ? _rater.GetRatings(item) : _rater.GetRatings(item, options),
             };
+
+            item._player.CurrentAbility = originalCurrentAbility;
+
+            return constructedPlayer;
         }
 
         private static string GetLookupString(int key, Dictionary<int, string> lookup)

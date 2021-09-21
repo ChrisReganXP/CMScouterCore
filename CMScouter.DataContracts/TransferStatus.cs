@@ -20,6 +20,9 @@ namespace CMScouter.DataClasses
         ListedForLoan = 6,
 
         [Description("Listed By Request")]
+        ListedByRequest3 = 8,
+
+        [Description("Listed By Request")]
         ListedByRequest = 12,
 
         [Description("Listed By Request")]

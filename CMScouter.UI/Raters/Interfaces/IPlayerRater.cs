@@ -14,8 +14,8 @@ namespace CMScouter.UI
 
         ScoutingInformation GetRatings(Player item);
 
-        bool PlaysPosition(PlayerPosition type, PlayerData player);
+        ScoutingInformation GetRatings(Player item, ConstructPlayerOptions options);
 
-        ScoutingInformation GetRating(Player item, ConstructPlayerOptions options);
+        bool PlaysPosition(PlayerPosition type, PlayerData player);
     }
 }
