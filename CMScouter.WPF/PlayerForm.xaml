@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="PlayerForm" Height="800" Width="1000">
+
+
     <DockPanel  Background="WhiteSmoke">
         <StackPanel DockPanel.Dock="Left" Width="195">
             <GroupBox Header="Personal" Margin="10, 10, 10, 10" Padding="5, 5, 5, 5">
@@ -136,6 +138,32 @@
                     <TextBlock Grid.Row="13" Grid.Column="1"><Label Name="lblL"/></TextBlock>
                 </Grid>
 
+            </GroupBox>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Top">
+            <GroupBox Header="Ratings" Margin="10, 10, 10, 10" Padding="25, 15, 25, 15">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="Margin" Value="20,0,0,0"/>
+                        </Style>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="Margin" Value="10,0,10,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Label>Position:</Label>
+                    <ComboBox Name="ddlPosition" DropDownClosed="ddlPosition_DropDownClosed" />
+
+                    <Label>Run To:</Label>
+                    <ComboBox Name="ddlRunTo" DropDownClosed="ddlPosition_DropDownClosed"/>
+
+                    <Label>Rating:</Label>
+                    <Label Name="lblRating"></Label>
+
+                    <!--<Label>Use Potential:</Label>
+                    <CheckBox Name="cbxPotential" Unchecked="cbxPotential_Checked" Checked="cbxPotential_Checked"></CheckBox>-->
+                </StackPanel>
             </GroupBox>
         </StackPanel>
 
@@ -382,33 +410,6 @@
 
                     <Label>Temperament</Label>
                     <Label Name="lblTemperament" />
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-
-
-        <StackPanel DockPanel.Dock="Bottom">
-            <GroupBox Header="Ratings" Margin="10, 10, 10, 10" Padding="25, 15, 25, 15">
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel.Resources>
-                        <Style TargetType="{x:Type Label}">
-                            <Setter Property="Margin" Value="20,0,0,0"/>
-                        </Style>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="Margin" Value="10,0,10,0"/>
-                        </Style>
-                    </StackPanel.Resources>
-                    <Label>Position: </Label>
-                    <ComboBox Name="ddlPosition" DropDownClosed="ddlPosition_DropDownClosed" />
-                
-                    <Label>Run To: </Label>
-                    <ComboBox Name="ddlRunTo" DropDownClosed="ddlPosition_DropDownClosed"/>
-
-                    <Label>Rating:</Label>
-                    <Label Name="lblRating"></Label>
-
-                    <!--<Label>Use Potential:</Label>
-                    <CheckBox Name="cbxPotential" Unchecked="cbxPotential_Checked" Checked="cbxPotential_Checked"></CheckBox>-->
                 </StackPanel>
             </GroupBox>
         </StackPanel>
