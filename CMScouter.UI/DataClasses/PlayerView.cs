@@ -162,22 +162,45 @@ namespace CMScouter.UI
             return bestPosition.RoleRatings.OrderByDescending(x => x.AbilityRating).First();
         }
 
-        public string CreateCSVText(List<PropertyInfo> csv_order, List<PropertyInfo> csv_attributes_order, List<PropertyInfo> csv_positions_order)
+        public string CreateCSVTextFromPlayer(List<PropertyInfo> playerValues)
         {
             StringBuilder csv = new StringBuilder();
-            foreach (var prop in csv_order)
+
+            foreach (var prop in playerValues)
             {
-                csv.Append(prop.GetValue(this) + ",");
+                csv.Append(prop.GetValue(this) + ", ");
             }
 
-            foreach (var prop in csv_attributes_order)
+            return csv.ToString();
+        }
+
+        public string CreateCSVTextFromAttributes(params List<PropertyInfo>[] lists)
+        {
+            if (lists == null)
             {
-                csv.Append(prop.GetValue(this.Attributes) + ",");
+                return string.Empty;
             }
 
-            foreach (var prop in csv_positions_order)
+            StringBuilder csv = new StringBuilder();
+
+            foreach (var list in lists)
             {
-                csv.Append(prop.GetValue(this.Positions) + ",");
+                foreach (var prop in list)
+                {
+                    csv.Append(prop.GetValue(this.Attributes) + ", ");
+                }
+            }
+
+            return csv.ToString();
+        }
+
+        public string CreateCSVTextFromPositions(List<PropertyInfo> positionValues)
+        {
+            StringBuilder csv = new StringBuilder();
+
+            foreach (var prop in positionValues)
+            {
+                csv.Append(prop.GetValue(this.Positions) + ", ");
             }
 
             return csv.ToString();

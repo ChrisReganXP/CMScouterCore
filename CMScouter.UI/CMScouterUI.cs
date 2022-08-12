@@ -32,7 +32,13 @@ namespace CMScouter.UI
 
         private static List<PropertyInfo> csv_order = new List<PropertyInfo>()
         {
-            typeof(PlayerView).GetProperty(nameof(PlayerView.FirstName)), typeof(PlayerView).GetProperty(nameof(PlayerView.SecondName)), typeof(PlayerView).GetProperty(nameof(PlayerView.CurrentAbility)), typeof(PlayerView).GetProperty(nameof(PlayerView.PotentialAbility))
+            typeof(PlayerView).GetProperty(nameof(PlayerView.FirstName)), 
+            typeof(PlayerView).GetProperty(nameof(PlayerView.SecondName)),
+            typeof(PlayerView).GetProperty(nameof(PlayerView.PlayerId)),
+            typeof(PlayerView).GetProperty(nameof(PlayerView.PlayingPositionDescription)),
+            typeof(PlayerView).GetProperty(nameof(PlayerView.Age)), 
+            typeof(PlayerView).GetProperty(nameof(PlayerView.CurrentAbility)), 
+            typeof(PlayerView).GetProperty(nameof(PlayerView.PotentialAbility))
         };
 
         private static List<PropertyInfo> csv_positions_order = new List<PropertyInfo>()
@@ -43,26 +49,86 @@ namespace CMScouter.UI
             typeof(PlayerPositionView).GetProperty(nameof(PlayerView.Positions.Right)), typeof(PlayerPositionView).GetProperty(nameof(PlayerView.Positions.Centre)), typeof(PlayerPositionView).GetProperty(nameof(PlayerView.Positions.Left))
         };
 
-        private static List<PropertyInfo> csv_attributes_order = new List<PropertyInfo>()
+        private static List<PropertyInfo> csv_fitness_attributes_order = new List<PropertyInfo>()
         {
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Acceleration)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Adaptability)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Aggression)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Agility)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Ambition)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Anticipation)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Balance)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Bravery)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Consistency)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Corners)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Creativity)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Crossing)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Decisions)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Determination)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Dirtiness)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Dribbling)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Finishing)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Flair)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.FreeKicks)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Handling)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Heading)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.ImportantMatches)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Influence)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.InjuryProneness)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Jumping)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.LeftFoot)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.LongShots)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Loyalty)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Marking)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.NaturalFitness)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.OffTheBall)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.OneOnOnes)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Pace)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Passing)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Penalties)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Positioning)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Pressure)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Professionalism)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Reflexes)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.RightFoot)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Sportsmanship)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Stamina)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Strength)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Tackling)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Teamwork)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Technique)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Temperament)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.ThrowIns)), 
-            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Versatility)), typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.WorkRate))
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Acceleration)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Agility)), 
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Jumping)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.NaturalFitness)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Pace)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Reflexes)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Stamina)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Strength))
+        };
 
+        private static List<PropertyInfo> csv_skill_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Corners)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Crossing)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Dribbling)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.FreeKicks)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Heading)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Passing)), 
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Tackling)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Technique)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.ThrowIns))
+        };
+
+        private static List<PropertyInfo> csv_tactic_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Decisions)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Marking)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.OffTheBall)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Positioning)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Teamwork))
+        };
+
+        private static List<PropertyInfo> csv_shooting_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Finishing)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.LongShots)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Penalties)),
+        };
+
+        private static List<PropertyInfo> csv_goalkeeping_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Handling)),
+        };
+
+        private static List<PropertyInfo> csv_experience_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Anticipation)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Consistency)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Creativity)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Influence)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Versatility))
+        };
+
+        private static List<PropertyInfo> csv_other_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Adaptability)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Aggression)), 
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Ambition)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Balance)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Bravery)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Determination)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Dirtiness)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Flair)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.ImportantMatches)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.InjuryProneness)), 
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Loyalty)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.OneOnOnes)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Pressure)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Professionalism)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Sportsmanship)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.Temperament)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.WorkRate))
+        };
+
+        private static List<PropertyInfo> csv_foot_attributes_order = new List<PropertyInfo>()
+        {
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.LeftFoot)),
+            typeof(PlayerAttributeView).GetProperty(nameof(PlayerView.Attributes.RightFoot))
         };
 
         private SaveGameData _savegame;
@@ -283,13 +349,30 @@ namespace CMScouter.UI
             StringBuilder csv = new StringBuilder();
 
             csv.Append(string.Join(",", csv_order.Select(x => x.Name)) + ",");
-            csv.Append(string.Join(",", csv_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_fitness_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_skill_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_tactic_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_shooting_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_goalkeeping_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_experience_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_other_attributes_order.Select(x => x.Name)) + ",");
+            csv.Append(string.Join(",", csv_foot_attributes_order.Select(x => x.Name)) + ",");
             csv.Append(string.Join(",", csv_positions_order.Select(x => x.Name)));
             csv.Append(Environment.NewLine);
 
             foreach (var player in players)
             {
-                csv.Append(player.CreateCSVText(csv_order, csv_attributes_order,csv_positions_order) + Environment.NewLine);
+                csv.Append(player.CreateCSVTextFromPlayer(csv_order));
+                csv.Append(player.CreateCSVTextFromAttributes(
+                    csv_fitness_attributes_order,
+                    csv_skill_attributes_order,
+                    csv_tactic_attributes_order,
+                    csv_shooting_attributes_order,
+                    csv_goalkeeping_attributes_order,
+                    csv_experience_attributes_order,
+                    csv_other_attributes_order,
+                    csv_foot_attributes_order));
+                csv.Append(player.CreateCSVTextFromPositions(csv_positions_order) + Environment.NewLine);
                 
                 // Append blank line to enable comparison with another file
                 csv.Append(Environment.NewLine);
