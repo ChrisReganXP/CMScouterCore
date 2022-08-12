@@ -109,7 +109,7 @@ namespace CMScouterFunctions
 
         private static List<int> GetOceaniaCountries(Dictionary<int, Nation> nations)
         {
-            List<string> countryNames = new List<string>() { "AUSTRALIA", "FIJI", "SAMOA", "SOLOMON ISLANDS", "VANATU" };
+            List<string> countryNames = new List<string>() { "AUSTRALIA", "FIJI", "NEW ZEALAND", "SAMOA", "SOLOMON ISLANDS", "VANATU" };
             return PopulateNationIds(countryNames, nations);
         }
 
