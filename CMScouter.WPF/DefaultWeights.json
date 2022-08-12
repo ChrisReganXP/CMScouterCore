@@ -626,29 +626,28 @@
         },
         "PlaymakingWeights": {
             "Determination": 0,
-            "Anticipation": 4,
-            "Creativity": 4,
-            "Crossing": 2,
-            "Decisions": 2,
-            "Dribbling": 2,
+            "Anticipation": 6,
+            "Creativity": 8,
+            "Decisions": 4,
+            "Dribbling": 1,
             "Finishing": 0,
             "Heading": 0,
-            "LongShots": 1,
+            "LongShots": 3,
             "Marking": 0,
-            "OffTheBall": 8,
-            "Passing": 10,
+            "OffTheBall": 4,
+            "Passing": 12,
             "Positioning": 0,
-            "Tackling": 0,
+            "Tackling": 3,
             "Technique": 8,
             "Aggression": 0,
             "Bravery": 0,
             "Consistency": 0,
-            "Flair": 0,
+            "Flair": 6,
             "ImportantMatches": 0,
             "Influence": 0,
-            "Teamwork": 4,
+            "Teamwork": 3,
             "Versatility": 0,
-            "WorkRate": 3,
+            "WorkRate": 0,
             "Acceleration": 0,
             "Agility": 0,
             "Balance": 0,
@@ -997,6 +996,18 @@
                 "Role": 7
             },
             {
+                "SpeedPercent": 5,
+                "StrengthPercent": 10,
+                "PlaymakingPercent": 42,
+                "ScoringPercent": 8,
+                "DefendingPercent": 10,
+                "WideplayPercent": 5,
+                "ImpactPercent": 10,
+                "ReliabilityPercent": 10,
+                "GoalkeepingPercent": 0,
+                "Role": 8
+            },
+            {
                 "SpeedPercent": 35,
                 "StrengthPercent": 5,
                 "PlaymakingPercent": 15,
@@ -1006,7 +1017,7 @@
                 "ImpactPercent": 5,
                 "ReliabilityPercent": 10,
                 "GoalkeepingPercent": 0,
-                "Role": 8
+                "Role": 9
             },
             {
                 "SpeedPercent": 15,
@@ -1018,7 +1029,7 @@
                 "ImpactPercent": 5,
                 "ReliabilityPercent": 10,
                 "GoalkeepingPercent": 0,
-                "Role": 10
+                "Role": 11
             },
             {
                 "SpeedPercent": 35,
@@ -1030,7 +1041,7 @@
                 "ImpactPercent": 5,
                 "ReliabilityPercent": 10,
                 "GoalkeepingPercent": 0,
-                "Role": 9
+                "Role": 10
             },
             {
                 "SpeedPercent": 20,
@@ -1042,7 +1053,7 @@
                 "ImpactPercent": 10,
                 "ReliabilityPercent": 10,
                 "GoalkeepingPercent": 0,
-                "Role": 12
+                "Role": 13
             },
             {
                 "SpeedPercent": 20,
@@ -1054,7 +1065,7 @@
                 "ImpactPercent": 10,
                 "ReliabilityPercent": 10,
                 "GoalkeepingPercent": 0,
-                "Role": 13
+                "Role": 14
             },
             {
                 "SpeedPercent": 10,
@@ -1066,7 +1077,7 @@
                 "ImpactPercent": 15,
                 "ReliabilityPercent": 5,
                 "GoalkeepingPercent": 0,
-                "Role": 11
+                "Role": 12
             }
         ]
     }

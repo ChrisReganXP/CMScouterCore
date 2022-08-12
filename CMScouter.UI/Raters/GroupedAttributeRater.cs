@@ -147,6 +147,20 @@ namespace CMScouter.UI
 
             groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
             {
+                Role = Roles.PM,
+                ImpactPercent = 10,
+                ReliabilityPercent = 10,
+                PlaymakingPercent = 55,
+                WideplayPercent = 5,
+                ScoringPercent = 5,
+                DefendingPercent = 5,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 5,
+                StrengthPercent = 5
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
                 Role = Roles.WM,
                 ImpactPercent = 5,
                 ReliabilityPercent = 10,
@@ -245,17 +259,16 @@ namespace CMScouter.UI
 
             groupedWeightSet.PlaymakingWeights = new AttributeWeights()
             {
-                Creativity = 4,
-                LongShots = 1,
-                Dribbling = 2,
-                Passing = 10,
+                Creativity = 8,
+                LongShots = 3,
+                Dribbling = 1,
+                Passing = 12,
                 Technique = 8,
-                Anticipation = 4,
-                Decisions = 2,
-                OffTheBall = 8,
-                Crossing = 2,
-                Teamwork = 4,
-                WorkRate = 3,
+                Anticipation = 6,
+                Decisions = 4,
+                OffTheBall = 4,
+                Teamwork = 3,
+                Flair = 6
             };
 
             groupedWeightSet.WideplayWeights = new AttributeWeights()

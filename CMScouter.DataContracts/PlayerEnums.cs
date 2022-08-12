@@ -49,7 +49,7 @@ namespace CMScouter.DataClasses
         RightMidfielder,
 
         [Description("Central Midfielder")]
-        [LinkedRoles(Roles.HM, Roles.CM)]
+        [LinkedRoles(Roles.HM, Roles.CM, Roles.PM)]
         CentralMidfielder,
 
         [Description("Left Midfielder")]
@@ -61,7 +61,7 @@ namespace CMScouter.DataClasses
         RightWinger,
 
         [Description("Attacking Midfielder")]
-        [LinkedRoles(Roles.AM)]
+        [LinkedRoles(Roles.AM, Roles.CM)]
         AttackingMidfielder,
 
         [Description("Left Winger")]
@@ -98,6 +98,9 @@ namespace CMScouter.DataClasses
 
         [Description("Central Midfielder")]
         CM,
+
+        [Description("Playmaker")]
+        PM,
 
         [Description("Wide Midfielder")]
         WM,

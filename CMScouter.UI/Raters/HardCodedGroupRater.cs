@@ -173,6 +173,25 @@ namespace CMScouter.UI
             groupedWeightings[(int)Roles.CM] = groupWeight;
         }
 
+        private void AddPM()
+        {
+            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
+
+            groupWeight[(int)AG.Impact] = 10;
+            groupWeight[(int)AG.Reliability] = 10;
+
+            groupWeight[(int)AG.Playmaking] = 55;
+            groupWeight[(int)AG.Wideplay] = 5;
+            groupWeight[(int)AG.Scoring] = 5;
+            groupWeight[(int)AG.Defending] = 5;
+            groupWeight[(int)AG.Goalkeeping] = 0;
+
+            groupWeight[(int)AG.Speed] = 5;
+            groupWeight[(int)AG.Strength] = 5;
+
+            groupedWeightings[(int)Roles.CM] = groupWeight;
+        }
+
         private void AddWM()
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
@@ -384,6 +403,7 @@ namespace CMScouter.UI
             AddDM();
             AddWB();
             AddCM();
+            AddPM();
             AddWM();
             AddAM();
             AddWG();
