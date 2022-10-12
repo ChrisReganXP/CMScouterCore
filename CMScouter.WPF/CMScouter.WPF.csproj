@@ -27,4 +27,11 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Page Update="Forms\Scouting.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	</ItemGroup>
+
 </Project>

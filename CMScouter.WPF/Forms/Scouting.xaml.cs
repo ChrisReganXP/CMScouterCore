@@ -17,48 +17,43 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Diagnostics;
+using System.Threading;
 
 namespace CMScouter.WPF
 {
     /// <summary>
     /// Interaction logic for ScoutingForm.xaml
     /// </summary>
-    public partial class ScoutingForm : Window
+    public partial class Scouting : UserControl
     {
-        private static string _assemblyPath = Process.GetCurrentProcess().MainModule.FileName;
-
-        private SettingsManager settingsManager;
-
         private CMScouterUI cmsUI;
 
         private Settings settings;
 
-        private static string DefaultWeightingPath { get => Path.GetDirectoryName(_assemblyPath) + "\\DefaultWeights.json"; }
-
-        private WeightingManager weightingManager;
-
-        public ScoutingForm()
+        public Scouting()
         {
             InitializeComponent();
+        }
+
+        public void WakeUp(CMScouterUI ui, Settings sets)
+        {
+            this.Visibility = Visibility.Visible;
+            cmsUI = ui;
+            settings = sets;
             HandleInitialSettings();
             PopulateInitialItems();
+            CustomiseSearchOptions();
         }
 
         #region Initial Opening
 
         private void HandleInitialSettings()
         {
-            settingsManager = new SettingsManager(_assemblyPath); 
-            settings = settingsManager.LoadSavedGameSettings();
             var lastGame = settings.GetLastSavedGame();
             if (lastGame == null)
             {
                 return;
             }
-
-            AddLastGameMenuItem();
-
-            weightingManager = new WeightingManager(DefaultWeightingPath);
         }
 
         private void PopulateInitialItems()
@@ -173,33 +168,33 @@ namespace CMScouter.WPF
 
         public void RefreshAfterSettingsSave()
         {
-            ChangeMenusOnSaveGameLoad();
             ResetAndTeamSearch();
         }
 
-        private void ResetAndTeamSearch()
+        public void ResetAndTeamSearch()
         {
             ResetSearchFields();
             PerformInitialSearch();
         }
 
-        private void RepeatSearch()
+        public void RepeatSearch()
         {
+            this.Visibility = Visibility.Visible;
             PerformSearch();
         }
 
-        private bool NoSearchAttempted()
+        public bool NoSearchAttempted()
         {
-            if (ddlPlayerType.SelectedIndex == 0
-                && ddlAvailability.SelectedIndex == 0
-                && ddlReputation.SelectedIndex == 0
+            if (ddlPlayerType.SelectedIndex <= 0
+                && ddlAvailability.SelectedIndex <= 0
+                && ddlReputation.SelectedIndex <= 0
                 && string.IsNullOrWhiteSpace(tbxMaxAge.Text)
                 && string.IsNullOrWhiteSpace(tbxMaxValue.Text)
                 && string.IsNullOrWhiteSpace(tbxMaxWage.Text)
-                && ddlPlayerBased.SelectedIndex == 0
-                && ddlNationality.SelectedIndex == 0
+                && ddlPlayerBased.SelectedIndex <= 0
+                && ddlNationality.SelectedIndex <= 0
                 && cbxEUNational.IsChecked == false
-                && cbxClubs.SelectedIndex == 0
+                && cbxClubs.SelectedIndex <= 0
                 && string.IsNullOrWhiteSpace(tbxPlayerId.Text)
                 && string.IsNullOrWhiteSpace(tbxTextSearch.Text))
             {
@@ -209,7 +204,7 @@ namespace CMScouter.WPF
             return false;
         }
 
-        private void CustomiseSearchOptions()
+        public void CustomiseSearchOptions()
         {
             PopulateNationalities();
             PopulatePlayerBased();
@@ -236,116 +231,9 @@ namespace CMScouter.WPF
 
         #endregion
 
-        #region Menu Handling
-
-        private void AddLastGameMenuItem()
-        {
-            menLastGame.Header = $"Load Last Game ({settings.GetLastSavedGame().FileName})";
-            menLastGame.Visibility = Visibility.Visible;
-        }
-
-        private void Exit_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Open_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Save Game Files (*.sav)|*.sav";
-            openFileDialog.DefaultExt = "sav";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                LoadSaveGameFile(openFileDialog.FileName);
-            }
-        }
-
-        private void LoadLastGame_Click(object sender, RoutedEventArgs e)
-        {
-            LoadSaveGameFile(settings.GetLastSavedGame().FilePath);
-        }
-
-        private void ChangeMenusOnSaveGameLoad()
-        {
-            menLastGame.Header = "Reload";
-            menLastGame.Visibility = Visibility.Visible;
-
-            menSettings.IsEnabled = true;
-        }
-
-        private void SettingsMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ShowSaveGameSettingsDialog();
-        }
-
-        #endregion
-
-        #region Load Data
-
-        private void LoadSaveGameFile(string fileName)
-        {
-            bool neverSeenBefore;
-            lblStatusInfo.Content = string.Empty;
-
-            string currentFileName = dgvPlayers.Visibility == Visibility.Hidden ? null : settings.GetLastSavedGame()?.FilePath;
-            string errorResult = settingsManager.SaveNewlyOpenedGame(fileName, settings, out neverSeenBefore);
-
-            lblStatusInfo.Content = errorResult;
-
-            var newGame = settings.GetLastSavedGame();
-            if (newGame == null)
-            {
-                return;
-            }
-
-            if (string.IsNullOrEmpty((string)lblStatusInfo.Content))
-            {
-                lblStatusInfo.Content = "Loaded : " + newGame.FilePath;
-            }
-
-            cmsUI = new CMScouterUI(fileName, newGame.ValueMultiplier, DefaultWeightingPath, newGame.SelectedWeighting);
-
-            if (cmsUI.GetLoadingFailures().Any())
-            {
-                dgvPlayers.Visibility = Visibility.Hidden;
-                lblStatusInfo.Content = string.Join(". ", cmsUI.GetLoadingFailures());
-                return;
-            }
-
-            Globals.Instance.SetGameDate(cmsUI.GameDate);
-
-            ChangeMenusOnSaveGameLoad();
-
-            if (neverSeenBefore)
-            {
-                CustomiseSearchOptions();
-                ShowSaveGameSettingsDialog();
-            }
-            else
-            {
-                if (currentFileName == null || currentFileName != newGame.FilePath || NoSearchAttempted())
-                {
-                    CustomiseSearchOptions();
-                    ResetAndTeamSearch();
-                }
-                else
-                {
-                    RepeatSearch();
-                }
-            }
-        }
-
-        private void ShowSaveGameSettingsDialog()
-        {
-            SaveGameSettingsDialog sgd = new SaveGameSettingsDialog(this, settingsManager, settings, cmsUI, weightingManager);
-            sgd.Show();
-        }
-
-        #endregion
-
         #region Show Players
 
-        private void PerformInitialSearch()
+        public void PerformInitialSearch()
         {
             if (settings.GetLastSavedGame() == null || settings.GetLastSavedGame().UserManagedTeam < 0)
             {
@@ -408,11 +296,8 @@ namespace CMScouter.WPF
         private async void PerformSearch()
         {
             LockUIDuringSearch();
-            dgvPlayers.Visibility = Visibility.Hidden;
-            Mouse.OverrideCursor = Cursors.Wait;
             await SearchForPlayers();
-            Mouse.OverrideCursor = Cursors.Arrow;
-            UnlockUIDuringSearch();
+            UnlockUIAfterSearch();
         }
 
         private void ResetSearchFields()
@@ -558,12 +443,13 @@ namespace CMScouter.WPF
 
         private void LockUIDuringSearch()
         {
-            menSettings.IsEnabled = false;
+            dgvPlayers.Visibility = Visibility.Hidden;
+            Mouse.OverrideCursor = Cursors.Wait;
         }
 
-        private void UnlockUIDuringSearch()
+        private void UnlockUIAfterSearch()
         {
-            menSettings.IsEnabled = true;
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         #endregion

@@ -1,38 +1,12 @@
-﻿<Window x:Class="CMScouter.WPF.ScoutingForm"
+﻿<UserControl x:Class="CMScouter.WPF.Scouting"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMScouter.WPF"
-        mc:Ignorable="d"
-        Title="CM 01/02 Scouting" Height="900" Width="1600" MinHeight="900" MinWidth="1600" Left="20" Top="20">
-    
-    <Window.Resources>
-        <ItemsPanelTemplate x:Key="VSP">
-            <VirtualizingStackPanel/>
-        </ItemsPanelTemplate>
-    </Window.Resources>
+        mc:Ignorable="d">
 
     <DockPanel>
-
-        <StatusBar DockPanel.Dock="Bottom" Height="35">
-            <StatusBarItem>
-                <Label Name="lblStatusInfo" Content="No Game Loaded" />
-            </StatusBarItem>
-        </StatusBar>
-
-        <Menu DockPanel.Dock="Top" Name="TopMenu">
-            <MenuItem Header="_File" Name="FileMenu">
-                <MenuItem Header="Open" Click="Open_Click" />
-                <MenuItem Header="Reload" Click="LoadLastGame_Click" Visibility="Collapsed" Name="menLastGame" />
-                <Separator />
-                <MenuItem Header="Exit" Click="Exit_Click" />
-            </MenuItem>
-
-            <MenuItem Header="Settings" Name="SettingsMenu">
-                <MenuItem Header="Game Settings" Click="SettingsMenu_Click" IsEnabled="false" Name="menSettings" />
-            </MenuItem>
-        </Menu>
 
         <StackPanel x:Name="stpSearchCriteria" Width="220" DockPanel.Dock="Left" >
             <Label>Text Search:</Label>
@@ -80,7 +54,13 @@
             </StackPanel>
 
             <Label>Club:</Label>
-            <ComboBox Name="cbxClubs" Height="25" Margin="10" ItemsPanel="{StaticResource VSP}"/>
+            <ComboBox Name="cbxClubs" Height="25" Margin="10">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
 
             <Label>Custom Search:</Label>
             <ComboBox Name="cbxCustomSearch" Height="25" Margin="8" />
@@ -136,4 +116,4 @@
         </StackPanel>
     </DockPanel>
 
-</Window>
+</UserControl>
