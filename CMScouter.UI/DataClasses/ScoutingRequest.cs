@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.DataContracts;
 using CMScouter.UI.DataClasses;
 
 namespace CMScouter.UI
@@ -33,7 +34,7 @@ namespace CMScouter.UI
 
         public string PlaysInCountry { get; set; }
 
-        public string PlaysInRegion { get; set; }
+        public ActualRegion PlaysInRegion { get; set; }
 
         public int? PlaysInDivision { get; set; }
 

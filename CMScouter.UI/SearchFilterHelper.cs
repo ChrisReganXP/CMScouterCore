@@ -54,7 +54,7 @@ namespace CMScouter.UI
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(request.PlaysInRegion))
+            if (request.PlaysInRegion > 0)
             {
                 List<int> regionCountryIds = SaveGameHandler.GetCountriesInRegion(_savegame.Nations, request.PlaysInRegion);
                 if (regionCountryIds?.Count > 0)

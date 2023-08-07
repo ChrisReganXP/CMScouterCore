@@ -30,31 +30,9 @@ namespace CMScouterFunctions
             return data;
         }
 
-        public static List<int> GetCountriesInRegion(Dictionary<int, Nation> nations, string regionName)
+        public static List<int> GetCountriesInRegion(Dictionary<int, Nation> nations, ActualRegion region)
         {
-            List<int> countryIds = new List<int>();
-            if (string.IsNullOrWhiteSpace(regionName))
-            {
-                return countryIds;
-            }
-
-            switch (regionName.ToUpper())
-            {
-                case "UK":
-                case "UK & IRELAND":
-                    countryIds = GetUKCountries(nations);
-                    break;
-
-                case "SCANDINAVIA":
-                    countryIds = GetScandiCountries(nations);
-                    break;
-
-                case "OCEANIA":
-                    countryIds = GetOceaniaCountries(nations);
-                    break;
-            }
-
-            return countryIds;
+            return nations.Where(x => x.Value.ActualRegion == region).Select(y => y.Key).ToList();
         }
 
         private static void ReadFileHeaders(StreamReader sr, SaveGameFile savegame)
@@ -93,40 +71,6 @@ namespace CMScouterFunctions
 
             var fileData = ByteHandler.GetAllDataFromFile(general, savegame.FileName, fileFacts.DataSize);
             savegame.GameDate = ByteHandler.GetDateFromBytes(fileData[0], fileFacts.DataSize - 8).Value;
-        }
-
-        private static List<int> GetUKCountries(Dictionary<int, Nation> nations)
-        {
-            List<string> countryNames = new List<string>() { "ENGLAND", "SCOTLAND", "WALES", "IRELAND", "REPUBLIC OF IRELAND", "N.IRELAND", "NORTHERN IRELAND" };
-            return PopulateNationIds(countryNames, nations);
-        }
-
-        private static List<int> GetScandiCountries(Dictionary<int, Nation> nations)
-        {
-            List<string> countryNames = new List<string>() { "ICELAND", "FINLAND", "NORWAY", "SWEDEN", "DENMARK" };
-            return PopulateNationIds(countryNames, nations);
-        }
-
-        private static List<int> GetOceaniaCountries(Dictionary<int, Nation> nations)
-        {
-            List<string> countryNames = new List<string>() { "AUSTRALIA", "FIJI", "NEW ZEALAND", "SAMOA", "SOLOMON ISLANDS", "VANATU" };
-            return PopulateNationIds(countryNames, nations);
-        }
-
-        private static List<int> PopulateNationIds(List<string> nationNames, Dictionary<int, Nation> nations)
-        { 
-            List<int> countryIds = new List<int>();
-
-            foreach (var country in nationNames)
-            {
-                var id = nations.Values.FirstOrDefault(n => n.Name.Equals(country, StringComparison.InvariantCultureIgnoreCase))?.Id;
-                if (id != null)
-                {
-                    countryIds.Add(id.Value);
-                }
-            }
-
-            return countryIds;
         }
     }
 }

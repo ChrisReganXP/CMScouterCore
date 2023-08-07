@@ -255,5 +255,25 @@ namespace CMScouterFunctions
 
             return numberOfRecords;
         }
+
+        public static string GetByteInvestigationOutput(byte[] source)
+        {
+            string byteHeader = string.Empty;
+            string byteOutput = string.Empty;
+            int headerId = 0;
+            foreach (byte b in source)
+            {
+                byteHeader += headerId.ToString().PadLeft(3) + ",";
+                byteOutput += b.ToString().PadLeft(3) + ",";
+
+                headerId++;
+            }
+
+            StringBuilder nationBytes = new StringBuilder();
+            nationBytes.AppendLine(byteHeader);
+            nationBytes.AppendLine(byteOutput);
+
+            return nationBytes.ToString();
+        }
     }
 }

@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Threading;
+using CMScouter.DataContracts;
 
 namespace CMScouter.WPF
 {
@@ -130,11 +131,13 @@ namespace CMScouter.WPF
             {
                 new { Value = "-1", Text = "<All>" },
                 new { Value = "-2", Text = "---- Regions ----" },
-                new { Value = "UKI", Text = "UK & Ireland" },
-                new { Value = "SCA", Text = "Scandinavia" },
-                new { Value = "OCE", Text = "Oceania" },
+
                 new { Value = "-3", Text = "---- Competitions ----" },
             };
+
+            var regionList = Enum.GetValues(typeof(ActualRegion)).Cast<ActualRegion>().ToList().Select(x => new { Value = x.ToString(), Text = x.ToName() }).ToList();
+            regionList.RemoveAll(y => y.Value == ActualRegion.Unknown.ToString());
+            playsInLocationList.InsertRange(2, regionList);
 
             var nations = cmsUI.GetAllNations();
             var clubComps = cmsUI.GetAllClubCompetitions().OrderBy(x => x.LongName);
@@ -387,11 +390,14 @@ namespace CMScouter.WPF
             int? clubId = (int)cbxClubs.SelectedValue == -1 ? (int?)null : (int)cbxClubs.SelectedValue;
 
             string selectedPlaysInValue = (string)ddlPlayerBased.SelectedValue;
-            string playsInRegion = null;
+            ActualRegion playsInRegion = ActualRegion.Unknown;
             int? playsInDivision = null;
-            if (!string.IsNullOrWhiteSpace(selectedPlaysInValue) && selectedPlaysInValue.Length == 3 && selectedPlaysInValue.ToList().All(Char.IsLetter))
+            if (!string.IsNullOrWhiteSpace(selectedPlaysInValue) && selectedPlaysInValue.ToList().All(Char.IsLetter))
             {
-                playsInRegion = (string)ddlPlayerBased.Text;
+                if (Enum.TryParse(ddlPlayerBased.SelectedValue.ToString(), out ActualRegion tmpRegion))
+                {
+                    playsInRegion = tmpRegion;
+                }
             }
             else
             {

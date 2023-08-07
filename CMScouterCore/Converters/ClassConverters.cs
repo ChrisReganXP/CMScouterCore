@@ -1,18 +1,16 @@
-﻿using CMScouterFunctions.DataClasses;
+﻿using CMScouter.DataContracts;
+using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CMScouterFunctions.Converters
 {
 
     internal class NationConverter
     {
-        private static readonly List<string> EUNations = new List<string>() {
-            "AUSTRIA", "BELGIUM", "BULGARIA", "CROATIA", "CYRPUS", "CZECH REPUBLIC", "DENMARK", "ENGLAND", "ESTONIA", "SPAIN", "FINLAND", "FRANCE",
-            "GERMANY", "GREECE", "HUNGARY", "REPUBLIC OF IRELAND", "ICELAND", "ITALY", "LATVIA", "LITHUANIA", "LUXEMBOURG", "MALTA", "NETHERLANDS", "NORTHERN IRELAND",
-            "NORWAY", "POLAND", "PORTUGAL", "ROMANIA", "SCOTLAND", "SLOVAKIA", "SWITZERLAND", "SLOVENIA", "SWEDEN", "WALES"
-        };
+        private StringBuilder nationBytes = new StringBuilder();
 
         public Nation Convert(byte[] source)
         {
@@ -20,9 +18,40 @@ namespace CMScouterFunctions.Converters
 
             nation.Id = ByteHandler.GetIntFromBytes(source, 0);
             nation.Name = ByteHandler.GetStringFromBytes(source, 4, 50);
-            nation.EUNation = EUNations.Contains(nation.Name, StringComparer.InvariantCultureIgnoreCase);
+            nation.ShortName = ByteHandler.GetStringFromBytes(source, 56, 25);
+            nation.ThreeLetterName = ByteHandler.GetStringFromBytes(source, 83, 3);
+            nation.Nationality = ByteHandler.GetStringFromBytes(source, 87, 25);
+            nation.Continent = (Continent)ByteHandler.GetIntFromBytes(source, 113);
+            nation.Region = (Region)ByteHandler.GetByteFromBytes(source, 117);
+            nation.ActualRegion = (ActualRegion)ByteHandler.GetByteFromBytes(source, 118);
+            nation.Language = (Language)ByteHandler.GetByteFromBytes(source, 119);
+            nation.SecondLanguage = (Language)ByteHandler.GetByteFromBytes(source, 120);
+            nation.ThirdLanguage = (Language)ByteHandler.GetByteFromBytes(source, 121);
+            nation.CapitalCityId = ByteHandler.GetIntFromBytes(source, 122);
+            nation.DevelopmentLevel = (DevelopmentLevel)ByteHandler.GetByteFromBytes(source, 126);
+            nation.EUNation = ByteHandler.GetByteFromBytes(source, 127) == 2;
+            nation.StadiumId = ByteHandler.GetIntFromBytes(source, 128);
+            nation.GameImportance = ByteHandler.GetByteFromBytes(source, 132);
+            nation.LeagueStandard = ByteHandler.GetByteFromBytes(source, 133);
+            nation.NumberOfClubs = ByteHandler.GetShortFromBytes(source, 134);
+
+            var byteOutput = ByteHandler.GetByteInvestigationOutput(source);
+
+            string nationDetails = nation.Id + " : ";
+            for (int i = 0; i < 750; i = i + nation.Name.Length)
+            {
+                nationDetails += nation.Name + " ";
+            }
+
+            nationBytes.AppendLine(nationDetails);
+            nationBytes.AppendLine(byteOutput);
 
             return nation;
+        }
+
+        public string GetByteList()
+        {
+            return nationBytes.ToString();
         }
     }
 
