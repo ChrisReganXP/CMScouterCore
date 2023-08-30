@@ -68,6 +68,7 @@ namespace CMScouter.WPF
         public void RefreshAfterSettingsSave()
         {
             ChangeMenusOnSaveGameLoad();
+            settingsManager.LoadSavedGameSettings();
             ResetAndTeamSearch();
         }
 
@@ -171,6 +172,7 @@ namespace CMScouter.WPF
                 }
                 else
                 {
+                    ucScouting.WakeUp(cmsUI, settings);
                     ucScouting.RepeatSearch();
                 }
             }

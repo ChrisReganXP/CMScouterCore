@@ -78,23 +78,26 @@ namespace CMScouterFunctions
 
         public static List<byte[]> GetAllDataFromFile(DataFile dataFile, string fileName, int sizeOfData)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-
-            int numberOfRecords = GetNumberOfRecordsFromDataFile(dataFile, sizeOfData, br, out int startReadPosition);
-
-            br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
-
-            List<byte[]> records = new List<byte[]>();
-
-            for (int i = 0; i < numberOfRecords; i++)
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
-                byte[] buffer = new byte[sizeOfData];
-                br.BaseStream.Read(buffer, 0, sizeOfData);
-                records.Add(buffer);
-            }
+                using (BinaryReader br = new BinaryReader(fs))
+                {
+                    int numberOfRecords = GetNumberOfRecordsFromDataFile(dataFile, sizeOfData, br, out int startReadPosition);
 
-            return records;
+                    br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+
+                    List<byte[]> records = new List<byte[]>();
+
+                    for (int i = 0; i < numberOfRecords; i++)
+                    {
+                        byte[] buffer = new byte[sizeOfData];
+                        br.BaseStream.Read(buffer, 0, sizeOfData);
+                        records.Add(buffer);
+                    }
+
+                    return records;
+                }
+            }
         }
 
         public static List<string> GetPossibleShortValuesFromByteArray(byte[] source)
