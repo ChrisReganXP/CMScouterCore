@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataClasses;
+using CMScouter.UI.DataClasses;
 using CMScouter.UI.Raters;
 using CMScouterFunctions.DataClasses;
 using System;
@@ -12,6 +13,8 @@ namespace CMScouter.UI
     public class PlayerView
     {
         public int PlayerId { get; set; }
+
+        public int StaffId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -62,6 +65,8 @@ namespace CMScouter.UI
         public PlayerAttributeView Attributes { get; set; }
 
         public ScoutingInformation ScoutRatings { get; set; }
+
+        public PlayerShortlistEntry ShortlistData { get; set; }
 
         public string GetFootedness()
         {

@@ -287,11 +287,6 @@ namespace CMScouter.WPF
             PerformSearch();
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            ExportCurrentResults();
-        }
-
         #endregion
 
         #region Execute Search
@@ -315,25 +310,37 @@ namespace CMScouter.WPF
             tbxTextSearch.Clear();
         }
 
-        private void ExportCurrentResults()
+        public void ExportCurrentResults()
+        {
+            List<GridViewPlayer> playerIds = GetCurrentResults();
+            if (playerIds == null)
+            {
+                return;
+            }
+
+            var csvLines = cmsUI.CreateExportSet(playerIds.Select(p => p.PlayerId).ToList());
+
+            ExportViaDialog(csvLines);
+        }
+
+        private List<GridViewPlayer> GetCurrentResults()
         {
             var displayedResults = dgvPlayers.ItemsSource;
 
             if (!(displayedResults is List<GridViewPlayer>))
             {
-                return;
+                return null;
             }
 
-            var csvLines = cmsUI.CreateExportSet(((List<GridViewPlayer>)displayedResults).Select(x => x.PlayerId).ToList());
-
-            ExportViaDialog(csvLines);
+            return ((List<GridViewPlayer>)displayedResults).ToList();
         }
 
         private void ExportViaDialog(string csv)
         {
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.InitialDirectory = @"C:\";
+            dlg.InitialDirectory = Path.GetDirectoryName(settings.GetLastSavedGame().FilePath);
             dlg.Filter = "CSV file (*.csv)|*.csv|All Files (*.*)|*.*";
+            dlg.RestoreDirectory = false;
             var result = dlg.ShowDialog();
             if (result.HasValue && result.Value)
             {

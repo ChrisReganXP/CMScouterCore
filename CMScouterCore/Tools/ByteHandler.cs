@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CMScouterFunctions
 {
-    internal static class ByteHandler
+    public static class ByteHandler
     {
         private static readonly Encoding textEncoding = Encoding.GetEncoding("ISO-8859-1");
 
@@ -19,6 +19,11 @@ namespace CMScouterFunctions
         public static int GetIntFromBytes(byte[] bytes, int start)
         {
             return BitConverter.ToInt32(bytes.Skip(start).Take(4).ToArray(), 0);
+        }
+
+        public static byte[] GetBytesForInt(int value)
+        {
+            return BitConverter.GetBytes(value);
         }
 
         public static string GetStringFromBytes(byte[] bytes, int start, int length = 0)
@@ -43,6 +48,16 @@ namespace CMScouterFunctions
             {
                 return null;
             }
+        }
+
+        public static byte[] GetBytesForDate(DateTime date)
+        {
+            Math.DivRem(date.Year, 4, out var remainder);
+            var dayOffset = remainder == 0 && date.DayOfYear > 59 ? 0 : -1;
+            byte[] dayBytes = BitConverter.GetBytes(date.DayOfYear + dayOffset);
+
+            byte[] yearBytes = BitConverter.GetBytes(date.Year);
+            return new byte[5] { dayBytes[0], dayBytes[1], yearBytes[0], yearBytes[1], 0 };
         }
 
         public static byte GetByteFromBytes(byte[] bytes, int start, bool isIntrinsicValue = false)

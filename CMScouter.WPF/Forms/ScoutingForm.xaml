@@ -25,6 +25,9 @@
             <MenuItem Header="_File" Name="FileMenu">
                 <MenuItem Header="Open" Click="Open_Click" />
                 <MenuItem Header="Reload" Click="LoadLastGame_Click" Visibility="Collapsed" Name="menLastGame" />
+                <Separator Name="sepSaveShortlist" Visibility="Collapsed" />
+                <MenuItem Header="Save Shortlist" Click="SaveShortlist_Click" Visibility="Collapsed" Name="menSaveShortlist" />
+                <MenuItem Header="Export as CSV" Click="Export_Click" Visibility="Collapsed" Name="menExportCSV" />
                 <Separator />
                 <MenuItem Header="Exit" Click="Exit_Click" />
             </MenuItem>

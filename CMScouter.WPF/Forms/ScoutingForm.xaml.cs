@@ -68,7 +68,8 @@ namespace CMScouter.WPF
         public void RefreshAfterSettingsSave()
         {
             ChangeMenusOnSaveGameLoad();
-            settingsManager.LoadSavedGameSettings();
+            settings = settingsManager.LoadSavedGameSettings();
+            LoadSaveGameFile(settings.GetLastSavedGame().FileName);
             ResetAndTeamSearch();
         }
 
@@ -108,10 +109,49 @@ namespace CMScouter.WPF
             LoadSaveGameFile(settings.GetLastSavedGame().FilePath);
         }
 
+        private async void SaveShortlist_Click(object sender, RoutedEventArgs e)
+        {
+            if (!cmsUI.HasShortlistData())
+            {
+                lblStatusInfo.Content = "Attempt to save shortlist failed as no available players";
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = "pls";
+            saveFileDialog.Filter = "Shortlist File (*.pls)|*.pls";
+
+            string savegamePath = Path.GetDirectoryName(settings.GetLastSavedGame().FilePath);
+            saveFileDialog.InitialDirectory = savegamePath;
+            if (Directory.Exists(savegamePath + "\\search"))
+            {
+                saveFileDialog.InitialDirectory = savegamePath + "\\search";
+            }
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                cmsUI.SavePlayersAsShortlist(saveFileDialog.FileName, out var failureMessage);
+
+                if (!string.IsNullOrEmpty(failureMessage))
+                {
+                    lblStatusInfo.Content = "Failed to save shortlist : " + failureMessage;
+                }
+            }
+        }
+
+        private async void Export_Click(object sender, RoutedEventArgs e)
+        {
+            ucScouting.ExportCurrentResults();
+        }
+
         private void ChangeMenusOnSaveGameLoad()
         {
             menLastGame.Header = "Reload";
             menLastGame.Visibility = Visibility.Visible;
+
+            sepSaveShortlist.Visibility = Visibility.Visible;
+            menSaveShortlist.Visibility = Visibility.Visible;
+            menExportCSV.Visibility = Visibility.Visible;
 
             menSettings.IsEnabled = true;
         }

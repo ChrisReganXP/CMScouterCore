@@ -1,10 +1,10 @@
 ﻿using CMScouter.DataClasses;
 using CMScouter.DataContracts;
 using CMScouter.UI.Converters;
+using CMScouter.UI.DataClasses;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CMScouter.UI
 {
@@ -51,6 +51,7 @@ namespace CMScouter.UI
             var constructedPlayer = new PlayerView()
             {
                 PlayerId = item._player.PlayerId,
+                StaffId = item._staff.StaffId,
                 FirstName = GetLookupString(item._staff.FirstNameId, _lookups.firstNames),
                 SecondName = GetLookupString(item._staff.SecondNameId, _lookups.secondNames),
                 CommonName = item._staff.CommonNameId > 0 ? GetLookupString(item._staff.CommonNameId, _lookups.commonNames) : null,
@@ -164,12 +165,31 @@ namespace CMScouter.UI
                     Temperament = item._staff.Temperament,
                 },
 
-                ScoutRatings = options == null ? _rater.GetRatings(item) : _rater.GetRatings(item, options),
+                ScoutRatings = _rater == null ? null : options == null ? _rater.GetRatings(item) : _rater.GetRatings(item, options),
             };
+
+            constructedPlayer.ShortlistData = ConstructShortlistData(item._staff);
 
             item._player.CurrentAbility = originalCurrentAbility;
 
             return constructedPlayer;
+        }
+
+        private PlayerShortlistEntry ConstructShortlistData(Staff staff)
+        {
+            if (staff == null)
+            {
+                return null;
+            }
+
+            return new PlayerShortlistEntry()
+            {
+                StaffId = staff.StaffId,
+                FirstNameId = staff.FirstNameId,
+                SecondNameId = staff.SecondNameId,
+                CommonNameId = staff.CommonNameId,
+                DOB = staff.DOB,
+            };
         }
 
         private static string GetLookupString(int key, Dictionary<int, string> lookup)

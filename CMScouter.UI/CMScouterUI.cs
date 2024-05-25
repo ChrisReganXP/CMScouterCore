@@ -134,6 +134,7 @@ namespace CMScouter.UI
         private SaveGameData _savegame;
         private PlayerDisplayHelper _displayHelper;
         private IPlayerRater _rater;
+        private List<PlayerShortlistEntry> _shortlist = new List<PlayerShortlistEntry>();
 
         public DateTime GameDate;
 
@@ -146,43 +147,46 @@ namespace CMScouter.UI
 
             WeightCollection collection;
 
-            using (StreamReader sw = new StreamReader(weightFileName))
+            if (weightFileName != null)
             {
-                try
+                using (StreamReader sw = new StreamReader(weightFileName))
                 {
-                    collection = JsonSerializer.Deserialize<WeightCollection>(sw.ReadToEnd());
+                    try
+                    {
+                        collection = JsonSerializer.Deserialize<WeightCollection>(sw.ReadToEnd());
+                    }
+                    catch
+                    {
+                        collection = new WeightCollection();
+                        collection.GroupedWeights.Add(new GroupedAttributeRater(IntrinsicMasker, null).DefaultGroupedWeights());
+                        collection.IndividualWeights.Add(new IndividualAttributeRater(IntrinsicMasker, null).GetDefaultWeights());
+                    }
                 }
-                catch
+
+                IndividualWeightSet selectedIndividualWeights = collection.IndividualWeights.FirstOrDefault(x => x.ID == weightingSelected);
+                GroupedWeightSet selectedGroupWeights = null;
+                if (selectedIndividualWeights != null)
                 {
-                    collection = new WeightCollection();
-                    collection.GroupedWeights.Add(new GroupedAttributeRater(IntrinsicMasker, null).DefaultGroupedWeights());
-                    collection.IndividualWeights.Add(new IndividualAttributeRater(IntrinsicMasker, null).GetDefaultWeights());
+                    _rater = new IndividualAttributeRater(IntrinsicMasker, selectedIndividualWeights);
                 }
+                else
+                {
+                    selectedGroupWeights = collection.GroupedWeights.FirstOrDefault(x => x.ID == weightingSelected);
+                    if (selectedGroupWeights == null)
+                    {
+                        selectedGroupWeights = collection.GroupedWeights.First();
+                    }
+
+                    if (selectedGroupWeights == null)
+                    {
+                        return;
+                    }
+
+                    _rater = new GroupedAttributeRater(IntrinsicMasker, selectedGroupWeights);
+                }
+
+                SetupCustomSearches();
             }
-
-            IndividualWeightSet selectedIndividualWeights = collection.IndividualWeights.FirstOrDefault(x => x.ID == weightingSelected);
-            GroupedWeightSet selectedGroupWeights = null;
-            if (selectedIndividualWeights != null)
-            {
-                _rater = new IndividualAttributeRater(IntrinsicMasker, selectedIndividualWeights);
-            }
-            else
-            {
-                selectedGroupWeights = collection.GroupedWeights.FirstOrDefault(x => x.ID == weightingSelected);
-                if (selectedGroupWeights == null)
-                {
-                    selectedGroupWeights = collection.GroupedWeights.First();
-                }
-
-                if (selectedGroupWeights == null)
-                {
-                    return;
-                }
-
-                _rater = new GroupedAttributeRater(IntrinsicMasker, selectedGroupWeights);
-            }
-
-            SetupCustomSearches();
         }
 
         public List<string> GetLoadingFailures()
@@ -206,6 +210,23 @@ namespace CMScouter.UI
             ConstructLookups();
         }
 
+        public bool HasShortlistData()
+        {
+            if (_shortlist != null &&  _shortlist.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SavePlayersAsShortlist(string filePath, out string failureMessage)
+        {
+            failureMessage = null;
+            if (_shortlist != null && _shortlist.Count > 0)
+                FileFunctions.WriteShortlistFile(filePath, _shortlist, out failureMessage);
+        }
+
         public IIntrinsicMasker IntrinsicMasker { get; internal set; }
 
         public List<Tuple<string, string>> GetCustomSearchList()
@@ -218,6 +239,13 @@ namespace CMScouter.UI
             customSearches.Add(new CustomSearch() { SearchName = "Highest CA", SearchId = "CA", SearchMethod = this.GetHighestCA() });
             customSearches.Add(new CustomSearch() { SearchName = "Highest PA", SearchId = "PA", SearchMethod = this.GetHighestPA() });
             customSearches.Add(new CustomSearch() { SearchName = "Unfulfilled Potential", SearchId = "YG", SearchMethod = this.GetHighestUnfulfilledPotential() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest Finishing", SearchId = "HF", SearchMethod = this.GetHighestFinishing() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest Off The Ball & Finishing", SearchId = "OF", SearchMethod = this.GetHighestOffTheBallAndFinishing() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest Mark, Position and Tackle", SearchId = "DF", SearchMethod = this.GetHighestMarkingPositioningAndTackling() });
+            customSearches.Add(new CustomSearch() { SearchName = "Lazy Centre Back Ratings", SearchId = "CB", SearchMethod = this.GetLazyCentreBackRating() });
+            customSearches.Add(new CustomSearch() { SearchName = "Lazy Full Back Ratings", SearchId = "FB", SearchMethod = this.GetLazyFullBackRating() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest Agility, OffBall and Pass", SearchId = "PS", SearchMethod = this.GetHighestAgilityOffBallAndPassing() });
+            customSearches.Add(new CustomSearch() { SearchName = "Highest Creative, Pass and Technique", SearchId = "PL", SearchMethod = this.GetHighestCreativityPassingAndTechnique() });
         }
 
         public List<Club> GetClubs()
@@ -279,17 +307,46 @@ namespace CMScouter.UI
 
             if (!string.IsNullOrEmpty(request.CustomSearch))
             {
+                var resultset = new List<PlayerView>();
                 switch (request.CustomSearch.ToUpper())
                 {
                     case "CA":
-                        return GetHighestCA();
+                        resultset = GetHighestCA();
+                        break;
                     case "PA":
-                        return GetHighestPA();
+                        resultset = GetHighestPA();
+                        break;
                     case "YG":
-                        return GetHighestUnfulfilledPotential();
+                        resultset = GetHighestUnfulfilledPotential();
+                        break;
+                    case "HF":
+                        resultset = GetHighestFinishing();
+                        break;
+                    case "OF":
+                        resultset = GetHighestOffTheBallAndFinishing();
+                        break;
+                    case "DF":
+                        resultset = GetHighestMarkingPositioningAndTackling();
+                        break;
+                    case "CB":
+                        resultset = GetLazyCentreBackRating();
+                        break;
+                    case "FB":
+                        resultset = GetLazyFullBackRating();
+                        break;
+                    case "PS":
+                        resultset = GetHighestAgilityOffBallAndPassing();
+                        break;
+                    case "PL":
+                        resultset = GetHighestCreativityPassingAndTechnique();
+                        break;
                     default:
                         break;
                 }
+
+                CreateShortlistData(resultset.Select(p => p.ShortlistData));
+
+                return resultset;
             }
 
             if (filters.Count == 0)
@@ -416,6 +473,83 @@ namespace CMScouter.UI
             return ConstructPlayerByFilter(filter).OrderByDescending(x => x.PotentialAbility - x.CurrentAbility).ToList();
         }
 
+        public List<PlayerView> GetHighestFinishing()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => IntrinsicMasker.GetIntrinsicBasicMask(x._player.Finishing, x._player.CurrentAbility) > 20);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Finishing, x.CurrentAbility)).ToList();
+        }
+
+        public List<PlayerView> GetHighestOffTheBallAndFinishing()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.Finishing > 160 && x._player.OffTheBall > 160);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => 
+                IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Finishing, x.CurrentAbility) 
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.OffTheBall, x.CurrentAbility)
+                ).ToList();
+        }
+
+        public List<PlayerView> GetHighestMarkingPositioningAndTackling()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.Marking > 150 && x._player.Positioning > 150 && x._player.Tackling > 150);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x =>
+                IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Marking, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Positioning, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Tackling, x.CurrentAbility)
+                ).ToList();
+        }
+
+        public List<PlayerView> GetLazyCentreBackRating()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x =>
+                IntrinsicMasker.GetIntrinsicBasicMask(x._player.Marking, x._player.CurrentAbility) > 16 
+                && IntrinsicMasker.GetIntrinsicBasicMask(x._player.Positioning, x._player.CurrentAbility) > 16 
+                && IntrinsicMasker.GetIntrinsicBasicMask(x._player.Tackling, x._player.CurrentAbility) > 16 
+                && x._player.Jumping > 12 
+                && x._player.Strength > 12);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x =>
+                IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Marking, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Positioning, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Tackling, x.CurrentAbility)
+                + x.Attributes.Jumping
+                + x.Attributes.Strength
+                ).ToList();
+        }
+
+        public List<PlayerView> GetLazyFullBackRating()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x =>
+                IntrinsicMasker.GetIntrinsicBasicMask(x._player.Positioning, x._player.CurrentAbility) > 16 
+                && IntrinsicMasker.GetIntrinsicBasicMask(x._player.Tackling, x._player.CurrentAbility) > 16 
+                && x._player.Acceleration > 12 
+                && x._player.Pace > 12);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x =>
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Positioning, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Tackling, x.CurrentAbility)
+                + x.Attributes.Pace
+                + x.Attributes.Acceleration
+                ).ToList();
+        }
+
+        public List<PlayerView> GetHighestCreativityPassingAndTechnique()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.Creativity > 150 && x._player.Passing > 150 && x._player.Technique > 13);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x =>
+                IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Creativity, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Passing, x.CurrentAbility)
+                + x.Attributes.Technique
+                ).ToList();
+        }
+
+        public List<PlayerView> GetHighestAgilityOffBallAndPassing()
+        {
+            Func<Player, bool> filter = new Func<Player, bool>(x => x._player.Agility > 13 && x._player.OffTheBall > 150 && x._player.Passing > 150);
+            return ConstructPlayerByFilter(filter).OrderByDescending(x =>
+                x.Attributes.Agility
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.OffTheBall, x.CurrentAbility)
+                + IntrinsicMasker.GetIntrinsicBasicMask(x.Attributes.Passing, x.CurrentAbility)
+                ).ToList();
+        }
+
         private byte GetAge(DateTime date)
         {
             var age = _savegame.GameDate.Year - date.Year;
@@ -438,7 +572,9 @@ namespace CMScouter.UI
                 specificPlayerList = _savegame.Players;
             }
 
-            return specificPlayerList.Where(x => filter(x));
+            var filteredPlayers = specificPlayerList.Where(x => filter(x));
+
+            return filteredPlayers;
         }
 
         private List<PlayerView> ConstructPlayerByScoutingValueDesc(PlayerPosition? type, short numberOfResults, List<Player> preFilteredPlayers, bool outputDebug)
@@ -455,7 +591,16 @@ namespace CMScouter.UI
             _rater.OutputDebug(false);
 
             var scoutOrder = ScoutingOrdering(list, type);
-            return scoutOrder.Take(numberOfResults).ToList();
+            var results = scoutOrder.Take(numberOfResults).ToList();
+
+            CreateShortlistData(results.Select(p => p.ShortlistData));
+
+            return results;
+        }
+
+        private void CreateShortlistData(IEnumerable<PlayerShortlistEntry> players)
+        {
+            _shortlist = players.ToList();
         }
 
         private IEnumerable<PlayerView> ScoutingOrdering(IEnumerable<PlayerView> list, PlayerPosition? type)
