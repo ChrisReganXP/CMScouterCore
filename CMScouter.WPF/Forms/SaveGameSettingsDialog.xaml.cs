@@ -45,7 +45,7 @@ namespace CMScouter.WPF
         private void BindData()
         {
             var clubNames = _cmsui.GetClubs().Select(x => new { x.ClubId, x.Name }).OrderBy(x => x.Name).ToList();
-            var all = new { ClubId = -1, Name = "<None>" };
+            var all = new { ClubId = -1, Name = "<Mandatory>" };
             clubNames.Insert(0, all);
 
             cbxClubs.DisplayMemberPath = "Name";
@@ -73,6 +73,7 @@ namespace CMScouter.WPF
             var weightList = weights.GroupedWeights.Select(x => new { x.ID, x.Name }).ToList();
             weightList.AddRange(weights.IndividualWeights.Select(x => new { x.ID, x.Name }).ToList());
             cbxWeightings.ItemsSource = weightList;
+            cbxWeightings.SelectedIndex = 0;
 
             if (_newgame.SelectedWeighting != Guid.Empty)
             {
@@ -85,9 +86,9 @@ namespace CMScouter.WPF
             decimal selectedInflation;
             decimal.TryParse(tbxInflation.Text, out selectedInflation);
             int selectedClub = (int)cbxClubs.SelectedValue;
-            Guid selectedWeighting = (Guid)cbxWeightings.SelectedValue;
+            Guid selectedWeighting = cbxWeightings.SelectedValue == null ? Guid.Empty : (Guid)cbxWeightings.SelectedValue;
 
-            if (!ValidateSettings(selectedClub, selectedInflation))
+            if (!ValidateSettings(selectedClub, selectedInflation, selectedWeighting))
             {
                 return;
             }
@@ -116,7 +117,7 @@ namespace CMScouter.WPF
             _parent.RefreshAfterSettingsSave();
         }
 
-        private bool ValidateSettings(int club, decimal inflation)
+        private bool ValidateSettings(int club, decimal inflation, Guid weighting)
         {
             if (club < 0)
             {
@@ -124,6 +125,11 @@ namespace CMScouter.WPF
             }
 
             if (inflation < 1 || inflation > 10)
+            {
+                return false;
+            }
+
+            if (weighting == Guid.Empty)
             {
                 return false;
             }

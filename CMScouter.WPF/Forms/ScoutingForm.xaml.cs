@@ -50,6 +50,8 @@ namespace CMScouter.WPF
         {
             settingsManager = new SettingsManager(_assemblyPath); 
             settings = settingsManager.LoadSavedGameSettings();
+            weightingManager = new WeightingManager(DefaultWeightingPath);
+
             var lastGame = settings.GetLastSavedGame();
             if (lastGame == null)
             {
@@ -57,8 +59,6 @@ namespace CMScouter.WPF
             }
 
             AddLastGameMenuItem();
-
-            weightingManager = new WeightingManager(DefaultWeightingPath);
         }
 
         #endregion
@@ -69,12 +69,13 @@ namespace CMScouter.WPF
         {
             ChangeMenusOnSaveGameLoad();
             settings = settingsManager.LoadSavedGameSettings();
-            LoadSaveGameFile(settings.GetLastSavedGame().FileName);
+            LoadSaveGameFile(settings.GetLastSavedGame().FilePath);
             ResetAndTeamSearch();
         }
 
         private void ResetAndTeamSearch()
         {
+            ucScouting.WakeUp(cmsUI, settings);
             PerformInitialSearch();
         }
 
