@@ -7,7 +7,6 @@ using System.Text;
 
 namespace CMScouterFunctions.Converters
 {
-
     internal class NationConverter
     {
         private StringBuilder nationBytes = new StringBuilder();

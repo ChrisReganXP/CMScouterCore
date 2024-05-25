@@ -91,30 +91,6 @@ namespace CMScouterFunctions
             return null;
         }
 
-        public static List<byte[]> GetAllDataFromFile(DataFile dataFile, string fileName, int sizeOfData)
-        {
-            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                using (BinaryReader br = new BinaryReader(fs))
-                {
-                    int numberOfRecords = GetNumberOfRecordsFromDataFile(dataFile, sizeOfData, br, out int startReadPosition);
-
-                    br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
-
-                    List<byte[]> records = new List<byte[]>();
-
-                    for (int i = 0; i < numberOfRecords; i++)
-                    {
-                        byte[] buffer = new byte[sizeOfData];
-                        br.BaseStream.Read(buffer, 0, sizeOfData);
-                        records.Add(buffer);
-                    }
-
-                    return records;
-                }
-            }
-        }
-
         public static List<string> GetPossibleShortValuesFromByteArray(byte[] source)
         {
             if (source == null || source.Length < 2)
@@ -239,39 +215,6 @@ namespace CMScouterFunctions
 
             var date = new DateTime(year, 1, 1).AddDays(day);
             return date;
-        }
-
-        private static int GetNumberOfRecordsFromDataFile(DataFile dataFile, int sizeOfData, BinaryReader br, out int startReadPosition)
-        {
-            int numberOfRecords = dataFile.Length / sizeOfData;
-            startReadPosition = dataFile.Position;
-
-            if (dataFile.FileFacts.HeaderOverload != null)
-            {
-                byte[] header = new byte[dataFile.FileFacts.HeaderOverload.MinimumHeaderLength];
-                br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
-                br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.MinimumHeaderLength);
-                startReadPosition += dataFile.FileFacts.HeaderOverload.MinimumHeaderLength;
-
-                var numberHeaderRows = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.AdditionalHeaderIndicatorPosition);
-                numberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.InitialNumberOfRecordsPosition);
-                int furtherNumberOfRecords = 0;
-
-                if (numberHeaderRows > 0)
-                {
-                    for (int headerLoop = 0; headerLoop < numberHeaderRows; headerLoop++)
-                    {
-                        header = new byte[dataFile.FileFacts.HeaderOverload.ExtraHeaderLength];
-                        br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
-                        br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.ExtraHeaderLength);
-                        startReadPosition += dataFile.FileFacts.HeaderOverload.ExtraHeaderLength;
-                    }
-                    furtherNumberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.FurtherNumberOfRecordsPosition);
-                }
-                numberOfRecords = furtherNumberOfRecords > 0 ? furtherNumberOfRecords : numberOfRecords;
-            }
-
-            return numberOfRecords;
         }
 
         public static string GetByteInvestigationOutput(byte[] source)

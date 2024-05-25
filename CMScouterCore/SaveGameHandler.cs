@@ -67,7 +67,7 @@ namespace CMScouterFunctions
             var general = savegame.DataBlockNameList.First(x => x.FileFacts.Type == DataFileType.General);
             var fileFacts = DataFileFacts.GetDataFileFacts().First(x => x.Type == DataFileType.General);
 
-            var fileData = ByteHandler.GetAllDataFromFile(general, savegame.FileName, fileFacts.DataSize);
+            var fileData = DataFileLoaders.GetAllDataFromFile(general, savegame.FileName, fileFacts.DataSize);
             savegame.GameDate = ByteHandler.GetDateFromBytes(fileData[0], fileFacts.DataSize - 8).Value;
         }
     }

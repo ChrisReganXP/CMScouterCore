@@ -1,6 +1,7 @@
 ﻿using CMScouterFunctions.Converters;
 using CMScouterFunctions.DataClasses;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CMScouterFunctions
@@ -131,7 +132,64 @@ namespace CMScouterFunctions
         public static List<byte[]> GetDataFileBytes(SaveGameFile savegame, DataFileType fileType, int sizeOfData)
         {
             DataFile dataFile = savegame.DataBlockNameList.First(x => x.FileFacts.Type == fileType);
-            return ByteHandler.GetAllDataFromFile(dataFile, savegame.FileName, sizeOfData);
+            return GetAllDataFromFile(dataFile, savegame.FileName, sizeOfData);
+        }
+
+        public static List<byte[]> GetAllDataFromFile(DataFile dataFile, string fileName, int sizeOfData)
+        {
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader br = new BinaryReader(fs))
+                {
+                    int numberOfRecords = DataFileLoaders.GetNumberOfRecordsFromDataFile(dataFile, sizeOfData, br, out int startReadPosition);
+
+                    br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+
+                    List<byte[]> records = new List<byte[]>();
+
+                    for (int i = 0; i < numberOfRecords; i++)
+                    {
+                        byte[] buffer = new byte[sizeOfData];
+                        br.BaseStream.Read(buffer, 0, sizeOfData);
+                        records.Add(buffer);
+                    }
+
+                    return records;
+                }
+            }
+        }
+
+        public static int GetNumberOfRecordsFromDataFile(DataFile dataFile, int sizeOfData, BinaryReader br, out int startReadPosition)
+        {
+            int numberOfRecords = dataFile.Length / sizeOfData;
+            startReadPosition = dataFile.Position;
+
+            if (dataFile.FileFacts.HeaderOverload != null)
+            {
+                byte[] header = new byte[dataFile.FileFacts.HeaderOverload.MinimumHeaderLength];
+                br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+                br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.MinimumHeaderLength);
+                startReadPosition += dataFile.FileFacts.HeaderOverload.MinimumHeaderLength;
+
+                var numberHeaderRows = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.AdditionalHeaderIndicatorPosition);
+                numberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.InitialNumberOfRecordsPosition);
+                int furtherNumberOfRecords = 0;
+
+                if (numberHeaderRows > 0)
+                {
+                    for (int headerLoop = 0; headerLoop < numberHeaderRows; headerLoop++)
+                    {
+                        header = new byte[dataFile.FileFacts.HeaderOverload.ExtraHeaderLength];
+                        br.BaseStream.Seek(startReadPosition, SeekOrigin.Begin);
+                        br.BaseStream.Read(header, 0, dataFile.FileFacts.HeaderOverload.ExtraHeaderLength);
+                        startReadPosition += dataFile.FileFacts.HeaderOverload.ExtraHeaderLength;
+                    }
+                    furtherNumberOfRecords = ByteHandler.GetIntFromBytes(header, dataFile.FileFacts.HeaderOverload.FurtherNumberOfRecordsPosition);
+                }
+                numberOfRecords = furtherNumberOfRecords > 0 ? furtherNumberOfRecords : numberOfRecords;
+            }
+
+            return numberOfRecords;
         }
     }
 }
