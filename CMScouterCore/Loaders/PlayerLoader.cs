@@ -53,7 +53,6 @@ namespace CMScouterFunctions
             saveData.CommonNames = commonNames;
             saveData.Nations = nations;
             saveData.Clubs = clubs;
-            saveData.PlayerDictionary = searchablePlayers.ToDictionary(x => x._player.PlayerId);
             saveData.Players = searchablePlayers;
             saveData.ClubComps = clubcomps;
 

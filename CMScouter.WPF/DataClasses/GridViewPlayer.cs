@@ -74,5 +74,13 @@ namespace CMScouter.WPF.DataClasses
         public byte SpeedRating { get; set; }
 
         public string PlayingPositionDescription { get; set; }
+
+        public short Penalties { get; set; }
+
+        public short Corners { get; set; }
+
+        public short FreeKicks { get; set; }
+
+        public short Influence { get; set; }
     }
 }
