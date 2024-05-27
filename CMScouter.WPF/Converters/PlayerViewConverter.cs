@@ -62,6 +62,11 @@ namespace CMScouter.WPF.Converters
             dest.BestRole = source.ScoutRatings.BestPosition.BestRole.Role.ToName();
             dest.Recommendation = source.ScoutRatings.OverallRating;
 
+            dest.Penalties = source.Attributes.Penalties;
+            dest.Corners = source.Attributes.Corners;
+            dest.FreeKicks = source.Attributes.FreeKicks;
+            dest.Influence = source.Attributes.Influence;
+
             return dest;
         }
     }

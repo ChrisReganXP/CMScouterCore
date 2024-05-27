@@ -406,7 +406,7 @@ namespace CMScouter.UI
         private IIntrinsicMasker masker;
 
         // rename
-        public HardCodededGroupRater(IIntrinsicMasker Masker, GroupedRoleWeights weights)
+        public HardCodededGroupRater(IIntrinsicMasker Masker)
         {
             masker = Masker;
 

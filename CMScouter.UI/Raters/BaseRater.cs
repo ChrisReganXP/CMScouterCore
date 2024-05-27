@@ -10,15 +10,23 @@ namespace CMScouter.UI.Raters
     {
         protected IIntrinsicMasker masker;
 
-        protected void ScoreAttribute(DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition, byte playerAttribute, byte weight, ref int combinedWeight, ref decimal rating)
+        protected void ScoreAttribute(DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition, byte playerAttribute, byte weight, ref Tuple<int, short> combinedWeight, ref decimal rating)
         {
             if (weight == 0)
             {
                 return;
             }
 
-            combinedWeight += weight;
+            combinedWeight = new Tuple<int, short>(combinedWeight.Item1 + weight, (short)(combinedWeight.Item2 + 1));
+
             var value = Adj(playerAttribute, IsAttributeIntrinsic(attribute), attribute, player, setPosition, movementPosition);
+
+            // pretty hacky way of increasing importance of Intrinsics in scouting
+            if (IsAttributeIntrinsic(attribute))
+            {
+                value = value * 1.1m;
+            }
+
             decimal weightedValue = value * weight;
 
             rating += weightedValue;

@@ -12,7 +12,7 @@ using CMScouter.DataContracts;
 
 namespace CMScouter.UI
 {
-    internal class GroupedAttributeRater : BaseRater, IPlayerRater
+    public class GroupedAttributeRater : BaseRater, IPlayerRater
     {
         public void OutputDebug(bool enabled)
         {
@@ -65,27 +65,27 @@ namespace CMScouter.UI
             {
                 Role = Roles.DFB,
                 ImpactPercent = 10,
-                ReliabilityPercent = 10,
-                PlaymakingPercent = 0,
-                WideplayPercent = 10,
+                ReliabilityPercent = 3,
+                PlaymakingPercent = 2,
+                WideplayPercent = 17,
                 ScoringPercent = 0,
-                DefendingPercent = 45,
+                DefendingPercent = 30,
                 GoalkeepingPercent = 0,
-                SpeedPercent = 20,
-                StrengthPercent = 5
+                SpeedPercent = 24,
+                StrengthPercent = 14
             });
 
             groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
             {
                 Role = Roles.AFB,
-                ImpactPercent = 8,
-                ReliabilityPercent = 8,
-                PlaymakingPercent = 8,
-                WideplayPercent = 15,
+                ImpactPercent = 3,
+                ReliabilityPercent = 3,
+                PlaymakingPercent = 7,
+                WideplayPercent = 32,
                 ScoringPercent = 0,
-                DefendingPercent = 15,
+                DefendingPercent = 22,
                 GoalkeepingPercent = 0,
-                SpeedPercent = 35,
+                SpeedPercent = 28,
                 StrengthPercent = 5
             });
 
@@ -101,6 +101,20 @@ namespace CMScouter.UI
                 GoalkeepingPercent = 0,
                 SpeedPercent = 15,
                 StrengthPercent = 30
+            });
+
+            groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
+            {
+                Role = Roles.LD,
+                ImpactPercent = 3,
+                ReliabilityPercent = 2,
+                PlaymakingPercent = 0,
+                WideplayPercent = 0,
+                ScoringPercent = 0,
+                DefendingPercent = 70,
+                GoalkeepingPercent = 0,
+                SpeedPercent = 0,
+                StrengthPercent = 25
             });
 
             groupedWeightSet.RoleWeights.Add(new GroupedRoleWeights()
@@ -246,15 +260,13 @@ namespace CMScouter.UI
             groupedWeightSet.ImpactWeights = new AttributeWeights()
             {
                 Aggression = 10,
-                Bravery = 10
+                Bravery = 7
             };
 
             groupedWeightSet.ReliabilityWeights = new AttributeWeights()
             {
                 Consistency = 10,
                 ImportantMatches = 4,
-                Teamwork = 4,
-                WorkRate = 4,
             };
 
             groupedWeightSet.PlaymakingWeights = new AttributeWeights()
@@ -268,7 +280,8 @@ namespace CMScouter.UI
                 Decisions = 4,
                 OffTheBall = 4,
                 Teamwork = 3,
-                Flair = 6
+                Flair = 6,
+                WorkRate = 1,
             };
 
             groupedWeightSet.WideplayWeights = new AttributeWeights()
@@ -329,10 +342,10 @@ namespace CMScouter.UI
             return groupedWeightSet;
         }
 
-        public GroupedAttributeRater(IIntrinsicMasker Masker, GroupedWeightSet Weights)
+        public GroupedAttributeRater(IIntrinsicMasker Masker, GroupedWeightSet Weights = null)
         {
             base.masker = Masker;
-            weights = Weights;
+            weights = Weights ?? DefaultGroupedWeights();
         }
 
         public ScoutingInformation GetRatings(Player player)
@@ -462,18 +475,43 @@ namespace CMScouter.UI
                 return (byte)0;
             }
 
-            decimal mentalRating = ApplyWeightToGroup(playerGroupedRatings.impactRating, weights.ImpactPercent) + ApplyWeightToGroup(playerGroupedRatings.reliabilityRating, weights.ReliabilityPercent);
+            decimal reliabilityRating = ApplyWeightToGroup(playerGroupedRatings.reliabilityRating, weights.ReliabilityPercent);
+            decimal impactRating = ApplyWeightToGroup(playerGroupedRatings.impactRating, weights.ImpactPercent);
+
+            decimal mentalRating = impactRating + reliabilityRating;
             decimal mentalWeighting = weights.ImpactPercent + weights.ReliabilityPercent;
 
-            decimal technicalRating = ApplyWeightToGroup(playerGroupedRatings.playmakingRating, weights.PlaymakingPercent)
-                + ApplyWeightToGroup(playerGroupedRatings.wideplayRating, weights.WideplayPercent)
-                + ApplyWeightToGroup(playerGroupedRatings.scoringRating, weights.ScoringPercent) + ApplyWeightToGroup(playerGroupedRatings.defendingRating, weights.DefendingPercent)
-                + ApplyWeightToGroup(playerGroupedRatings.goalkeepingRating, weights.GoalkeepingPercent);
+            string ifX = GetGroupingDebugDetail(impactRating, weights.ImpactPercent);
+            string rfX = GetGroupingDebugDetail(reliabilityRating, weights.ReliabilityPercent);
+
+            decimal goalkeepingRating = ApplyWeightToGroup(playerGroupedRatings.goalkeepingRating, weights.GoalkeepingPercent);
+            decimal defendingRating = ApplyWeightToGroup(playerGroupedRatings.defendingRating, weights.DefendingPercent);
+            decimal playmakingRating = ApplyWeightToGroup(playerGroupedRatings.playmakingRating, weights.PlaymakingPercent);
+            decimal wideplayRating = ApplyWeightToGroup(playerGroupedRatings.wideplayRating, weights.WideplayPercent);
+            decimal scoringRating = ApplyWeightToGroup(playerGroupedRatings.scoringRating, weights.ScoringPercent);
+
+            decimal technicalRating = playmakingRating
+                + wideplayRating
+                + scoringRating
+                + defendingRating
+                + goalkeepingRating;
+
             decimal technicalWeighting = weights.PlaymakingPercent + weights.WideplayPercent + weights.ScoringPercent + weights.DefendingPercent + weights.GoalkeepingPercent;
 
-            decimal physicalRating = ApplyWeightToGroup(playerGroupedRatings.speedRating, weights.SpeedPercent) + ApplyWeightToGroup(playerGroupedRatings.strengthRating, weights.StrengthPercent);
+            string kfX = GetGroupingDebugDetail(goalkeepingRating, weights.GoalkeepingPercent);
+            string dfX = GetGroupingDebugDetail(defendingRating, weights.DefendingPercent);
+            string pfX = GetGroupingDebugDetail(playmakingRating, weights.PlaymakingPercent);
+            string wfX = GetGroupingDebugDetail(wideplayRating, weights.WideplayPercent);
+            string gfX = GetGroupingDebugDetail(scoringRating, weights.ScoringPercent);
+
+            decimal speedRating = ApplyWeightToGroup(playerGroupedRatings.speedRating, weights.SpeedPercent);
+            decimal strengthRating = ApplyWeightToGroup(playerGroupedRatings.strengthRating, weights.StrengthPercent);
+
+            decimal physicalRating = speedRating + strengthRating;
             decimal physicalWeighting = weights.SpeedPercent + weights.StrengthPercent;
 
+            string sfX = GetGroupingDebugDetail(speedRating, weights.SpeedPercent);
+            string tfX = GetGroupingDebugDetail(strengthRating, weights.StrengthPercent);
 
             decimal rating = mentalRating + technicalRating + physicalRating;
             rating = Math.Min(99, rating);
@@ -482,15 +520,29 @@ namespace CMScouter.UI
             {
                 Position = type.ToString(),
                 Role = role,
-                Mental = $"{mentalRating} / {mentalWeighting} ({(100 * mentalRating / mentalWeighting).ToString("N0")})",
-                MentalDetail = $"{mentalRating} / {mentalWeighting} ({(100 * mentalRating / mentalWeighting).ToString("N0")})",
+                Mental =       $"{mentalRating} / {mentalWeighting} ({(100 * mentalRating / mentalWeighting).ToString("N0")})",
+                MentalDetail = $"{mentalRating} / {mentalWeighting} ({(100 * mentalRating / mentalWeighting).ToString("N0")}%)",
                 Physical = $"{physicalRating} / {physicalWeighting} ({(100 * physicalRating / physicalWeighting).ToString("N0")})",
-                PhysicalDetail = $"{physicalRating} / {physicalWeighting} ({(100 * physicalRating / physicalWeighting).ToString("N0")})",
+                PhysicalDetail = $"{physicalRating} / {physicalWeighting} ({(100 * physicalRating / physicalWeighting).ToString("N0")}%)",
                 Technical = $"{technicalRating} / {technicalWeighting} ({(100 * technicalRating / technicalWeighting).ToString("N0")})",
-                TechnicalDetail = $"{technicalRating} / {technicalWeighting} ({(100 * technicalRating / technicalWeighting).ToString("N0")})",
+                TechnicalDetail = $"{technicalRating} / {technicalWeighting} ({(100 * technicalRating / technicalWeighting).ToString("N0")}%)",
+                GoalkeepingDetail = $"{goalkeepingRating} / {weights.GoalkeepingPercent} ({kfX}%)",
+                DefendingDetail = $"{defendingRating} / {weights.DefendingPercent} ({dfX}%)",
+                PlaymakingDetail = $"{playmakingRating} / {weights.PlaymakingPercent} ({pfX}%)",
+                WideplayDetail = $"{wideplayRating} / {weights.WideplayPercent} ({wfX}%)",
+                ScoringDetail = $"{scoringRating} / {weights.ScoringPercent} ({gfX}%)",
+                SpeedDetail = $"{speedRating} / {weights.SpeedPercent} ({sfX}%)",
+                StrengthDetail = $"{strengthRating} / {weights.StrengthPercent} ({tfX}%)",
+                ImpactDetail = $"{impactRating} / {weights.ImpactPercent} ({ifX}%)",
+                ReliabilityDetail = $"{reliabilityRating} / {weights.ReliabilityPercent} ({rfX}%)",
             };
 
             return (byte)rating;
+        }
+
+        private string GetGroupingDebugDetail(decimal rating, byte weightPercent)
+        {
+            return weightPercent > 0 ? (100 * rating / weightPercent).ToString("N0") : "0";
         }
 
         private byte ApplyWeightToGroup(byte groupRating, byte weight)
@@ -525,7 +577,7 @@ namespace CMScouter.UI
         private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeights weights)
         {
             decimal rating = 0;
-            int combinedWeights = 0;
+            Tuple<int, short> combinedWeights = new Tuple<int, short>(0,0);
 
             ScoreAttribute(DP.Acceleration, player._player, setPosition, movementPosition, player._player.Acceleration, weights.Acceleration, ref combinedWeights, ref rating);
             ScoreAttribute(DP.Aggression, player._player, setPosition, movementPosition, player._player.Aggression, weights.Aggression, ref combinedWeights, ref rating);
@@ -566,7 +618,11 @@ namespace CMScouter.UI
             ScoreAttribute(DP.Versatility, player._player, setPosition, movementPosition, player._player.Versatility, weights.Versatility, ref combinedWeights, ref rating);
             ScoreAttribute(DP.WorkRate, player._player, setPosition, movementPosition, player._player.WorkRate, weights.WorkRate, ref combinedWeights, ref rating);
 
-            int maxScore = 20 * combinedWeights;
+            int maxScore = 20 * combinedWeights.Item1;
+
+            short numberOfCategories = combinedWeights.Item2;
+            var ratingModifier = 1 + ((decimal)(numberOfCategories - 4) * 4 / 100);
+            rating = rating * ratingModifier;
 
             decimal ratio = rating / maxScore;
             int easyratio = (int)(ratio * 100);

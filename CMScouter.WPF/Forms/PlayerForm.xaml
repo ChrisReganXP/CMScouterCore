@@ -414,5 +414,68 @@
             </GroupBox>
         </StackPanel>
 
+        <StackPanel DockPanel.Dock="Top" Margin="10 17 10 0">
+            <GroupBox Header="Scouting" >
+                <StackPanel Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"><Label>Role</Label>
+                            <Label Name="lblScoutRole" /></TextBlock>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"><Label>Physical Group</Label>
+                            <Label Name="lblPhysical" /></TextBlock>
+
+                        <TextBlock Grid.Row="1" Grid.Column="1"><Label>Technical Group</Label>
+                            <Label Name="lblTechnical" /></TextBlock>
+
+                        <TextBlock Grid.Row="1" Grid.Column="2"><Label>Mental Group</Label>
+                            <Label Name="lblMental" /></TextBlock>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"><Label ToolTip="Acceleration, Pace, Agility, Stamina">Speed</Label>
+                            <Label Name="lblSpeed" /></TextBlock>
+
+                        <TextBlock Grid.Row="2" Grid.Column="1"><Label ToolTip="Tackling, Position, Marking, Heading, Anticipation">Defending</Label>
+                            <Label Name="lblDefending" /></TextBlock>
+
+                        <TextBlock Grid.Row="2" Grid.Column="3"><Label ToolTip="Aggression, Bravery">Impact</Label>
+                            <Label Name="lblImpact" /></TextBlock>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0"><Label ToolTip="Jumping, Strength, Balance, Stamina">Strength</Label>
+                            <Label Name="lblStrengthDetail" /></TextBlock>
+
+                        <TextBlock Grid.Row="3" Grid.Column="1"><Label ToolTip="Crossing, Dribbling, Off the ball, Technique, Passing, Flair">Wide Play</Label>
+                            <Label Name="lblWidePlay" /></TextBlock>
+
+                        <TextBlock Grid.Row="3" Grid.Column="2"><Label ToolTip="Consistency, Important Matches">Reliability</Label>
+                            <Label Name="lblReliability" /></TextBlock>
+
+                        <TextBlock Grid.Row="4" Grid.Column="1"><Label ToolTip="Passing, Creativity, Technique, Anticipation, Flair, Decisions, Off the ball, Long shots, Teamwork, Work rate, Dribbling">Playmaking</Label>
+                            <Label Name="lblPlaymaking" /></TextBlock>
+
+                        <TextBlock Grid.Row="5" Grid.Column="1"><Label ToolTip="Off the ball, Finishing, Heading, Technique, Anticipation, Flair, Long shots">Goal Scoring</Label>
+                            <Label Name="lblScoring" /></TextBlock>
+
+                        <TextBlock Grid.Row="6" Grid.Column="1"><Label ToolTip="Handling, Reflexes, Positioning, Agility, One on ones">Goalkeeping</Label>
+                            <Label Name="lblGoalKeeping" /></TextBlock>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
     </DockPanel>
 </Window>

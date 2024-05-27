@@ -112,5 +112,22 @@ namespace CMScouter.UI.Raters
 
         public string TechnicalDetail { get; set; }
 
+        public string GoalkeepingDetail { get; set; }
+
+        public string DefendingDetail { get; set; }
+
+        public string PlaymakingDetail { get; set; }
+
+        public string WideplayDetail { get; set; }
+
+        public string ScoringDetail { get; set; }
+
+        public string SpeedDetail { get; set; }
+
+        public string StrengthDetail { get; set; }
+
+        public string ImpactDetail { get; set; }
+
+        public string ReliabilityDetail { get; set; }
     }
 }

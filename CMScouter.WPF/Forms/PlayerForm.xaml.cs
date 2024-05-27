@@ -52,6 +52,7 @@ namespace CMScouter.WPF
             AddGoalkeeping();
 
             AddRating();
+            AddScouting();
         }
 
         protected void SetAttributeLabels(Label valueLabel, byte value, DP attribute, bool IsIntrinsic = false, bool IsInverted = false)
@@ -112,7 +113,7 @@ namespace CMScouter.WPF
 
         private void AddPersonalDetails()
         {
-            this.Title = player.GetKnownName() + " - " + player.PlayerId;
+            this.Title = player.GetKnownName() + " - " + player.PlayerId + $" ({player.StaffId})";
             lblFullName.Content = player.GetKnownName();
             lblAlternateName.Content = player.GetAlternateName();
             lblNationality.Content = player.Nationality;
@@ -219,6 +220,27 @@ namespace CMScouter.WPF
         private void AddRating()
         {
             lblRating.Content = player.ScoutRatings.BestPosition.BestRole.AbilityRating;
+        }
+
+        private void AddScouting()
+        {
+            var role = player.ScoutRatings.BestPosition.BestRole;
+            lblScoutRole.Content = role.Role.ToName();
+            lblPhysical.Content = role.Debug.PhysicalDetail;
+            lblTechnical.Content = role.Debug.TechnicalDetail;
+            lblMental.Content = role.Debug.MentalDetail;
+
+            lblGoalKeeping.Content = role.Debug.GoalkeepingDetail;
+            lblDefending.Content = role.Debug.DefendingDetail;
+            lblPlaymaking.Content = role.Debug.PlaymakingDetail;
+            lblWidePlay.Content = role.Debug.WideplayDetail;
+            lblScoring.Content = role.Debug.ScoringDetail;
+            
+            lblSpeed.Content = role.Debug.SpeedDetail;
+            lblStrengthDetail.Content = role.Debug.StrengthDetail;
+
+            lblImpact.Content = role.Debug.ImpactDetail;
+            lblReliability.Content = role.Debug.ReliabilityDetail;
         }
 
         private void InitialiseRatingPanel()
