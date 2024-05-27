@@ -79,6 +79,10 @@ namespace CMScouter.WPF
             {
                 cbxWeightings.SelectedValue = _newgame.SelectedWeighting;
             }
+            else
+            {
+                cbxWeightings.SelectedIndex = 0;
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

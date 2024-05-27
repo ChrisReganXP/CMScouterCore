@@ -116,6 +116,25 @@ namespace CMScouter.UI
             groupedWeightings[(int)Roles.CB] = groupWeight;
         }
 
+        private void AddLD()
+        {
+            byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
+
+            groupWeight[(int)AG.Impact] = 3;
+            groupWeight[(int)AG.Reliability] = 2;
+
+            groupWeight[(int)AG.Playmaking] = 0;
+            groupWeight[(int)AG.Wideplay] = 0;
+            groupWeight[(int)AG.Scoring] = 0;
+            groupWeight[(int)AG.Defending] = 60;
+            groupWeight[(int)AG.Goalkeeping] = 0;
+
+            groupWeight[(int)AG.Speed] = 5;
+            groupWeight[(int)AG.Strength] = 30;
+
+            groupedWeightings[(int)Roles.LD] = groupWeight;
+        }
+
         private void AddWB()
         {
             byte[] groupWeight = new byte[Enum.GetNames(typeof(AG)).Length];
@@ -357,9 +376,9 @@ namespace CMScouter.UI
 
         private AttributeWeight[] DefendingAttributes = new AttributeWeight[]
         {
-            new AttributeWeight{ Attribute = DP.Heading, Weight = 10, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Marking, Weight = 15, IsIntrinsic = true },
+            new AttributeWeight{ Attribute = DP.Heading, Weight = 0, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Marking, Weight = 20, IsIntrinsic = true },
             new AttributeWeight{ Attribute = DP.Positioning, Weight = 30, IsIntrinsic = true }, new AttributeWeight{ Attribute = DP.Tackling, Weight = 30, IsIntrinsic = true },
-            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 5, IsIntrinsic = true }
+            new AttributeWeight{ Attribute = DP.Anticipation, Weight = 0, IsIntrinsic = true }
         };
 
         private AttributeWeight[] GoalkeepingAttributes = new AttributeWeight[]
@@ -400,6 +419,7 @@ namespace CMScouter.UI
             AddDFB();
             AddAFB();
             AddCB();
+            AddLD();
             AddDM();
             AddWB();
             AddCM();

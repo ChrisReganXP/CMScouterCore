@@ -25,7 +25,7 @@ namespace CMScouter.DataClasses
         RightBack,
 
         [Description("Centre Half")]
-        [LinkedRoles(Roles.CB)]
+        [LinkedRoles(Roles.CB, Roles.LD)]
         CentreHalf,
 
         [Description("Left Back")]
@@ -75,18 +75,27 @@ namespace CMScouter.DataClasses
 
     public enum Roles
     {
+        // 0
         [Description("Goal Keeper")]
         GK,
-
+        
+        // 1
         [Description("Sweeper")]
         SW,
 
+        // 2
         [Description("Defensive Full Back")]
         DFB,
 
+        // 3
         [Description("Centre Half")]
         CB,
 
+        // 4
+        [Description("Limited Defender")]
+        LD,
+
+        // 5
         [Description("Attacking Full Back")]
         AFB,
 
