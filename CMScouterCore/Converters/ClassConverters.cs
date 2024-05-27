@@ -1,4 +1,5 @@
 ﻿using CMScouter.DataContracts;
+using CMScouterCore.DataClasses;
 using CMScouterFunctions.DataClasses;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,7 @@ namespace CMScouterFunctions.Converters
             staff.Value = ByteHandler.GetIntFromBytes(source, 82);
             staff.ClubId = ByteHandler.GetIntFromBytes(source, 57);
 
-            List<int> playerTests = new List<int>() { 11282, 35425, 70038, 21195, 120511, 16406 };
+            List<int> playerTests = new List<int>() { 107706 };
             if (playerTests.Contains(staff.StaffPlayerId))
             {
                 var dobBytes = string.Join(", ", source.Skip(16).Take(5));
@@ -232,4 +233,21 @@ namespace CMScouterFunctions.Converters
         }
     }
 
+    internal class RetirementConverter
+    {
+        public Retirement Convert(byte[] source)
+        {
+            var retirement = new Retirement();
+
+            retirement.StaffId = ByteHandler.GetIntFromBytes(source, 30);
+
+            retirement.RetirementDecisionDate = ByteHandler.GetSensibleDateFromBytes(source, 12);
+
+            retirement.PlannedRetirementDate= ByteHandler.GetSensibleDateFromBytes(source, 20);
+            
+            ////retirement.byteArray = ByteHandler.GetByteInvestigationOutput(source);
+
+            return retirement;
+        }
+    }
 }

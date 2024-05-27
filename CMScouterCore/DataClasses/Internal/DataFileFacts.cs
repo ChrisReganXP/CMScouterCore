@@ -27,6 +27,8 @@ namespace CMScouterFunctions.DataClasses
         Club_Comps,
 
         Contracts,
+
+        Retirement,
     }
 
     internal class DataFileFact
@@ -74,6 +76,7 @@ namespace CMScouterFunctions.DataClasses
             // HeaderOverride.FurtherNumberOfRecordsPosition = 17
             DataFileHeaderInformation headerInfo = new DataFileHeaderInformation(0, 4, 8, 21, 17);
             facts.Add(new DataFileFact(DataFileType.Contracts, "contract.dat", 80, 0, headerOverload: headerInfo));
+            facts.Add(new DataFileFact(DataFileType.Retirement, "retire.dat", 52, 0));
 
 
             return facts;

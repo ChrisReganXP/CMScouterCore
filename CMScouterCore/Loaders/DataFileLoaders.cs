@@ -1,8 +1,11 @@
-﻿using CMScouterFunctions.Converters;
+﻿using CMScouterCore.DataClasses;
+using CMScouterFunctions.Converters;
 using CMScouterFunctions.DataClasses;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace CMScouterFunctions
 {
@@ -35,6 +38,33 @@ namespace CMScouterFunctions
                     }
                 }
             }
+
+            return dic;
+        }
+
+        public static Dictionary<int, Retirement> GetDataFileRetirementDictionary(SaveGameFile savegame)
+        {
+            Dictionary<int, Retirement> dic = new Dictionary<int, Retirement>();
+            var fileFacts = DataFileFacts.GetDataFileFacts().First(x => x.Type == DataFileType.Retirement);
+            var bytes = GetDataFileBytes(savegame, fileFacts.Type, fileFacts.DataSize);
+
+            RetirementConverter converter = new RetirementConverter();
+
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < bytes.Count; i++)
+            {
+                var item = bytes[i];
+                var retirement = converter.Convert(item);
+                builder.AppendLine(ByteHandler.GetByteInvestigationOutput(item));
+
+                if (!dic.ContainsKey(retirement.StaffId))
+                {
+                    dic.Add(retirement.StaffId, retirement);
+                }
+            }
+
+            var output = builder.ToString();
 
             return dic;
         }

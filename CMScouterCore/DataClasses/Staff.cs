@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMScouterCore.DataClasses;
+using System;
 using System.Collections.Generic;
 
 namespace CMScouterFunctions.DataClasses
@@ -70,6 +71,8 @@ namespace CMScouterFunctions.DataClasses
 
         [AttributeGroup(AttributeGroup.OffField)]
         public byte Temperament { get; set; }
+
+        public Retirement Retirement { get; set; }
 
         public bool IsNationality(int nationId)
         {

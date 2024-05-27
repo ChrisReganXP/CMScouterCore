@@ -1,5 +1,7 @@
-﻿using CMScouterFunctions.Converters;
+﻿using CMScouterCore.DataClasses;
+using CMScouterFunctions.Converters;
 using CMScouterFunctions.DataClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,11 +29,23 @@ namespace CMScouterFunctions
             List<Staff> duplicates = new List<Staff>();
             Dictionary<int, Staff> staffDic = DataFileLoaders.GetDataFileStaffDictionary(savegame, saveData, out duplicates);
 
-            List<PlayerData> players = GetDataFilePlayerData(savegame);
+            Dictionary<int, Retirement> playerRetirements = DataFileLoaders.GetDataFileRetirementDictionary(savegame);
+            foreach (var retirement in playerRetirements)
+            {
+                var staff = staffDic.Values.FirstOrDefault(x => x.StaffId == retirement.Key);
+                if (staff != null)
+                {
+                    staff.Retirement = retirement.Value;
+                }
+            }
+
+            Dictionary<int, PlayerData> players = GetDataFilePlayerData(savegame);
 
             Dictionary<int, Contract> playerContracts = DataFileLoaders.GetDataFileContractDictionary(savegame, saveData);
 
             List<Player> searchablePlayers = ConstructSearchablePlayers(staffDic, players, playerContracts).ToList();
+
+            List<Player> retiredPlayers = searchablePlayers.Where(x => x._staff.Retirement != null).ToList();
 
             saveData.GameDate = savegame.GameDate;
             saveData.FirstNames = firstnames;
@@ -39,6 +53,7 @@ namespace CMScouterFunctions
             saveData.CommonNames = commonNames;
             saveData.Nations = nations;
             saveData.Clubs = clubs;
+            saveData.PlayerDictionary = searchablePlayers.ToDictionary(x => x._player.PlayerId);
             saveData.Players = searchablePlayers;
             saveData.ClubComps = clubcomps;
 
@@ -46,20 +61,20 @@ namespace CMScouterFunctions
         }
 
 
-        private static IEnumerable<Player> ConstructSearchablePlayers(Dictionary<int, Staff> staffDic, List<PlayerData> players, Dictionary<int, Contract> contracts)
+        private static IEnumerable<Player> ConstructSearchablePlayers(Dictionary<int, Staff> staffDic, Dictionary<int, PlayerData> players, Dictionary<int, Contract> contracts)
         {
-            foreach (var player in players)
+            foreach (var playerID in players.Keys)
             {
-                if (staffDic.ContainsKey(player.PlayerId))
+                if (staffDic.ContainsKey(playerID))
                 {
-                    var staff = staffDic[player.PlayerId];
+                    var staff = staffDic[playerID];
                     Contract contract = null;
                     if (contracts.Keys.Contains(staff.StaffId))
                     {
                         contract = contracts[staff.StaffId];
                     }
 
-                    yield return new Player(player, staff, contract);
+                    yield return new Player(players[playerID], staff, contract);
                 }
             }
         }
@@ -78,16 +93,18 @@ namespace CMScouterFunctions
             return fileContents;
         }
 
-        private static List<PlayerData> GetDataFilePlayerData(SaveGameFile savegame)
+        private static Dictionary<int, PlayerData> GetDataFilePlayerData(SaveGameFile savegame)
         {
             var fileFacts = DataFileFacts.GetDataFileFacts().First(x => x.Type == DataFileType.Players);
             var bytes = DataFileLoaders.GetDataFileBytes(savegame, fileFacts.Type, fileFacts.DataSize);
             var converter = new PlayerDataConverter();
-            var collect = new List<PlayerData>();
+            var collect = new Dictionary<int, PlayerData>();
 
             foreach (var source in bytes)
             {
-                collect.Add(converter.Convert(source));
+                var player = converter.Convert(source);
+
+                collect.Add(player.PlayerId, player);
             }
 
             return collect;
