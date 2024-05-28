@@ -14,6 +14,8 @@ namespace CMScouter.UI.Raters
 
         public byte PurchaseRating { get; set; }
 
+        public byte PotentialRating { get; set; }
+
         public byte PhysicalRating { get; set; }
 
         public byte TechnicalRating { get; set; }
@@ -42,6 +44,8 @@ namespace CMScouter.UI.Raters
         public RoleRating BestRole { get => RoleRatings.OrderByDescending(r => r.AbilityRating).FirstOrDefault(); }
 
         public byte Rating { get => BestRole?.AbilityRating ?? 0; }
+
+        public byte PotentialRating { get => BestRole?.PotentialRating ?? 0; }
     }
 
     public class ScoutingInformation

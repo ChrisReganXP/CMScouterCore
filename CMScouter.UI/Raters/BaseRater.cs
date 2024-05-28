@@ -10,7 +10,7 @@ namespace CMScouter.UI.Raters
     {
         protected IIntrinsicMasker masker;
 
-        protected void ScoreAttribute(DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition, byte playerAttribute, byte weight, ref Tuple<int, short> combinedWeight, ref decimal rating)
+        protected void ScoreAttribute(DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition, byte playerAttribute, byte weight, ref Tuple<int, short> combinedWeight, ref decimal rating, bool potential = false)
         {
             if (weight == 0)
             {
@@ -19,7 +19,7 @@ namespace CMScouter.UI.Raters
 
             combinedWeight = new Tuple<int, short>(combinedWeight.Item1 + weight, (short)(combinedWeight.Item2 + 1));
 
-            var value = Adj(playerAttribute, IsAttributeIntrinsic(attribute), attribute, player, setPosition, movementPosition);
+            var value = Adj(playerAttribute, IsAttributeIntrinsic(attribute), attribute, player, setPosition, movementPosition, potential);
 
             // pretty hacky way of increasing importance of Intrinsics in scouting
             if (IsAttributeIntrinsic(attribute))
@@ -60,14 +60,14 @@ namespace CMScouter.UI.Raters
             }
         }
 
-        protected decimal Adj(byte val, bool isIntrinsic, DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition)
+        protected decimal Adj(byte val, bool isIntrinsic, DP attribute, PlayerData player, PlayerPosition setPosition, PlayerPosition movementPosition, bool potential = false)
         {
             if (!isIntrinsic)
             {
                 return Math.Min((byte)20, val);
             }
 
-            return masker.GetIntrinsicMask(player.CurrentAbility, player, player.Versatility, attribute, setPosition, movementPosition, val);
+            return masker.GetIntrinsicMask(potential ? player.PotentialAbility : player.CurrentAbility, player, player.Versatility, attribute, setPosition, movementPosition, val);
         }
 
         public bool PlaysPosition(PlayerPosition type, PlayerData player)

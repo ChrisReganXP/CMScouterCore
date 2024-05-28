@@ -93,6 +93,7 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
                     <DataGridTextColumn Header="Ability" Binding="{Binding BestRating}" />
                     <DataGridTextColumn Header="Overall" Binding="{Binding PurchaseRating}" Width="47" />
+                    <DataGridTextColumn Header="Potential" Binding="{Binding PotentialRating}" Width="47" />
                     <DataGridTextColumn Header="Best Position" Binding="{Binding BestPosition}" Width="125" />
                     <DataGridTextColumn Header="Role" Binding="{Binding BestRole}" Width="125" />
                     <DataGridTextColumn Header="Postions" Binding="{Binding PlayingPositionDescription}" Width="90" />

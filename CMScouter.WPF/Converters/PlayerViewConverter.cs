@@ -57,6 +57,7 @@ namespace CMScouter.WPF.Converters
             }
 
             dest.BestRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole.AbilityRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.Rating).First().Rating;
+            dest.PotentialRating = playerType == null ? source.ScoutRatings.BestPosition.BestRole.PotentialRating : source.ScoutRatings.PositionRatings.Where(x => x.SetPosition == playerType).OrderByDescending(y => y.PotentialRating).First().PotentialRating;
             dest.PurchaseRating = source.ScoutRatings.BestPosition.BestRole.PurchaseRating;
             dest.BestPosition = source.ScoutRatings.BestPosition.SetPosition.ToName();
             dest.BestRole = source.ScoutRatings.BestPosition.BestRole.Role.ToName();

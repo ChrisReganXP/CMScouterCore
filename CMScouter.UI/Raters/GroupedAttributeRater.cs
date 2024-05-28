@@ -390,11 +390,12 @@ namespace CMScouter.UI
         {
             PositionRating positionRatings = new PositionRating(offField: offFieldRating) { SetPosition = setPosition, MovementPosition = movementPosition };
             GroupedRatings playerGroupedRatings = null;
+            GroupedRatings playerGroupedPotentialRatings = null;
 
             List<Roles> roles = setPosition.GetAttributeValue<LinkedRoles, List<Roles>>(x => x.Roles);
             foreach (var role in roles)
             {
-                var rating = GetRatingForTypeAndRole(player, setPosition, movementPosition, role, ref playerGroupedRatings);
+                var rating = GetRatingForTypeAndRole(player, setPosition, movementPosition, role, ref playerGroupedRatings, ref playerGroupedPotentialRatings);
                 rating.PurchaseRating = ApplyOffFieldAdjustment(rating.AbilityRating, offFieldRating, rating.Debug);
                 positionRatings.RoleRatings.Add(rating);
             }
@@ -402,13 +403,14 @@ namespace CMScouter.UI
             return positionRatings;
         }
 
-        private RoleRating GetRatingForTypeAndRole(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings)
+        private RoleRating GetRatingForTypeAndRole(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings, ref GroupedRatings playerGroupedPotentialRatings)
         {
             RatingRoleDebug roleDebug = new RatingRoleDebug();
 
-            var rating = CalculateRating(player, setPosition, movementPosition, role, ref playerGroupedRatings, ref roleDebug);
+            var rating = CalculateRating(player, setPosition, movementPosition, role, ref playerGroupedRatings, ref roleDebug, potential: false);
+            var potential = CalculateRating(player, setPosition, movementPosition, role, ref playerGroupedPotentialRatings, ref roleDebug, potential: true);
 
-            return new RoleRating() { AbilityRating = rating, Role = role, Debug = roleDebug, };
+            return new RoleRating() { AbilityRating = rating, PotentialRating = potential, Role = role, Debug = roleDebug, };
         }
 
         private byte GetRatingsForPersonality(Player player)
@@ -418,19 +420,22 @@ namespace CMScouter.UI
             return offField;
         }
 
-        private byte CalculateRating(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings, ref RatingRoleDebug debug)
+        private byte CalculateRating(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, Roles role, ref GroupedRatings playerGroupedRatings, ref RatingRoleDebug debug, bool potential = false)
         {
             RatingRoleDebug roleDebug;
 
             LogDebug($"*** {role} ***");
 
-            playerGroupedRatings = playerGroupedRatings ?? CreatePlayerGroupedRatings(player, setPosition, movementPosition);
+            playerGroupedRatings = playerGroupedRatings ?? CreatePlayerGroupedRatings(player, setPosition, movementPosition, potential);
 
-            decimal result = RatePlayerInRole(player, setPosition, role, GetWeightsForRole(role), playerGroupedRatings, out roleDebug);
+            decimal result = RatePlayerInRole(setPosition, role, GetWeightsForRole(role), playerGroupedRatings, out roleDebug);
 
             var proportion = result;
 
-            debug = roleDebug;
+            if (!potential)
+            {
+                debug = roleDebug;
+            }
 
             return (byte)proportion;
         }
@@ -440,7 +445,7 @@ namespace CMScouter.UI
             return weights.RoleWeights.FirstOrDefault(x => x.Role == role);
         }
 
-        private GroupedRatings CreatePlayerGroupedRatings(Player player, PlayerPosition setPosition, PlayerPosition movementPosition)
+        private GroupedRatings CreatePlayerGroupedRatings(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, bool potential = false)
         {
             var playerGroupedRatings = new GroupedRatings();
 
@@ -453,21 +458,21 @@ namespace CMScouter.UI
                 LogDebug($"{setPosition} -> {movementPosition}");
             }
 
-            playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, weights.ImpactWeights);
-            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, weights.ReliabilityWeights);
-            playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, weights.PlaymakingWeights);
-            playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, weights.WideplayWeights);
-            playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, weights.ScoringWeights);
-            playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, weights.DefendingWeights);
-            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, weights.GoalkeepingWeights);
-            playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, weights.SpeedWeights);
-            playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, weights.StrengthWeights);
+            playerGroupedRatings.impactRating = GetGroupingScore(player, setPosition, movementPosition, weights.ImpactWeights, potential);
+            playerGroupedRatings.reliabilityRating = GetGroupingScore(player, setPosition, movementPosition, weights.ReliabilityWeights, potential);
+            playerGroupedRatings.playmakingRating = GetGroupingScore(player, setPosition, movementPosition, weights.PlaymakingWeights, potential);
+            playerGroupedRatings.wideplayRating = GetGroupingScore(player, setPosition, movementPosition, weights.WideplayWeights, potential);
+            playerGroupedRatings.scoringRating = GetGroupingScore(player, setPosition, movementPosition, weights.ScoringWeights, potential);
+            playerGroupedRatings.defendingRating = GetGroupingScore(player, setPosition, movementPosition, weights.DefendingWeights, potential);
+            playerGroupedRatings.goalkeepingRating = GetGroupingScore(player, setPosition, movementPosition, weights.GoalkeepingWeights, potential);
+            playerGroupedRatings.speedRating = GetGroupingScore(player, setPosition, movementPosition, weights.SpeedWeights, potential);
+            playerGroupedRatings.strengthRating = GetGroupingScore(player, setPosition, movementPosition, weights.StrengthWeights, potential);
 
 
             return playerGroupedRatings;
         }
 
-        private byte RatePlayerInRole(Player player, PlayerPosition type, Roles role, GroupedRoleWeights weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
+        private byte RatePlayerInRole(PlayerPosition type, Roles role, GroupedRoleWeights weights, GroupedRatings playerGroupedRatings, out RatingRoleDebug debug)
         {
             debug = new RatingRoleDebug();
             if (weights == null)
@@ -574,49 +579,49 @@ namespace CMScouter.UI
             return unadjustedScore;
         }
 
-        private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeights weights)
+        private byte GetGroupingScore(Player player, PlayerPosition setPosition, PlayerPosition movementPosition, AttributeWeights weights, bool potential = false)
         {
             decimal rating = 0;
             Tuple<int, short> combinedWeights = new Tuple<int, short>(0,0);
 
-            ScoreAttribute(DP.Acceleration, player._player, setPosition, movementPosition, player._player.Acceleration, weights.Acceleration, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Aggression, player._player, setPosition, movementPosition, player._player.Aggression, weights.Aggression, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Agility, player._player, setPosition, movementPosition, player._player.Agility, weights.Agility, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Anticipation, player._player, setPosition, movementPosition, player._player.Anticipation, weights.Anticipation, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Balance, player._player, setPosition, movementPosition, player._player.Balance, weights.Balance, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Bravery, player._player, setPosition, movementPosition, player._player.Bravery, weights.Bravery, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Consistency, player._player, setPosition, movementPosition, player._player.Consistency, weights.Consistency, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Creativity, player._player, setPosition, movementPosition, player._player.Creativity, weights.Creativity, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Crossing, player._player, setPosition, movementPosition, player._player.Crossing, weights.Crossing, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Decisions, player._player, setPosition, movementPosition, player._player.Decisions, weights.Decisions, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Determination, player._player, setPosition, movementPosition, player._staff.Determination, weights.Determination, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Dribbling, player._player, setPosition, movementPosition, player._player.Dribbling, weights.Dribbling, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Finishing, player._player, setPosition, movementPosition, player._player.Finishing, weights.Finishing, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Flair, player._player, setPosition, movementPosition, player._player.Flair, weights.Flair, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Handling, player._player, setPosition, movementPosition, player._player.Handling, weights.Handling, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Heading, player._player, setPosition, movementPosition, player._player.Heading, weights.Heading, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.ImportantMatches, player._player, setPosition, movementPosition, player._player.ImportantMatches, weights.ImportantMatches, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Influence, player._player, setPosition, movementPosition, player._player.Influence, weights.Influence, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Jumping, player._player, setPosition, movementPosition, player._player.Jumping, weights.Jumping, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.LongShots, player._player, setPosition, movementPosition, player._player.LongShots, weights.LongShots, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Marking, player._player, setPosition, movementPosition, player._player.Marking, weights.Marking, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.NaturalFitness, player._player, setPosition, movementPosition, player._player.NaturalFitness, weights.NaturalFitness, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.OffTheBall, player._player, setPosition, movementPosition, player._player.OffTheBall, weights.OffTheBall, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.OneOnOnes, player._player, setPosition, movementPosition, player._player.OneOnOnes, weights.OneonOnes, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Pace, player._player, setPosition, movementPosition, player._player.Pace, weights.Pace, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Passing, player._player, setPosition, movementPosition, player._player.Passing, weights.Passing, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Positioning, player._player, setPosition, movementPosition, player._player.Positioning, weights.Positioning, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Pressure, player._player, setPosition, movementPosition, player._staff.Pressure, weights.Pressure, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Professionalism, player._player, setPosition, movementPosition, player._staff.Professionalism, weights.Professionalism, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Reflexes, player._player, setPosition, movementPosition, player._player.Reflexes, weights.Reflexes, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Stamina, player._player, setPosition, movementPosition, player._player.Stamina, weights.Stamina, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Strength, player._player, setPosition, movementPosition, player._player.Strength, weights.Strength, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Tackling, player._player, setPosition, movementPosition, player._player.Tackling, weights.Tackling, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Teamwork, player._player, setPosition, movementPosition, player._player.Teamwork, weights.Teamwork, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Technique, player._player, setPosition, movementPosition, player._player.Technique, weights.Technique, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Temperament, player._player, setPosition, movementPosition, player._staff.Temperament, weights.Temperament, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.Versatility, player._player, setPosition, movementPosition, player._player.Versatility, weights.Versatility, ref combinedWeights, ref rating);
-            ScoreAttribute(DP.WorkRate, player._player, setPosition, movementPosition, player._player.WorkRate, weights.WorkRate, ref combinedWeights, ref rating);
+            ScoreAttribute(DP.Acceleration, player._player, setPosition, movementPosition, player._player.Acceleration, weights.Acceleration, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Aggression, player._player, setPosition, movementPosition, player._player.Aggression, weights.Aggression, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Agility, player._player, setPosition, movementPosition, player._player.Agility, weights.Agility, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Anticipation, player._player, setPosition, movementPosition, player._player.Anticipation, weights.Anticipation, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Balance, player._player, setPosition, movementPosition, player._player.Balance, weights.Balance, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Bravery, player._player, setPosition, movementPosition, player._player.Bravery, weights.Bravery, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Consistency, player._player, setPosition, movementPosition, player._player.Consistency, weights.Consistency, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Creativity, player._player, setPosition, movementPosition, player._player.Creativity, weights.Creativity, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Crossing, player._player, setPosition, movementPosition, player._player.Crossing, weights.Crossing, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Decisions, player._player, setPosition, movementPosition, player._player.Decisions, weights.Decisions, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Determination, player._player, setPosition, movementPosition, player._staff.Determination, weights.Determination, ref combinedWeights, ref rating );
+            ScoreAttribute(DP.Dribbling, player._player, setPosition, movementPosition, player._player.Dribbling, weights.Dribbling, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Finishing, player._player, setPosition, movementPosition, player._player.Finishing, weights.Finishing, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Flair, player._player, setPosition, movementPosition, player._player.Flair, weights.Flair, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Handling, player._player, setPosition, movementPosition, player._player.Handling, weights.Handling, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Heading, player._player, setPosition, movementPosition, player._player.Heading, weights.Heading, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.ImportantMatches, player._player, setPosition, movementPosition, player._player.ImportantMatches, weights.ImportantMatches, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Influence, player._player, setPosition, movementPosition, player._player.Influence, weights.Influence, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Jumping, player._player, setPosition, movementPosition, player._player.Jumping, weights.Jumping, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.LongShots, player._player, setPosition, movementPosition, player._player.LongShots, weights.LongShots, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Marking, player._player, setPosition, movementPosition, player._player.Marking, weights.Marking, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.NaturalFitness, player._player, setPosition, movementPosition, player._player.NaturalFitness, weights.NaturalFitness, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.OffTheBall, player._player, setPosition, movementPosition, player._player.OffTheBall, weights.OffTheBall, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.OneOnOnes, player._player, setPosition, movementPosition, player._player.OneOnOnes, weights.OneonOnes, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Pace, player._player, setPosition, movementPosition, player._player.Pace, weights.Pace, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Passing, player._player, setPosition, movementPosition, player._player.Passing, weights.Passing, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Positioning, player._player, setPosition, movementPosition, player._player.Positioning, weights.Positioning, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Pressure, player._player, setPosition, movementPosition, player._staff.Pressure, weights.Pressure, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Professionalism, player._player, setPosition, movementPosition, player._staff.Professionalism, weights.Professionalism, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Reflexes, player._player, setPosition, movementPosition, player._player.Reflexes, weights.Reflexes, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Stamina, player._player, setPosition, movementPosition, player._player.Stamina, weights.Stamina, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Strength, player._player, setPosition, movementPosition, player._player.Strength, weights.Strength, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Tackling, player._player, setPosition, movementPosition, player._player.Tackling, weights.Tackling, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Teamwork, player._player, setPosition, movementPosition, player._player.Teamwork, weights.Teamwork, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Technique, player._player, setPosition, movementPosition, player._player.Technique, weights.Technique, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Temperament, player._player, setPosition, movementPosition, player._staff.Temperament, weights.Temperament, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.Versatility, player._player, setPosition, movementPosition, player._player.Versatility, weights.Versatility, ref combinedWeights, ref rating, potential);
+            ScoreAttribute(DP.WorkRate, player._player, setPosition, movementPosition, player._player.WorkRate, weights.WorkRate, ref combinedWeights, ref rating, potential);
 
             int maxScore = 20 * combinedWeights.Item1;
 

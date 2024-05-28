@@ -37,6 +37,8 @@ namespace CMScouter.WPF.DataClasses
 
         public byte BestRating { get; set; }
 
+        public byte PotentialRating { get; set; }
+
         public byte PurchaseRating { get; set; }
 
         public string BestPosition { get; set; }

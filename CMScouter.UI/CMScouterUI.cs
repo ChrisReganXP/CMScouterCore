@@ -470,7 +470,7 @@ namespace CMScouter.UI
         public List<PlayerView> GetHighestUnfulfilledPotential()
         {
             Func<Player, bool> filter = new Func<Player, bool>(x => x._player.PotentialAbility > 150 && GetAge(x._staff.DOB) <= 24);
-            return ConstructPlayerByFilter(filter).OrderByDescending(x => x.PotentialAbility - x.CurrentAbility).ToList();
+            return ConstructPlayerByFilter(filter).OrderByDescending(x => x.ScoutRatings.BestPosition.BestRole.PotentialRating -  x.ScoutRatings.BestPosition.BestRole.AbilityRating).ToList();
         }
 
         public List<PlayerView> GetHighestFinishing()
